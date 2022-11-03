@@ -21,10 +21,10 @@ class StudentModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'Email': email,
-      'Password': password,
-      'Name': name,
-      'Faculty': faculty,
+      'email': email,
+      'password': password,
+      'name': name,
+      'faculty': faculty,
       'academicYear': academicYear,
       'semester': semester,
       'studentId': studentId,
@@ -33,10 +33,10 @@ class StudentModel {
 
   factory StudentModel.fromMap(Map<String, dynamic> map) {
     return StudentModel(
-      email: map['Email'] as String,
-      password: map['Password'] as String,
-      name: map['Name'] as String,
-      faculty: map['Faculty'] as String,
+      email: map['email'] as String,
+      password: map['password'] as String,
+      name: map['name'] as String,
+      faculty: map['faculty'] as String,
       academicYear: map['academicYear'] as String,
       semester: map['semester'] as String,
       studentId: map['studentId'] as num,

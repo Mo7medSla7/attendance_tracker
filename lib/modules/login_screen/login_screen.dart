@@ -1,5 +1,7 @@
+import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/modules/sign_up_screen/sign_up_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
+import 'package:attendance_tracker/shared/end_points.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -41,7 +43,17 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 20),
               FullWidthElevatedButton(
                 text: 'Login',
-                onTap: () {},
+                onTap: () {
+                  DioHelper.postData(
+                    url: LOGIN,
+                    data: {
+                      'email': 'hysamelm3ars@mail.com',
+                      'password': '12369785896'
+                    },
+                  ).then((value) => print(value.data)).catchError((error) {
+                    print(error.toString());
+                  });
+                },
               ),
               const SizedBox(height: 20),
               buildLoginDivider(),

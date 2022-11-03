@@ -165,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       );
 
-  void signUp() async {
+  void signUp() {
     var student = StudentModel(
       name: nameController.text,
       email: emailController.text,
@@ -175,7 +175,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       password: idController.text,
       semester: 'one',
     ).toMap();
-    Response response = await DioHelper.putData(url: SIGN_UP, data: student);
-    print(response.data);
+    DioHelper.postData(url: SIGN_UP, data: student)
+        .then((value) => print(value.data))
+        .catchError((error) {
+      print(error.toString());
+    });
   }
 }
