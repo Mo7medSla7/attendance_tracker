@@ -33,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var nameController = TextEditingController();
   var emailController = TextEditingController();
   var idController = TextEditingController();
-
+  var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,34 +47,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Container(
           width: double.infinity,
           margin: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const HeaderTitle(title: 'Sign up'),
-              const SizedBox(height: 40),
-              DefaultFormField(
-                tintText: 'Student Name',
-                controller: nameController,
-              ),
-              const SizedBox(height: 15),
-              DefaultFormField(
-                tintText: 'Student Email',
-                controller: emailController,
-              ),
-              const SizedBox(height: 15),
-              DefaultFormField(
-                tintText: 'Student ID',
-                controller: idController,
-              ),
-              const SizedBox(height: 15),
-              buildDropDownMenus(),
-              const SizedBox(height: 20),
-              FullWidthElevatedButton(
-                text: 'Sign up',
-                onTap: () {
-                  signUp();
-                },
-              )
-            ],
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                const HeaderTitle(title: 'Sign up'),
+                const SizedBox(height: 40),
+                DefaultFormField(
+                  tintText: 'Student Name',
+                  controller: nameController,
+                  errormessege: 'Student Name',
+                ),
+                const SizedBox(height: 15),
+                DefaultFormField(
+                  tintText: 'Student Email',
+                  controller: emailController,
+                  errormessege: 'Student Email',
+                ),
+                const SizedBox(height: 15),
+                DefaultFormField(
+                  tintText: 'Student ID',
+                  controller: idController,
+                  errormessege: 'Student ID',
+                ),
+                const SizedBox(height: 15),
+                buildDropDownMenus(),
+                const SizedBox(height: 20),
+                FullWidthElevatedButton(
+                  text: 'Sign up',
+                  onTap: () {
+                    signUp();
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -166,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   void signUp() {
-    var student = StudentModel(
+/*    var student = StudentModel(
       name: nameController.text,
       email: emailController.text,
       studentId: num.parse(idController.text),
@@ -179,6 +185,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         .then((value) => print(value.data))
         .catchError((error) {
       print(error.toString());
-    });
+    });*/
+    //validation sign up
+    if (formKey.currentState!.validate()){
+      print(emailController.text);
+      print(idController.text);
+      print(nameController.text);
+    }
   }
 }

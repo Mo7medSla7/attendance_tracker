@@ -9,7 +9,7 @@ class LoginScreen extends StatelessWidget {
 
   var emailController = TextEditingController();
   var idController = TextEditingController();
-
+  var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,63 +22,73 @@ class LoginScreen extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.all(20),
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.network(
-                  height: 130,
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPHRvtFUvNT9Rrpz2HE4gu05hPPg8m7DweCg&usqp=CAU'),
-              const SizedBox(height: 30),
-              const HeaderTitle(title: 'LOGIN'),
-              const SizedBox(height: 40),
-              DefaultFormField(
-                tintText: 'Student Email',
-                controller: emailController,
-              ),
-              const SizedBox(height: 15),
-              DefaultFormField(
-                tintText: 'Student ID',
-                controller: idController,
-              ),
-              const SizedBox(height: 20),
-              FullWidthElevatedButton(
-                text: 'Login',
-                onTap: () {
-                  DioHelper.postData(
-                    url: LOGIN,
-                    data: {
-                      'email': 'hysamelm3ars@mail.com',
-                      'password': '12369785896'
-                    },
-                  ).then((value) => print(value.data)).catchError((error) {
+          child: Form(
+            key:formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.network(
+                    height: 130,
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPHRvtFUvNT9Rrpz2HE4gu05hPPg8m7DweCg&usqp=CAU'),
+                const SizedBox(height: 30),
+                const HeaderTitle(title: 'LOGIN'),
+                const SizedBox(height: 40),
+                DefaultFormField(
+                  tintText: 'Student Email',
+                  controller: emailController,
+                  errormessege:'Student Email',
+                ),
+                const SizedBox(height: 15),
+                DefaultFormField(
+                  tintText: 'Student ID',
+                  controller: idController,
+                  errormessege:'Student ID',
+                ),
+                const SizedBox(height: 20),
+                FullWidthElevatedButton(
+                  text: 'Login',
+                  onTap: () {
+                    DioHelper.postData(
+                      url: LOGIN,
+                      data: {
+                        'email': 'hysamelm3ars@mail.com',
+                        'password': '12369785896'
+                      },
+                    ).then((value) => print(value.data)).catchError((error) {
                     print(error.toString());
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              buildLoginDivider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Create new account',
-                    style: TextStyle(
-                      fontSize: 15,
+                      //validation sign in
+                    if (formKey.currentState!.validate()){
+                      print(emailController.text);
+                      print(idController.text);
+                      }
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                buildLoginDivider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Create new account',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SignUpScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('Sign Up'),
-                  )
-                ],
-              )
-            ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SignUpScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('Sign Up'),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

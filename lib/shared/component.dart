@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 class DefaultFormField extends StatelessWidget {
   final String tintText;
   final TextEditingController controller;
-
-  const DefaultFormField(
-      {super.key, required this.tintText, required this.controller});
-
+   String? errormessege;
+   DefaultFormField(
+      {super.key, required this.tintText, required this.controller,this.errormessege});
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -19,6 +18,11 @@ class DefaultFormField extends StatelessWidget {
         hintText: tintText,
       ),
       controller: controller,
+      validator: (value) {
+       if (value!.isEmpty){
+          return '$errormessege can not be empty';
+       }
+     },
     );
   }
 }
