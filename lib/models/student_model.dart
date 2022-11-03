@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class StudentModel {
   String email;
-  String password;
+  String? password;
   String name;
   String faculty;
   String academicYear;
@@ -34,7 +34,7 @@ class StudentModel {
   factory StudentModel.fromMap(Map<String, dynamic> map) {
     return StudentModel(
       email: map['email'] as String,
-      password: map['password'] as String,
+      password: map['password'],
       name: map['name'] as String,
       faculty: map['faculty'] as String,
       academicYear: map['academicYear'] as String,

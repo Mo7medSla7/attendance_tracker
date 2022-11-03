@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 class DefaultFormField extends StatelessWidget {
-  final String tintText;
+  final String hintText;
   final TextEditingController controller;
-   String? errormessege;
-   DefaultFormField(
-      {super.key, required this.tintText, required this.controller,this.errormessege});
+  final String? errorMessage;
+
+  const DefaultFormField({
+    super.key,
+    required this.hintText,
+    required this.controller,
+    this.errorMessage,
+  });
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -15,14 +20,15 @@ class DefaultFormField extends StatelessWidget {
         ),
         fillColor: Colors.grey[100],
         filled: true,
-        hintText: tintText,
+        hintText: hintText,
       ),
       controller: controller,
       validator: (value) {
-       if (value!.isEmpty){
-          return '$errormessege can not be empty';
-       }
-     },
+        if (value!.isEmpty) {
+          return '${errorMessage ?? 'This field'} can not be empty';
+        }
+        return null;
+      },
     );
   }
 }

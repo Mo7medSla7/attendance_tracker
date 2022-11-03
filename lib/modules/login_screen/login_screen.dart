@@ -1,4 +1,5 @@
 import 'package:attendance_tracker/helpers/dio_helper.dart';
+import 'package:attendance_tracker/models/student_model.dart';
 import 'package:attendance_tracker/modules/sign_up_screen/sign_up_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
@@ -23,7 +24,7 @@ class LoginScreen extends StatelessWidget {
           margin: const EdgeInsets.all(20),
           width: double.infinity,
           child: Form(
-            key:formKey,
+            key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -34,34 +35,23 @@ class LoginScreen extends StatelessWidget {
                 const HeaderTitle(title: 'LOGIN'),
                 const SizedBox(height: 40),
                 DefaultFormField(
-                  tintText: 'Student Email',
+                  hintText: 'Student Email',
                   controller: emailController,
-                  errormessege:'Student Email',
+                  errorMessage: 'Student Email',
                 ),
                 const SizedBox(height: 15),
                 DefaultFormField(
-                  tintText: 'Student ID',
+                  hintText: 'Student ID',
                   controller: idController,
-                  errormessege:'Student ID',
+                  errorMessage: 'Student ID',
                 ),
                 const SizedBox(height: 20),
                 FullWidthElevatedButton(
                   text: 'Login',
                   onTap: () {
-                    DioHelper.postData(
-                      url: LOGIN,
-                      data: {
-                        'email': 'hysamelm3ars@mail.com',
-                        'password': '12369785896'
-                      },
-                    ).then((value) => print(value.data)).catchError((error) {
-                    print(error.toString());
-                      //validation sign in
-                    if (formKey.currentState!.validate()){
-                      print(emailController.text);
-                      print(idController.text);
-                      }
-                    });
+                    if (formKey.currentState!.validate()) {
+                      login();
+                    }
                   },
                 ),
                 const SizedBox(height: 20),
@@ -118,4 +108,24 @@ class LoginScreen extends StatelessWidget {
           )
         ],
       );
+
+  void login() {
+    //mosalah@mail.com
+    //1369878469
+    DioHelper.postData(
+      url: LOGIN,
+      data: {'email': emailController.text, 'password': idController.text},
+    ).then((value) {
+      var model = StudentModel.fromMap(value.data);
+      print(model.name);
+      print(model.password);
+      print(model.academicYear);
+      print(model.email);
+      print(model.faculty);
+      print(model.semester);
+      print(model.studentId);
+    }).catchError((error) {
+      print(error.toString());
+    });
+  }
 }

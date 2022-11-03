@@ -1,4 +1,5 @@
 import 'package:attendance_tracker/helpers/dio_helper.dart';
+import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:attendance_tracker/modules/on_boarding_screen/on_boarding_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'RivalSans',
         primarySwatch: Colors.indigo,
       ),
-      home: OnBoardingScreen(),
+      home: LoginScreen(),
     );
   }
 }

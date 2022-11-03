@@ -34,6 +34,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var emailController = TextEditingController();
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  bool isFacultyAndLevelSelected = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,29 +56,56 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const HeaderTitle(title: 'Sign up'),
                 const SizedBox(height: 40),
                 DefaultFormField(
-                  tintText: 'Student Name',
+                  hintText: 'Student Name',
                   controller: nameController,
-                  errormessege: 'Student Name',
+                  errorMessage: 'Student Name',
                 ),
                 const SizedBox(height: 15),
                 DefaultFormField(
-                  tintText: 'Student Email',
+                  hintText: 'Student Email',
                   controller: emailController,
-                  errormessege: 'Student Email',
+                  errorMessage: 'Student Email',
                 ),
                 const SizedBox(height: 15),
                 DefaultFormField(
-                  tintText: 'Student ID',
+                  hintText: 'Student ID',
                   controller: idController,
-                  errormessege: 'Student ID',
+                  errorMessage: 'Student ID',
                 ),
                 const SizedBox(height: 15),
                 buildDropDownMenus(),
-                const SizedBox(height: 20),
+                if (isFacultyAndLevelSelected) const SizedBox(height: 20),
+                if (!isFacultyAndLevelSelected)
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 14,
+                        bottom: 15,
+                        top: 8,
+                      ),
+                      child: Text(
+                        'Faculty and Level must be chosen',
+                        style: TextStyle(color: Colors.red[800], fontSize: 12),
+                      ),
+                    ),
+                  ),
                 FullWidthElevatedButton(
                   text: 'Sign up',
                   onTap: () {
-                    signUp();
+                    if (selectedFaculty != null && selectedLevel != null) {
+                      setState(() {
+                        isFacultyAndLevelSelected = true;
+                      });
+                      if (formKey.currentState!.validate()) {
+                        signUp();
+                      }
+                    } else {
+                      setState(() {
+                        formKey.currentState!.validate();
+                        isFacultyAndLevelSelected = false;
+                      });
+                    }
                   },
                 )
               ],
@@ -172,7 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   void signUp() {
-/*    var student = StudentModel(
+    var student = StudentModel(
       name: nameController.text,
       email: emailController.text,
       studentId: num.parse(idController.text),
@@ -185,12 +214,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         .then((value) => print(value.data))
         .catchError((error) {
       print(error.toString());
-    });*/
-    //validation sign up
-    if (formKey.currentState!.validate()){
-      print(emailController.text);
-      print(idController.text);
-      print(nameController.text);
-    }
+    });
   }
 }
