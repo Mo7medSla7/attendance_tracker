@@ -9,7 +9,6 @@ class SignUpScreen extends StatefulWidget {
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
-
 class _SignUpScreenState extends State<SignUpScreen> {
   List<String> faculties = [
     'Faculty of medicine',
@@ -33,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var nameController = TextEditingController();
   var emailController = TextEditingController();
   var idController = TextEditingController();
+  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,34 +47,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Container(
           width: double.infinity,
           margin: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const HeaderTitle(title: 'Sign up'),
-              const SizedBox(height: 40),
-              DefaultFormField(
-                tintText: 'Student Name',
-                controller: nameController,
-              ),
-              const SizedBox(height: 15),
-              DefaultFormField(
-                tintText: 'Student Email',
-                controller: emailController,
-              ),
-              const SizedBox(height: 15),
-              DefaultFormField(
-                tintText: 'Student ID',
-                controller: idController,
-              ),
-              const SizedBox(height: 15),
-              buildDropDownMenus(),
-              const SizedBox(height: 20),
-              FullWidthElevatedButton(
-                text: 'Sign up',
-                onTap: () {
-                  signUp();
-                },
-              )
-            ],
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                const HeaderTitle(title: 'Sign up'),
+                const SizedBox(height: 40),
+                DefaultFormField(
+                  hintText: 'Student Name',
+                  controller: nameController,
+                  errorMessage: 'Student Name',
+                ),
+                const SizedBox(height: 15),
+                DefaultFormField(
+                  hintText: 'Student Email',
+                  controller: emailController,
+                  errorMessage: 'Student Email',
+                ),
+                const SizedBox(height: 15),
+                DefaultFormField(
+                  hintText: 'Student ID',
+                  controller: idController,
+                  errorMessage: 'Student ID',
+                ),
+                const SizedBox(height: 15),
+                buildDropDownMenus(),
+                const SizedBox(height: 20),
+                FullWidthElevatedButton(
+                  text: 'Sign up',
+                  onTap: () {
+                    signUp();
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -166,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   void signUp() async {
-    var student = StudentModel(
+    /*var student = StudentModel(
       name: nameController.text,
       email: emailController.text,
       studentId: num.parse(idController.text),
@@ -176,6 +182,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       semester: 'one',
     ).toMap();
     Response response = await DioHelper.putData(url: SIGN_UP, data: student);
-    print(response.data);
+    print(response.data);*/
+    if(formKey.currentState!.validate())
+    {
+      print(nameController.text);
+      print(emailController.text);
+      print(idController.text);
+    }
   }
 }
