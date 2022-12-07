@@ -1,3 +1,4 @@
+import 'package:attendance_tracker/helpers/cache_helper.dart';
 import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,11 +32,7 @@ class OnBoardingScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
-                ),
-              );
+              goToLogin(context);
             },
             child: const Text(
               'Skip',
@@ -90,11 +87,7 @@ class OnBoardingScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     if (isLastPage) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
-                        ),
-                      );
+                      goToLogin(context);
                     } else {
                       pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
@@ -142,4 +135,15 @@ class OnBoardingScreen extends StatelessWidget {
           ),
         ],
       );
+
+  void goToLogin(context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) {
+          CacheHelper.putData(key: 'isOnboardingFinished', value: true);
+          return LoginScreen();
+        },
+      ),
+    );
+  }
 }

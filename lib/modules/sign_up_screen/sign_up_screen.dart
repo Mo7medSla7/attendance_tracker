@@ -13,7 +13,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   List<String> faculties = [
     'Faculty of medicine',
-    'Faculty of Computing and Information',
+    'Faculty of computers and information',
     'Faculty of Engineering',
   ];
   String? selectedFaculty;
@@ -33,8 +33,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var nameController = TextEditingController();
   var emailController = TextEditingController();
   var idController = TextEditingController();
+  var passwordController = TextEditingController();
+  var confirmPasswordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool isFacultyAndLevelSelected = true;
+  bool isLoading = false;
+  String errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +77,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   errorMessage: 'Student ID',
                 ),
                 const SizedBox(height: 15),
+                DefaultFormField(
+                  hintText: 'Password',
+                  controller: passwordController,
+                  errorMessage: 'Password',
+                  isPassword: true,
+                ),
+                const SizedBox(height: 15),
+                DefaultFormField(
+                  hintText: 'Confirm Password',
+                  controller: confirmPasswordController,
+                  isPassword: true,
+                ),
+                const SizedBox(height: 15),
                 buildDropDownMenus(),
                 if (isFacultyAndLevelSelected) const SizedBox(height: 20),
                 if (!isFacultyAndLevelSelected)
@@ -90,24 +107,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                FullWidthElevatedButton(
-                  text: 'Sign up',
-                  onTap: () {
-                    if (selectedFaculty != null && selectedLevel != null) {
-                      setState(() {
-                        isFacultyAndLevelSelected = true;
-                      });
-                      if (formKey.currentState!.validate()) {
-                        signUp();
+                if (isLoading)
+                  const CircularProgressIndicator()
+                else
+                  FullWidthElevatedButton(
+                    text: 'Sign up',
+                    onTap: () {
+                      errorMessage = '';
+                      if (selectedFaculty != null &&
+                          selectedLevel != null &&
+                          isPasswordCorrect) {
+                        setState(() {
+                          isFacultyAndLevelSelected = true;
+                        });
+                        if (formKey.currentState!.validate()) {
+                          signUp(context);
+                        }
+                      } else if (!isPasswordCorrect) {
+                        setState(() {
+                          errorMessage +=
+                              'Password confirmation doesn\'t match the password';
+                        });
+                      } else {
+                        setState(() {
+                          formKey.currentState!.validate();
+                          isFacultyAndLevelSelected = false;
+                        });
                       }
-                    } else {
-                      setState(() {
-                        formKey.currentState!.validate();
-                        isFacultyAndLevelSelected = false;
-                      });
-                    }
-                  },
-                )
+                    },
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      errorMessage,
+                      style: TextStyle(color: Colors.red[800], fontSize: 14),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -200,20 +238,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       );
 
-  void signUp() {
+  void signUp(context) {
+    setState(() {
+      isLoading = true;
+    });
     var student = StudentModel(
       name: nameController.text,
       email: emailController.text,
       studentId: num.parse(idController.text),
       faculty: selectedFaculty!,
       academicYear: selectedLevel!,
-      password: idController.text,
-      semester: 'one',
+      password: passwordController.text,
+      semester: 'first',
     ).toMap();
-    DioHelper.postData(url: SIGN_UP, data: student)
-        .then((value) => print(value.data))
-        .catchError((error) {
-      print(error.toString());
+    DioHelper.postData(url: SIGN_UP, data: student).then((value) {
+      Navigator.of(context).pop(student);
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+        error.response.data['data']
+            .forEach(
+                (e) => errorMessage += (e['param'] + ' : ' + e['msg'] + '\n'))
+            .toString();
+      });
     });
+  }
+
+  bool get isPasswordCorrect {
+    return passwordController.text == confirmPasswordController.text;
   }
 }

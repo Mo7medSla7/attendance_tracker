@@ -4,12 +4,14 @@ class DefaultFormField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final String? errorMessage;
+  bool isPassword;
 
-  const DefaultFormField({
+  DefaultFormField({
     super.key,
     required this.hintText,
     required this.controller,
     this.errorMessage,
+    this.isPassword = false,
   });
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class DefaultFormField extends StatelessWidget {
         hintText: hintText,
       ),
       controller: controller,
+      obscureText: isPassword,
       validator: (value) {
         if (value!.isEmpty) {
           return '${errorMessage ?? 'This field'} can not be empty';
