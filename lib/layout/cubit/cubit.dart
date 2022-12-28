@@ -23,7 +23,7 @@ class AppCubit extends Cubit<AppStates> {
     Text('Home'),
     Text('Test'),
   ];
-  List<Widget> screens = [
+  List<Widget> screens = const [
     Subject_Screen(),
     Home_Screen(),
     Test_Screen(),
@@ -32,8 +32,9 @@ class AppCubit extends Cubit<AppStates> {
   void changeNavBar(int index) {
     currentIndex = index;
     emit(ChangeNavBarState());
-    if (index == 0 && subjectsForRegister.isEmpty) {
+    if (index == 0 && (subjectsForRegister.isEmpty)) {
       getSubjectsForRegister();
+      getRegisteredSubjects();
     }
   }
 
@@ -50,5 +51,64 @@ class AppCubit extends Cubit<AppStates> {
       print(e.toString());
       emit(GetSubjectsForRegisterErrorState());
     });
+  }
+
+  List<SubjectModel> registeredSubjects = [];
+
+  getRegisteredSubjects() {
+    emit(GetRegisteredSubjectsLoadingState());
+    DioHelper.getData(
+            url: ALL_REGISTERED_SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
+        .then((Response response) {
+      registeredSubjects = [];
+      response.data.forEach(
+          (subject) => registeredSubjects.add(SubjectModel.fromMap(subject)));
+      emit(GetRegisteredSubjectsSuccessState());
+    }).catchError((e) {
+      print(e.toString());
+      emit(GetRegisteredSubjectsErrorState());
+    });
+  }
+
+  filterSubjectsForRegister() {}
+
+  List<String> subjectsIdToRegister = [];
+  List<bool> checkStates = [];
+
+  addSubject(String id, int index) {
+    subjectsIdToRegister.add(id);
+    checkStates[index] = true;
+    emit(AddOrRemoveSubjectToRegisterState());
+  }
+
+  removeSubject(String id, int index) {
+    subjectsIdToRegister.remove(id);
+    checkStates[index] = false;
+    emit(AddOrRemoveSubjectToRegisterState());
+  }
+
+  registerSubject(String subjectId) {
+    emit(RegisterSubjectLoadingState());
+    DioHelper.postData(
+      url: REGISTER_SUBJECT,
+      data: {'subjectId': subjectId},
+      token: 'Bearer $STUDENT_TOKEN',
+    ).then((value) {
+      getRegisteredSubjects();
+      emit(RegisterSubjectSuccessState());
+    }).catchError((e) {
+      print(e.response.data);
+      emit(RegisterSubjectErrorState());
+    });
+  }
+
+  sendSubjectsToRegister() {
+    for (String subjectId in subjectsIdToRegister) {
+      try {
+        registerSubject(subjectId);
+      } catch (err) {
+        print(err.toString());
+      }
+    }
   }
 }

@@ -14,7 +14,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   List<String> faculties = [
     'Faculty of medicine',
     'Faculty of computers and information',
-    'Faculty of Engineering',
+    'Faculty of engineering',
   ];
   String? selectedFaculty;
 
@@ -249,7 +249,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       faculty: selectedFaculty!,
       academicYear: selectedLevel!,
       password: passwordController.text,
-      semester: 'first',
+      semester: DateTime.now().month > 2 ? 'first' : 'second',
     ).toMap();
     DioHelper.postData(url: SIGN_UP, data: student).then((value) {
       Navigator.of(context).pop(student);

@@ -55,12 +55,118 @@ class HeaderTitle extends StatelessWidget {
   }
 }
 
+class Subtitle extends StatelessWidget {
+  final String title;
+  const Subtitle({
+    super.key,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+class MiniTitle extends StatelessWidget {
+  final String title;
+  final bool overflow;
+  const MiniTitle({super.key, required this.title, this.overflow = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+      ),
+      overflow: overflow ? TextOverflow.ellipsis : null,
+    );
+  }
+}
+
+class MainBody extends StatelessWidget {
+  final String text;
+  final Color? color;
+  const MainBody({
+    super.key,
+    required this.text,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: color,
+      ),
+    );
+  }
+}
+
+class SubBody extends StatelessWidget {
+  final String text;
+  final Color? color;
+
+  const SubBody({
+    super.key,
+    required this.text,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: color,
+      ),
+    );
+  }
+}
+
+class MiniBody extends StatelessWidget {
+  final String text;
+  final Color? color;
+
+  const MiniBody({
+    super.key,
+    required this.text,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: color,
+      ),
+    );
+  }
+}
+
 class FullWidthElevatedButton extends StatelessWidget {
   final String text;
   final Function() onTap;
+  final Color? color;
 
   const FullWidthElevatedButton(
-      {super.key, required this.text, required this.onTap});
+      {super.key, required this.text, required this.onTap, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +176,7 @@ class FullWidthElevatedButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onTap,
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.blue[900]),
+          backgroundColor: MaterialStateProperty.all(color ?? Colors.blue[900]),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),

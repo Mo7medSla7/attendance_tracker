@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'RivalSans',
         primarySwatch: Colors.indigo,
       ),
-      home: LoginScreen(),
+      home: startWidget,
     );
   }
 }
