@@ -46,7 +46,6 @@ class Subject_Screen extends StatelessWidget {
                                         Expanded(
                                             child: MiniTitle(
                                           title: subject.name,
-                                          overflow: true,
                                         )),
                                         const Text('Status : '),
                                         subject.isAccepted!
@@ -102,7 +101,7 @@ class Subject_Screen extends StatelessWidget {
                       const Padding(
                         padding:
                             EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                        child: Subtitle(title: 'Subjects For Registered'),
+                        child: Subtitle(title: 'Subjects To Register'),
                       ),
                       ListView.builder(
                         shrinkWrap: true,

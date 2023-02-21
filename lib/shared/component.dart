@@ -69,6 +69,7 @@ class Subtitle extends StatelessWidget {
       style: const TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
+        fontFamily: null,
       ),
     );
   }
@@ -84,7 +85,7 @@ class MiniTitle extends StatelessWidget {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: FontWeight.w600,
       ),
       overflow: overflow ? TextOverflow.ellipsis : null,
