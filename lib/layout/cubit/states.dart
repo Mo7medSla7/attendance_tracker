@@ -4,6 +4,8 @@ class AppInitState extends AppStates {}
 
 class ChangeNavBarState extends AppStates {}
 
+class RefreshSubjectsState extends AppStates {}
+
 class AddOrRemoveSubjectToRegisterState extends AppStates {}
 
 class GetSubjectsForRegisterLoadingState extends AppStates {}

@@ -9,33 +9,44 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../modules/home_screen/home_screen.dart';
 import '../../modules/subjects_screen/subject_screen.dart';
-import '../../modules/test_screen/test_screen.dart';
+import '../../modules/profile_screen/profile_screen.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitState());
 
   static AppCubit get(context) => BlocProvider.of(context);
 
-  int currentIndex = 1;
+  int currentIndex = 0;
 
   List<Text> titles = const [
-    Text('Subjects'),
     Text('Home'),
-    Text('Test'),
+    Text('Subjects'),
+    Text('Profile'),
   ];
   List<Widget> screens = const [
-    Subject_Screen(),
     Home_Screen(),
-    Test_Screen(),
+    Subject_Screen(),
+    ProfileScreen(),
   ];
 
   void changeNavBar(int index) {
     currentIndex = index;
     emit(ChangeNavBarState());
-    if (index == 0 && (subjectsForRegister.isEmpty)) {
-      getSubjectsForRegister();
-      getRegisteredSubjects();
+    if (index == 1 && (subjectsForRegister.isEmpty)) {
+      getSubjects();
     }
+  }
+
+  getSubjects() {
+    getSubjectsForRegister();
+    getRegisteredSubjects();
+  }
+
+  refreshSubjects() async {
+    subjectsForRegister = [];
+    registeredSubjects = [];
+    await getSubjects();
+    emit(RefreshSubjectsState());
   }
 
   List<SubjectModel> subjectsForRegister = [];

@@ -68,20 +68,18 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: RivalSans
+    - family: OpenSans
       fonts:
-        - asset: assets/fonts/Rival-Sans-Font-Family/rivalsans-regular.otf
-        - asset: assets/fonts/Rival-Sans-Font-Family/rivalsans-thin.otf
-          weight: 200
-        - asset: assets/fonts/Rival-Sans-Font-Family/rivalsans-light.otf
+        - asset: assets/fonts/Open-Sans/OpenSans-Regular.ttf
+        - asset: assets/fonts/Open-Sans/OpenSans-Light.ttf
           weight: 300
-        - asset: assets/fonts/Rival-Sans-Font-Family/rivalsans-medium.otf
+        - asset: assets/fonts/Open-Sans/OpenSans-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Rival-Sans-Font-Family/rivalsans-bold.otf
+        - asset: assets/fonts/Open-Sans/OpenSans-SemiBold.ttf
           weight: 700
-        - asset: assets/fonts/Rival-Sans-Font-Family/rivalsans-extrabold.otf
+        - asset: assets/fonts/Open-Sans/OpenSans-Bold.ttf
           weight: 800
-        - asset: assets/fonts/Rival-Sans-Font-Family/rivalsans-black.otf
+        - asset: assets/fonts/Open-Sans/OpenSans-ExtraBold.ttf
           weight: 900
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

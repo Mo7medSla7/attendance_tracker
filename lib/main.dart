@@ -15,7 +15,7 @@ void main() async {
   await CacheHelper.init();
   setStudentData();
   runApp(BlocProvider(
-    create: (context) => AppCubit(),
+    create: (context) => AppCubit()..getSubjects(),
     child: MyApp(),
   ));
 }
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Attendance tracker',
       theme: ThemeData(
-        fontFamily: 'RivalSans',
+        fontFamily: 'OpenSans',
         primarySwatch: Colors.indigo,
       ),
       home: startWidget,

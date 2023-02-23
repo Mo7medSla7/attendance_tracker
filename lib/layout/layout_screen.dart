@@ -24,21 +24,21 @@ class LayoutScreen extends StatelessWidget {
             },
             items: const [
               BottomNavigationBarItem(
-                label: 'Subjects',
-                icon: Icon(
-                  Icons.menu_book_rounded,
-                ),
-              ),
-              BottomNavigationBarItem(
                 label: 'Home',
                 icon: Icon(
                   Icons.home_rounded,
                 ),
               ),
               BottomNavigationBarItem(
-                label: 'Test',
+                label: 'Subjects',
                 icon: Icon(
-                  Icons.terrain_sharp,
+                  Icons.menu_book_rounded,
+                ),
+              ),
+              BottomNavigationBarItem(
+                label: 'Profile',
+                icon: Icon(
+                  Icons.person,
                 ),
               ),
             ],
