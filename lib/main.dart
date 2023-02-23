@@ -2,6 +2,7 @@ import 'package:attendance_tracker/helpers/cache_helper.dart';
 import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:attendance_tracker/layout/layout_screen.dart';
+import 'package:attendance_tracker/modules/home_screen/home_screen.dart';
 import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:attendance_tracker/modules/on_boarding_screen/on_boarding_screen.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
