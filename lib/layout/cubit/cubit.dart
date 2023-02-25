@@ -32,14 +32,16 @@ class AppCubit extends Cubit<AppStates> {
   void changeNavBar(int index) {
     currentIndex = index;
     emit(ChangeNavBarState());
-    if (index == 1 && (subjectsForRegister.isEmpty)) {
+    if (index == 1 &&
+        (subjectsForRegister.isEmpty) &&
+        (registeredSubjects.isEmpty)) {
       getSubjects();
     }
   }
 
   getSubjects() {
-    getSubjectsForRegister();
     getRegisteredSubjects();
+    getSubjectsToRegister();
   }
 
   refreshSubjects() async {
@@ -51,16 +53,22 @@ class AppCubit extends Cubit<AppStates> {
 
   List<SubjectModel> subjectsForRegister = [];
 
-  getSubjectsForRegister() {
-    emit(GetSubjectsForRegisterLoadingState());
+  getSubjectsToRegister() {
+    emit(GetSubjectsToRegisterLoadingState());
     DioHelper.getData(url: SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
-      response.data['subjects'].forEach(
-          (subject) => subjectsForRegister.add(SubjectModel.fromMap(subject)));
-      emit(GetSubjectsForRegisterSuccessState());
+      response.data['subjects'].forEach((subject) {
+        var selectedSubject = SubjectModel.fromMap(subject);
+        bool isExist = registeredSubjects
+            .any((subject) => subject.id == selectedSubject.id);
+        if (!isExist) {
+          subjectsForRegister.add(selectedSubject);
+        }
+      });
+      emit(GetSubjectsToRegisterSuccessState());
     }).catchError((e) {
       print(e.toString());
-      emit(GetSubjectsForRegisterErrorState());
+      emit(GetSubjectsToRegisterErrorState());
     });
   }
 
@@ -71,7 +79,7 @@ class AppCubit extends Cubit<AppStates> {
     DioHelper.getData(
             url: ALL_REGISTERED_SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
-      registeredSubjects = [];
+      // registeredSubjects = [];
       response.data.forEach(
           (subject) => registeredSubjects.add(SubjectModel.fromMap(subject)));
       emit(GetRegisteredSubjectsSuccessState());

@@ -8,11 +8,11 @@ class RefreshSubjectsState extends AppStates {}
 
 class AddOrRemoveSubjectToRegisterState extends AppStates {}
 
-class GetSubjectsForRegisterLoadingState extends AppStates {}
+class GetSubjectsToRegisterLoadingState extends AppStates {}
 
-class GetSubjectsForRegisterSuccessState extends AppStates {}
+class GetSubjectsToRegisterSuccessState extends AppStates {}
 
-class GetSubjectsForRegisterErrorState extends AppStates {}
+class GetSubjectsToRegisterErrorState extends AppStates {}
 
 class GetRegisteredSubjectsLoadingState extends AppStates {}
 
