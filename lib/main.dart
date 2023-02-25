@@ -5,11 +5,13 @@ import 'package:attendance_tracker/layout/layout_screen.dart';
 import 'package:attendance_tracker/modules/home_screen/home_screen.dart';
 import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:attendance_tracker/modules/on_boarding_screen/on_boarding_screen.dart';
+import 'package:attendance_tracker/shared/bloc_observer.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
+  Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await CacheHelper.init();
