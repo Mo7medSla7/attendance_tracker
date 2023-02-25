@@ -12,9 +12,16 @@ class LayoutScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = AppCubit.get(context);
         return Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.qr_code_scanner, size: 26),
+          ),
           appBar: AppBar(
             centerTitle: true,
             title: cubit.titles[cubit.currentIndex],
+            actions: (cubit.currentIndex == 1)
+                ? [IconButton(onPressed: () {}, icon: const Icon(Icons.search))]
+                : null,
           ),
           body: cubit.screens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/cubit/states.dart';
 import 'package:attendance_tracker/models/subject_model.dart';
@@ -24,7 +26,7 @@ class AppCubit extends Cubit<AppStates> {
     Text('Profile'),
   ];
   List<Widget> screens = const [
-    Home_Screen(),
+    HomeScreen(),
     Subject_Screen(),
     ProfileScreen(),
   ];
@@ -32,26 +34,21 @@ class AppCubit extends Cubit<AppStates> {
   void changeNavBar(int index) {
     currentIndex = index;
     emit(ChangeNavBarState());
-    if (index == 1 &&
-        (subjectsForRegister.isEmpty) &&
-        (registeredSubjects.isEmpty)) {
-      getSubjects();
-    }
   }
 
-  getSubjects() {
-    getRegisteredSubjects();
-    getSubjectsToRegister();
+  getSubjects() async {
+    await getRegisteredSubjects();
+    Timer(const Duration(seconds: 1), () => getSubjectsToRegister());
   }
 
   refreshSubjects() async {
-    subjectsForRegister = [];
+    subjectsToRegister = [];
     registeredSubjects = [];
     await getSubjects();
     emit(RefreshSubjectsState());
   }
 
-  List<SubjectModel> subjectsForRegister = [];
+  List<SubjectModel> subjectsToRegister = [];
 
   getSubjectsToRegister() {
     emit(GetSubjectsToRegisterLoadingState());
@@ -62,7 +59,7 @@ class AppCubit extends Cubit<AppStates> {
         bool isExist = registeredSubjects
             .any((subject) => subject.id == selectedSubject.id);
         if (!isExist) {
-          subjectsForRegister.add(selectedSubject);
+          subjectsToRegister.add(selectedSubject);
         }
       });
       emit(GetSubjectsToRegisterSuccessState());
@@ -89,8 +86,6 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  filterSubjectsForRegister() {}
-
   List<String> subjectsIdToRegister = [];
   List<bool> checkStates = [];
 
@@ -113,6 +108,8 @@ class AppCubit extends Cubit<AppStates> {
       data: {'subjectId': subjectId},
       token: 'Bearer $STUDENT_TOKEN',
     ).then((value) {
+      subjectsToRegister.removeWhere((subject) => subject.id == subjectId);
+      registeredSubjects = [];
       getRegisteredSubjects();
       emit(RegisterSubjectSuccessState());
     }).catchError((e) {

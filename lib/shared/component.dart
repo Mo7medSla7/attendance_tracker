@@ -1,6 +1,4 @@
-import 'package:attendance_tracker/models/lecture_model.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class DefaultFormField extends StatelessWidget {
   final String hintText;
@@ -113,6 +111,8 @@ class MainBody extends StatelessWidget {
         fontWeight: FontWeight.w500,
         color: color,
       ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
@@ -194,83 +194,3 @@ class FullWidthElevatedButton extends StatelessWidget {
     );
   }
 }
-
-class DefaultGridView extends StatelessWidget {
-  const DefaultGridView({super.key,});
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 10,
-      crossAxisCount: 2,
-      children: List.generate(
-          lectures.length,
-              (index)=>buildLectureItem(lectures[index])
-      ),
-
-    );
-  }
-  Widget buildLectureItem(LectureModel lecture)=> Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
-      color: Colors.indigo,
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: double.maxFinite,
-            alignment:Alignment.topLeft,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey[300],
-            ),
-            child: Text(
-              'Dr.${lecture.drName}',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-              ),),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: double.maxFinite,
-            alignment:Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-            ),
-            child: Text(
-              '${lecture.subject}',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-        SizedBox(height: 20,),
-        Center(
-          child: new CircularPercentIndicator(
-            radius:40.0,
-            lineWidth: 10.0,
-            percent: lecture.attendancePercent/100,
-            center: new Text(
-                '${lecture.attendancePercent} %',
-                 style: TextStyle(
-                   fontSize: 20,
-                 ),
-            ),
-            progressColor: Colors.green,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-

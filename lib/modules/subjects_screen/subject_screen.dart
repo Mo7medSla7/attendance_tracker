@@ -14,7 +14,7 @@ class Subject_Screen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = AppCubit.get(context);
-        return cubit.subjectsForRegister.isEmpty &&
+        return cubit.subjectsToRegister.isEmpty &&
                 cubit.registeredSubjects.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
@@ -114,7 +114,7 @@ class Subject_Screen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             bool checkState = false;
                             cubit.checkStates.add(checkState);
-                            var subject = cubit.subjectsForRegister[index];
+                            var subject = cubit.subjectsToRegister[index];
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 16.0),
                               child: CheckboxListTile(
@@ -144,7 +144,7 @@ class Subject_Screen extends StatelessWidget {
                               ),
                             );
                           },
-                          itemCount: cubit.subjectsForRegister.length,
+                          itemCount: cubit.subjectsToRegister.length,
                         ),
                         FullWidthElevatedButton(
                           text: 'Register',
