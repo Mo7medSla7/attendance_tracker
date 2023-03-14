@@ -108,44 +108,74 @@ class Subject_Screen extends StatelessWidget {
                               EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                           child: Subtitle(title: 'Subjects To Register'),
                         ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            bool checkState = false;
-                            cubit.checkStates.add(checkState);
-                            var subject = cubit.subjectsToRegister[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: CheckboxListTile(
-                                onChanged: (value) {
-                                  if (value!) {
-                                    cubit.addSubject(subject.id, index);
-                                  } else {
-                                    checkState = value;
-                                    cubit.removeSubject(subject.id, index);
-                                  }
-                                },
-                                value: cubit.checkStates[index],
-                                title: MiniTitle(title: subject.name),
-                                subtitle: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MiniBody(text: subject.faculty),
-                                      MiniBody(text: 'Level ${subject.year}'),
-                                    ],
-                                  ),
+                        cubit.subjectsIdToRegister.isEmpty
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 24),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/Subject_Empty.png',
+                                      height: 240,
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    const Text(
+                                      'It seems you do not have subjects to register\n Try to search on your wanted subject',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                tileColor: Colors.white,
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  bool checkState = false;
+                                  cubit.checkStates.add(checkState);
+                                  var subject = cubit.subjectsToRegister[index];
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 16.0),
+                                    child: CheckboxListTile(
+                                      onChanged: (value) {
+                                        if (value!) {
+                                          cubit.addSubject(subject.id, index);
+                                        } else {
+                                          checkState = value;
+                                          cubit.removeSubject(
+                                              subject.id, index);
+                                        }
+                                      },
+                                      value: cubit.checkStates[index],
+                                      title: MiniTitle(title: subject.name),
+                                      subtitle: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            MiniBody(text: subject.faculty),
+                                            MiniBody(
+                                                text: 'Level ${subject.year}'),
+                                          ],
+                                        ),
+                                      ),
+                                      tileColor: Colors.white,
+                                    ),
+                                  );
+                                },
+                                itemCount: cubit.subjectsToRegister.length,
                               ),
-                            );
-                          },
-                          itemCount: cubit.subjectsToRegister.length,
-                        ),
                         FullWidthElevatedButton(
                           text: 'Register',
                           onTap: () => cubit.sendSubjectsToRegister(),

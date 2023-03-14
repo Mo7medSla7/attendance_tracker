@@ -18,22 +18,42 @@ class AppCubit extends Cubit<AppStates> {
 
   static AppCubit get(context) => BlocProvider.of(context);
 
-  int currentIndex = 0;
-
   List<Text> titles = const [
     Text('Home'),
     Text('Subjects'),
     Text('Profile'),
   ];
-  List<Widget> screens = const [
-    HomeScreen(),
-    Subject_Screen(),
+  List<Widget> screens = [
+    const HomeScreen(),
+    const Subject_Screen(),
     ProfileScreen(),
   ];
 
+  List<Widget> floatingButtons = [
+    FloatingActionButton(
+      onPressed: () {},
+      child: const Icon(Icons.qr_code_scanner, size: 26),
+    ),
+    FloatingActionButton(
+      onPressed: () {},
+      child: const Icon(Icons.manage_search, size: 26),
+    ),
+    FloatingActionButton(
+      onPressed: () {},
+      child: const Icon(Icons.edit, size: 26),
+    ),
+  ];
+
+  int currentIndex = 0;
   void changeNavBar(int index) {
     currentIndex = index;
     emit(ChangeNavBarState());
+  }
+
+  double lecturePosition = 0.0;
+  void changeNextLecture(int index) {
+    lecturePosition = index.toDouble();
+    emit(ChangeNextLectureState());
   }
 
   getSubjects() async {

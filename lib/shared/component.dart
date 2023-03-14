@@ -111,7 +111,7 @@ class MainBody extends StatelessWidget {
         fontWeight: FontWeight.w500,
         color: color,
       ),
-      maxLines: 1,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
@@ -159,6 +159,8 @@ class MiniBody extends StatelessWidget {
         fontWeight: FontWeight.w400,
         color: color,
       ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

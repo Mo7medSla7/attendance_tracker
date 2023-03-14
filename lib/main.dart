@@ -23,11 +23,11 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  bool isOnboardingFinished =
+  final bool isOnboardingFinished =
       CacheHelper.getData('isOnboardingFinished') ?? false;
-  bool isLoggedIn = CacheHelper.getData('isLoggedIn') ?? false;
+  final bool isLoggedIn = CacheHelper.getData('isLoggedIn') ?? false;
 
-  late Widget startWidget = !isOnboardingFinished
+  late final Widget startWidget = !isOnboardingFinished
       ? OnBoardingScreen()
       : !isLoggedIn
           ? LoginScreen()
