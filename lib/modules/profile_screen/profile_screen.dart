@@ -11,17 +11,19 @@ class ProfileScreen extends StatelessWidget {
       TextEditingController(text: CacheHelper.getData('STUDENT_NAME'));
   final emailController =
       TextEditingController(text: CacheHelper.getData('STUDENT_EMAIL'));
+  final facultyController =
+      TextEditingController(text: CacheHelper.getData('STUDENT_FACULTY'));
+  final academicYearController =
+      TextEditingController(text: CacheHelper.getData('STUDENT_ACADEMIC_YEAR'));
+  final semesterController =
+      TextEditingController(text: CacheHelper.getData('STUDENT_SEMESTER'));
+  final studentIdController =
+      TextEditingController(text: CacheHelper.getData('STUDENT_ID').toString());
 
   @override
   Widget build(BuildContext context) {
     /*
     String numOfSubjects
-  String email;
-  String name;
-  String faculty;
-  String academicYear;
-  String semester;
-  num studentId;
      */
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -37,10 +39,38 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MainBody(text: 'Name', color: Colors.grey[700]),
-                TextField(
+                DefaultTextField(
                   controller: nameController,
-                  enabled: false,
+                  title:'Name',
+                ),
+                DefaultTextField(
+                  controller: emailController,
+                  title:'Email',
+                ),
+                DefaultTextField(
+                  title:'Faculty',
+                  controller: facultyController,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: DefaultTextField(
+                          title:'Academic Year',
+                          controller: academicYearController,
+                        )
+                    ),
+                   const SizedBox(width: 8,),
+                    Expanded(
+                        child: DefaultTextField(
+                          title:'Semester',
+                          controller: semesterController,
+                        )
+                    ),
+                  ],
+                ),
+                DefaultTextField(
+                  title:'Student ID',
+                  controller: studentIdController,
                 ),
               ],
             ),

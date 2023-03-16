@@ -196,3 +196,56 @@ class FullWidthElevatedButton extends StatelessWidget {
     );
   }
 }
+class DefaultTextField extends StatelessWidget {
+  DefaultTextField({
+    Key? key,
+    required this.controller,
+    required this.title,
+    this.isEnable,
+  }) : super(key: key);
+final String title;
+final TextEditingController controller;
+ bool ?isEnable =false ;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MainBody(text: title, color: Colors.blueGrey[200]),
+        const SizedBox(height: 11,),
+        TextField(
+          enabled: isEnable = false,
+          controller: controller,
+          decoration: const InputDecoration(
+              disabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: 0.2,
+                ),
+            )
+          ),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(height: 11,),
+      ],
+    );
+  }
+}
+class DefaultDivider extends StatelessWidget {
+  const DefaultDivider({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: Colors.grey[300],
+      height: 1.0,
+    );
+  }
+}
+
+
