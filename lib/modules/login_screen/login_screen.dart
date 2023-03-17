@@ -46,13 +46,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 Image.network(
                     height: 130,
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPHRvtFUvNT9Rrpz2HE4gu05hPPg8m7DweCg&usqp=CAU'),
-                const SizedBox(height: 30),
-                const HeaderTitle(title: 'LOGIN'),
+                const SizedBox(height: 20),
+                const Align(
+                  alignment: Alignment.topLeft,
+                  child: HeaderTitle(title: 'Welcome'),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: SubBody(
+                        text: 'Login to your account', color: Colors.grey[600]),
+                  ),
+                ),
                 const SizedBox(height: 40),
                 DefaultFormField(
                   hintText: 'Student Email',
                   controller: emailController,
                   errorMessage: 'Student Email',
+                  icon: Icons.email,
                 ),
                 const SizedBox(height: 15),
                 DefaultFormField(
@@ -60,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   errorMessage: 'Password',
                   isPassword: true,
+                  icon: Icons.lock,
                 ),
                 const SizedBox(height: 20),
                 if (isLoading)

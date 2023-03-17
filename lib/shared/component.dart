@@ -5,25 +5,30 @@ class DefaultFormField extends StatelessWidget {
   final TextEditingController controller;
   final String? errorMessage;
   bool isPassword;
+  IconData? icon;
 
   DefaultFormField({
     super.key,
     required this.hintText,
     required this.controller,
     this.errorMessage,
+    this.icon,
     this.isPassword = false,
   });
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        fillColor: Colors.grey[100],
-        filled: true,
-        hintText: hintText,
-      ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          fillColor: Colors.grey[100],
+          filled: true,
+          hintText: hintText,
+          prefixIcon: Icon(
+            icon,
+            color: Colors.indigo,
+          )),
       controller: controller,
       obscureText: isPassword,
       validator: (value) {
@@ -48,7 +53,7 @@ class HeaderTitle extends StatelessWidget {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: 40,
+        fontSize: 48,
         fontWeight: FontWeight.w800,
       ),
     );
