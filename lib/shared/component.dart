@@ -57,19 +57,21 @@ class HeaderTitle extends StatelessWidget {
 
 class Subtitle extends StatelessWidget {
   final String title;
+  final Color? color;
   const Subtitle({
     super.key,
     required this.title,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
-        fontFamily: null,
+        color: color,
       ),
     );
   }
@@ -196,45 +198,131 @@ class FullWidthElevatedButton extends StatelessWidget {
     );
   }
 }
+
 class DefaultTextField extends StatelessWidget {
   DefaultTextField({
     Key? key,
     required this.controller,
     required this.title,
-    this.isEnable,
+    this.isEnabled = true,
   }) : super(key: key);
-final String title;
-final TextEditingController controller;
- bool ?isEnable =false ;
+  final String title;
+  final TextEditingController controller;
+  bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MainBody(text: title, color: Colors.blueGrey[200]),
-        const SizedBox(height: 11,),
-        TextField(
-          enabled: isEnable = false,
-          controller: controller,
-          decoration: const InputDecoration(
-              disabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                  width: 0.2,
-                ),
-            )
-          ),
+        Text(
+          title,
           style: const TextStyle(
-            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+            fontWeight: FontWeight.w600,
             fontSize: 16,
           ),
         ),
-        const SizedBox(height: 11,),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                enabled: false,
+                controller: controller,
+                decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.only(bottom: 10, top: 8),
+                    disabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                        width: 0.5,
+                      ),
+                    )),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            if (isEnabled)
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => EditAlert(title: title, type: 'Name'),
+                  ).then((value) => controller.text = value).catchError((e) {});
+                },
+                icon: const Icon(
+                  Icons.edit,
+                ),
+                color: Colors.indigo,
+              )
+          ],
+        ),
+        const SizedBox(
+          height: 24,
+        ),
       ],
     );
   }
 }
+
+class EditAlert extends StatelessWidget {
+  const EditAlert({
+    Key? key,
+    required this.title,
+    required this.type,
+  }) : super(key: key);
+
+  final String title;
+  final String type;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = TextEditingController();
+    return AlertDialog(
+      title: Text(
+        'Change The $title : ',
+        style: const TextStyle(color: Colors.indigo),
+      ),
+      content: SizedBox(
+        width: 1500,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                fillColor: Colors.grey[100],
+                filled: true,
+                hintText: 'Your New $title',
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(controller.text);
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+}
+
 class DefaultDivider extends StatelessWidget {
   const DefaultDivider({Key? key}) : super(key: key);
 
@@ -247,5 +335,3 @@ class DefaultDivider extends StatelessWidget {
     );
   }
 }
-
-
