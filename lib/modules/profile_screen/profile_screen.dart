@@ -22,9 +22,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*
-    String numOfSubjects
-     */
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(

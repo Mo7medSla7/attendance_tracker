@@ -4,6 +4,8 @@ class AppInitState extends AppStates {}
 
 class ChangeNavBarState extends AppStates {}
 
+class EnableEditState extends AppStates {}
+
 class ChangeNextLectureState extends AppStates {}
 
 class RefreshSubjectsState extends AppStates {}

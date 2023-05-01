@@ -43,9 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                    height: 130,
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPHRvtFUvNT9Rrpz2HE4gu05hPPg8m7DweCg&usqp=CAU'),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Image.asset(height: 200, 'assets/images/app_logo.png'),
+                ),
                 const SizedBox(height: 20),
                 const Align(
                   alignment: Alignment.topLeft,

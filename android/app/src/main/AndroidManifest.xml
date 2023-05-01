@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.attendance_tracker">
+    package="com.su.attendance_tracker">
    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="attendance_tracker"
+        android:label="SU Attendance"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/app_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

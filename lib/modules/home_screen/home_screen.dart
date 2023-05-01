@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          nextLecturesView(lectures[0]),
+          nextLecturesView(lectures[1]),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Subtitle(title: 'Your Progress In Courses'),
@@ -127,11 +127,11 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Card(
+                    const Card(
                       child: SizedBox(
                           width: double.infinity, child: Text('page 2')),
                     ),
-                    Card(
+                    const Card(
                       child: SizedBox(
                           width: double.infinity, child: Text('page 3')),
                     ),

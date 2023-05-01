@@ -44,6 +44,13 @@ class AppCubit extends Cubit<AppStates> {
     ),
   ];
 
+  bool isEnabled = false;
+
+  void enableEdit(bool newValue) {
+    isEnabled = newValue;
+    emit(EnableEditState());
+  }
+
   int currentIndex = 0;
   void changeNavBar(int index) {
     currentIndex = index;
