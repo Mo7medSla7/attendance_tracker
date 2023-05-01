@@ -11,6 +11,7 @@ class LayoutScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = AppCubit.get(context);
+        cubit.getContext(context);
         return Scaffold(
           floatingActionButton: cubit.floatingButtons[cubit.currentIndex],
           appBar: AppBar(

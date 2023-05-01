@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../modules/home_screen/home_screen.dart';
+import '../../modules/scanner_screen/scanner_screen.dart';
 import '../../modules/subjects_screen/subject_screen.dart';
 import '../../modules/profile_screen/profile_screen.dart';
 
@@ -18,6 +19,10 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitState());
 
   static AppCubit get(context) => BlocProvider.of(context);
+
+  late BuildContext context;
+
+  getContext(ctx) => context = ctx;
 
   static AppCubit create() => AppCubit();
 
@@ -35,7 +40,9 @@ class AppCubit extends Cubit<AppStates> {
   late List<Widget> floatingButtons = [
     FloatingActionButton(
       onPressed: () {
-        getDeviceId();
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const ScannerScreen(),
+        ));
       },
       child: const Icon(Icons.qr_code_scanner, size: 26),
     ),
