@@ -5,6 +5,7 @@ import 'package:attendance_tracker/layout/cubit/states.dart';
 import 'package:attendance_tracker/models/subject_model.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,8 @@ class AppCubit extends Cubit<AppStates> {
 
   static AppCubit get(context) => BlocProvider.of(context);
 
+  static AppCubit create() => AppCubit();
+
   List<Text> titles = const [
     Text('Home'),
     Text('Subjects'),
@@ -29,9 +32,11 @@ class AppCubit extends Cubit<AppStates> {
     ProfileScreen(),
   ];
 
-  List<Widget> floatingButtons = [
+  late List<Widget> floatingButtons = [
     FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        getDeviceId();
+      },
       child: const Icon(Icons.qr_code_scanner, size: 26),
     ),
     FloatingActionButton(
@@ -39,21 +44,35 @@ class AppCubit extends Cubit<AppStates> {
       child: const Icon(Icons.manage_search, size: 26),
     ),
     FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        enableEdit();
+      },
       child: const Icon(Icons.edit, size: 26),
     ),
   ];
 
+  void getDeviceId() async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    final deviceInfo = await deviceInfoPlugin.androidInfo;
+    final deviceId = deviceInfo.id;
+    print(deviceId);
+  }
+
   bool isEnabled = false;
 
-  void enableEdit(bool newValue) {
-    isEnabled = newValue;
+  void enableEdit() {
+    isEnabled = !isEnabled;
     emit(EnableEditState());
   }
 
   int currentIndex = 0;
   void changeNavBar(int index) {
     currentIndex = index;
+    if (index == 1 &&
+        subjectsToRegister.isEmpty &&
+        registeredSubjects.isEmpty) {
+      getSubjects();
+    }
     emit(ChangeNavBarState());
   }
 
@@ -153,5 +172,15 @@ class AppCubit extends Cubit<AppStates> {
         print(err.toString());
       }
     }
+  }
+
+  void logout() {
+    currentIndex = 0;
+    lecturePosition = 0.0;
+    subjectsToRegister = [];
+    registeredSubjects = [];
+    subjectsIdToRegister = [];
+    checkStates = [];
+    emit(LogoutState());
   }
 }

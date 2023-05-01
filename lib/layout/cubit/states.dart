@@ -29,3 +29,5 @@ class RegisterSubjectLoadingState extends AppStates {}
 class RegisterSubjectSuccessState extends AppStates {}
 
 class RegisterSubjectErrorState extends AppStates {}
+
+class LogoutState extends AppStates {}

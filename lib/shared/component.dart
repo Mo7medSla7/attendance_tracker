@@ -1,3 +1,5 @@
+import 'package:attendance_tracker/shared/constants.dart';
+import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
 
 class DefaultFormField extends StatelessWidget {
@@ -209,7 +211,7 @@ class DefaultTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.title,
-    this.isEnabled = true,
+    this.isEnabled = false,
   }) : super(key: key);
   final String title;
   final TextEditingController controller;
@@ -254,7 +256,7 @@ class DefaultTextField extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => EditAlert(title: title, type: 'Name'),
+                    builder: (context) => EditAlert(title: title),
                   ).then((value) => controller.text = value).catchError((e) {});
                 },
                 icon: const Icon(
@@ -273,14 +275,13 @@ class DefaultTextField extends StatelessWidget {
 }
 
 class EditAlert extends StatelessWidget {
-  const EditAlert({
+  EditAlert({
     Key? key,
     required this.title,
-    required this.type,
   }) : super(key: key);
 
   final String title;
-  final String type;
+  final faculty = STUDENT_FACULTY;
 
   @override
   Widget build(BuildContext context) {
@@ -292,20 +293,84 @@ class EditAlert extends StatelessWidget {
       ),
       content: SizedBox(
         width: 1500,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                fillColor: Colors.grey[100],
-                filled: true,
-                hintText: 'Your New $title',
-              ),
-            ),
-          ],
-        ),
+        child: title == 'Semester'
+            ? Builder(
+                builder: (
+                  context,
+                ) {
+                  List<bool> selections = [false, false];
+                  List<String> semesters = ['first', 'second'];
+                  return StatefulBuilder(builder: (ctx, setInnerState) {
+                    return Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: List.generate(
+                        2,
+                        (index) => GestureDetector(
+                          child: ToggleContainer(
+                              title: semesters[index],
+                              isSelected: selections[index]),
+                          onTap: () {
+                            setInnerState(() {
+                              selections.setAll(0, [false, false]);
+                              selections[index] = true;
+                              controller.text = semesters[index];
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  });
+                },
+              )
+            : title == 'Academic Year'
+                ? Builder(
+                    builder: (context) {
+                      List<bool> selections = List.generate(
+                          facultyToLevels[faculty]!.length, (index) => false);
+                      List<String> levels = facultyToLevels[faculty]!;
+                      return StatefulBuilder(builder: (ctx, setInnerState) {
+                        return Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: List.generate(
+                              facultyToLevels[faculty]!.length,
+                              (index) => GestureDetector(
+                                    child: ToggleContainer(
+                                        title: levels[index],
+                                        isSelected: selections[index]),
+                                    onTap: () {
+                                      setInnerState(() {
+                                        selections.setAll(
+                                            0,
+                                            List.generate(
+                                                facultyToLevels[faculty]!
+                                                    .length,
+                                                (index) => false));
+
+                                        selections[index] = true;
+                                        controller.text = levels[index];
+                                      });
+                                    },
+                                  )),
+                        );
+                      });
+                    },
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          fillColor: Colors.grey[100],
+                          filled: true,
+                          hintText: 'Your New $title',
+                        ),
+                      ),
+                    ],
+                  ),
       ),
       actions: [
         TextButton(
@@ -324,6 +389,35 @@ class EditAlert extends StatelessWidget {
           child: const Text('Save'),
         ),
       ],
+    );
+  }
+}
+
+class ToggleContainer extends StatelessWidget {
+  ToggleContainer({super.key, required this.title, required this.isSelected});
+  final String title;
+  bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.indigo[200] : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isSelected ? Colors.indigo : Colors.grey[300]!,
+          width: 2.0,
+        ),
+      ),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: isSelected ? Colors.white : Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
     );
   }
 }
