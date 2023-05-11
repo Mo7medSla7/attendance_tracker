@@ -90,13 +90,12 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   getSubjects() async {
-    await getRegisteredSubjects();
-    Timer(const Duration(seconds: 1), () => getSubjectsToRegister());
+    subjectsToRegister = [];
+    registeredSubjects = [];
+    getRegisteredSubjects().then((_) => getSubjectsToRegister());
   }
 
   refreshSubjects() async {
-    subjectsToRegister = [];
-    registeredSubjects = [];
     await getSubjects();
     emit(RefreshSubjectsState());
   }
@@ -124,7 +123,9 @@ class AppCubit extends Cubit<AppStates> {
 
   List<SubjectModel> registeredSubjects = [];
 
-  getRegisteredSubjects() {
+  Future<void> getRegisteredSubjects() async {
+    registeredSubjects = [];
+
     emit(GetRegisteredSubjectsLoadingState());
     DioHelper.getData(
             url: ALL_REGISTERED_SUBJECTS, token: 'Bearer $STUDENT_TOKEN')

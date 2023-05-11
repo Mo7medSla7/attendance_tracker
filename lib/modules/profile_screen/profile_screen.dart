@@ -10,21 +10,21 @@ import '../login_screen/login_screen.dart';
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
 
-  final nameController =
-      TextEditingController(text: CacheHelper.getData('STUDENT_NAME'));
-  final emailController =
-      TextEditingController(text: CacheHelper.getData('STUDENT_EMAIL'));
-  final facultyController =
-      TextEditingController(text: CacheHelper.getData('STUDENT_FACULTY'));
-  final academicYearController =
-      TextEditingController(text: CacheHelper.getData('STUDENT_ACADEMIC_YEAR'));
-  final semesterController =
-      TextEditingController(text: CacheHelper.getData('STUDENT_SEMESTER'));
-  final studentIdController =
-      TextEditingController(text: CacheHelper.getData('STUDENT_ID').toString());
-
   @override
   Widget build(BuildContext context) {
+    var nameController =
+        TextEditingController(text: CacheHelper.getData('STUDENT_NAME'));
+    var emailController =
+        TextEditingController(text: CacheHelper.getData('STUDENT_EMAIL'));
+    var facultyController =
+        TextEditingController(text: CacheHelper.getData('STUDENT_FACULTY'));
+    var academicYearController = TextEditingController(
+        text: CacheHelper.getData('STUDENT_ACADEMIC_YEAR'));
+    var semesterController =
+        TextEditingController(text: CacheHelper.getData('STUDENT_SEMESTER'));
+    var studentIdController = TextEditingController(
+        text: CacheHelper.getData('STUDENT_ID').toString());
+
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
