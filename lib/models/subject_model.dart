@@ -36,7 +36,7 @@ class SubjectModel {
       faculty: map['faculty'] as String,
       semester: map['semester'] as String,
       year: map['year'] as String,
-      isAccepted: map['accepted'],
+      isAccepted: map['accepted'] ?? false,
     );
   }
 

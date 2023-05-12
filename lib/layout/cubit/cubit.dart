@@ -78,7 +78,7 @@ class AppCubit extends Cubit<AppStates> {
     if (index == 1 &&
         subjectsToRegister.isEmpty &&
         registeredSubjects.isEmpty) {
-      getSubjects();
+      getRegisteredSubjects();
     }
     emit(ChangeNavBarState());
   }
@@ -89,50 +89,27 @@ class AppCubit extends Cubit<AppStates> {
     emit(ChangeNextLectureState());
   }
 
-  getSubjects() async {
-    subjectsToRegister = [];
-    registeredSubjects = [];
-    getRegisteredSubjects().then((_) => getSubjectsToRegister());
-  }
-
   refreshSubjects() async {
-    await getSubjects();
+    await getRegisteredSubjects();
     emit(RefreshSubjectsState());
   }
 
   List<SubjectModel> subjectsToRegister = [];
-
-  getSubjectsToRegister() {
-    emit(GetSubjectsToRegisterLoadingState());
-    DioHelper.getData(url: SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
-        .then((Response response) {
-      response.data['subjects'].forEach((subject) {
-        var selectedSubject = SubjectModel.fromMap(subject);
-        bool isExist = registeredSubjects
-            .any((subject) => subject.id == selectedSubject.id);
-        if (!isExist) {
-          subjectsToRegister.add(selectedSubject);
-        }
-      });
-      emit(GetSubjectsToRegisterSuccessState());
-    }).catchError((e) {
-      print(e.toString());
-      emit(GetSubjectsToRegisterErrorState());
-    });
-  }
-
   List<SubjectModel> registeredSubjects = [];
 
   Future<void> getRegisteredSubjects() async {
-    registeredSubjects = [];
-
     emit(GetRegisteredSubjectsLoadingState());
-    DioHelper.getData(
-            url: ALL_REGISTERED_SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
+    DioHelper.getData(url: SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
-      // registeredSubjects = [];
-      response.data.forEach(
-          (subject) => registeredSubjects.add(SubjectModel.fromMap(subject)));
+      registeredSubjects.clear();
+      subjectsToRegister.clear();
+      response.data.forEach((subject) {
+        if (subject['isRegistered']) {
+          registeredSubjects.add(SubjectModel.fromMap(subject));
+        } else {
+          subjectsToRegister.add(SubjectModel.fromMap(subject));
+        }
+      });
       emit(GetRegisteredSubjectsSuccessState());
     }).catchError((e) {
       print(e.toString());
@@ -162,9 +139,9 @@ class AppCubit extends Cubit<AppStates> {
       data: {'subjectId': subjectId},
       token: 'Bearer $STUDENT_TOKEN',
     ).then((value) {
+      registeredSubjects.add(
+          subjectsToRegister.firstWhere((subject) => subject.id == subjectId));
       subjectsToRegister.removeWhere((subject) => subject.id == subjectId);
-      registeredSubjects = [];
-      getRegisteredSubjects();
       emit(RegisterSubjectSuccessState());
     }).catchError((e) {
       print(e.response.data);
@@ -172,7 +149,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  sendSubjectsToRegister() {
+  sendSubjectsToRegister() async {
     for (String subjectId in subjectsIdToRegister) {
       try {
         registerSubject(subjectId);
@@ -180,6 +157,11 @@ class AppCubit extends Cubit<AppStates> {
         print(err.toString());
       }
     }
+    subjectsIdToRegister = [];
+    checkStates = [];
+    await getRegisteredSubjects();
+
+    emit(RegisterAllSubjectState());
   }
 
   void logout() {

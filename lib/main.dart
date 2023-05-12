@@ -3,6 +3,7 @@ import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:attendance_tracker/layout/layout_screen.dart';
 import 'package:attendance_tracker/modules/home_screen/home_screen.dart';
+import 'package:attendance_tracker/modules/instructor_home/instructor_cubit/instructor_cubit.dart';
 import 'package:attendance_tracker/modules/instructor_home/instructor_home_screen.dart';
 import 'package:attendance_tracker/modules/instructor_lecture/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/modules/instructor_subjects/instructor_subjects_screen.dart';
@@ -19,8 +20,15 @@ void main() async {
   DioHelper.init();
   await CacheHelper.init();
   setStudentData();
-  runApp(BlocProvider(
-    create: (context) => AppCubit()..getSubjects(),
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (context) => AppCubit()..getRegisteredSubjects(),
+      ),
+      BlocProvider(
+        create: (context) => InstructorCubit(),
+      ),
+    ],
     child: MyApp(),
   ));
 }
@@ -45,8 +53,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'OpenSans',
         primarySwatch: Colors.indigo,
       ),
-      home:
-      startWidget,
+      home: InstructorSubjectScreen(),
     );
   }
 }

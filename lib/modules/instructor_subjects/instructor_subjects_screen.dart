@@ -1,3 +1,4 @@
+import 'package:attendance_tracker/modules/instructor_lecture/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:flutter/material.dart';
 
@@ -9,147 +10,186 @@ class InstructorSubjectScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Subjects',
+          'Subject name',
         ),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: const Text('Add Lecture',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: SizedBox(
-            height: double.maxFinite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Subtitle(title: 'Subject name'),
-                    const Spacer(),
-                    TextButton(
-                        onPressed:(){},
-                        child: const MiniTitle(title: 'Extract All',)
+                    const MiniTitle(title: 'Subject ID'),
+                    const MiniTitle(title: 'Faculty name'),
+                    const MiniTitle(title: 'Level one'),
+                    const MiniTitle(title: 'first semester'),
+                    Row(
+                      children: [
+                        const MiniTitle(title: '60 Active student'),
+                        const Spacer(),
+                        TextButton(
+                            onPressed: () {},
+                            child: const MiniTitle(
+                              title: 'Show All',
+                            )),
+                      ],
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const MiniTitle(title: 'Faculty name'),
-                      const SizedBox(height: 10,),
-                      const MiniTitle(title: 'level 1'),
-                      const SizedBox(height: 10,),
-                      const MiniTitle(title: 'semester two'),
-                      const SizedBox(height: 10,),
-                      Row(
-                        children: [
-                          const MiniTitle(title: 'Active student: 56'),
-                          const Spacer(),
-                          TextButton(
-                              onPressed:(){},
-                              child: const MiniTitle(title: 'Show more..',)
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+              ),
+              const Subtitle(title: 'Course lectures'),
+              const SizedBox(
+                height: 8,
+              ),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => buildCourseLectures(context),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 4,
                 ),
-                const SizedBox(height: 10,),
-                const Subtitle(title: 'Course lectures'),
-                Expanded(
-                  child: ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => buildCourseLectures(),
-                      separatorBuilder: (context, index) => const SizedBox(height: 10,),
-                      itemCount: 15,
-                  ),
-                ),
-                FloatingActionButton(
-                  onPressed: (){},
-                )
-              ],
-            ),
+                itemCount: 15,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-Widget buildCourseLectures() => Card(
-  child: Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: const [
-            MiniTitle(
-              title: "Lecture name",
-            ),
-            Spacer(),
-            MiniTitle(title: 'status: Attended'),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          children: const [
-            MiniTitle(title: 'Active students: 33'),
-            SizedBox(
-              width: 5,
-            ),
-            CircleAvatar(
-              child: Icon(
-                Icons.person,
+
+Widget buildCourseLectures(context) => GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => InstructorLectureScreen(),
+        ));
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: MiniTitle(
+                      title: "Lecture name",
+                    ),
+                  ),
+                  const Text('Status : '),
+                  5 == 5
+                      ? Row(
+                          children: const [
+                            Text(
+                              'Finished ',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                            Icon(
+                              Icons.check_circle_rounded,
+                              color: Colors.green,
+                              size: 16,
+                            )
+                          ],
+                        )
+                      : Row(
+                          children: const [
+                            Text(
+                              'In Future ',
+                              style: TextStyle(color: Colors.orange),
+                            ),
+                            Icon(
+                              Icons.watch_later_rounded,
+                              color: Colors.orange,
+                              size: 16,
+                            )
+                          ],
+                        ),
+                ],
               ),
-            )
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          children: [
-            const Text('Date : '),
-            Row(
-              children: const [
-                Text(
-                  'Wed 25/3/2023 ',
-                  style: TextStyle(
-                    color: Colors.indigo,
-                    fontWeight: FontWeight.bold,
+              const SizedBox(
+                height: 4,
+              ),
+              Row(
+                children: [
+                  const Text('Date : '),
+                  Row(
+                    children: const [
+                      Text(
+                        'Wed 25/3/2023 ',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        Icons.calendar_today,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
                   ),
+                  const Spacer(),
+                  const Text('Time : '),
+                  Row(
+                    children: const [
+                      Text(
+                        '12:30 PM ',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        Icons.access_time_rounded,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              if (5 == 5)
+                Row(
+                  children: [
+                    const Text('Attendance : '),
+                    Row(
+                      children: const [
+                        Text(
+                          '60',
+                          style: TextStyle(
+                            color: Colors.indigo,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Icon(
+                          Icons.person,
+                          color: Colors.indigo,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Icon(
-                  Icons.calendar_today,
-                  color: Colors.indigo,
-                  size: 16,
-                ),
-              ],
-            ),
-            const Spacer(),
-            const Text('Time : '),
-            Row(
-              children: const [
-                Text(
-                  '12:30 PM ',
-                  style: TextStyle(
-                    color: Colors.indigo,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Icon(
-                  Icons.access_time_rounded,
-                  color: Colors.indigo,
-                  size: 16,
-                ),
-              ],
-            )
-          ],
-        )
-      ],
-    ),
-  ),
-);
+            ],
+          ),
+        ),
+      ),
+    );

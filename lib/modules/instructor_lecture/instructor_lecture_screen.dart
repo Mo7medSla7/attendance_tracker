@@ -6,7 +6,8 @@ class InstructorLectureScreen extends StatefulWidget {
   const InstructorLectureScreen({Key? key}) : super(key: key);
 
   @override
-  State<InstructorLectureScreen> createState() => _InstructorLectureScreenState();
+  State<InstructorLectureScreen> createState() =>
+      _InstructorLectureScreenState();
 }
 
 class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
@@ -15,6 +16,17 @@ class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('lecture'),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: const Text('Extract as File',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -28,7 +40,9 @@ class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
                   children: const [
                     Subtitle(title: 'Lecture name'),
                     Spacer(),
-                    MiniTitle(title:'Code: cs223',),
+                    MiniTitle(
+                      title: 'Code: cs223',
+                    ),
                   ],
                 ),
                 Padding(
@@ -37,7 +51,9 @@ class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const MiniTitle(title: 'status: Attended'),
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         children: const [
                           Text(
@@ -67,21 +83,26 @@ class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
                           )
                         ],
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 const Subtitle(title: 'Students'),
                 Expanded(
                   child: ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) => buildStudentAttendItem(),
-                    separatorBuilder: (context, index) => const SizedBox(height: 10,),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 10,
+                    ),
                     itemCount: 15,
                   ),
                 )
-
               ],
             ),
           ),
@@ -90,22 +111,23 @@ class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
     );
   }
 }
+
 Widget buildStudentAttendItem() => Card(
-  child: Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: const [
-            MiniTitle(
-              title: "Student name",
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: const [
+                MiniTitle(
+                  title: "Student name",
+                ),
+                Spacer(),
+                MiniTitle(title: 'ID: 190900013'),
+              ],
             ),
-            Spacer(),
-            MiniTitle(title: 'ID: 190900013'),
           ],
         ),
-      ],
-    ),
-  ),
-);
+      ),
+    );
