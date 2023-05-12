@@ -3,6 +3,9 @@ import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:attendance_tracker/layout/layout_screen.dart';
 import 'package:attendance_tracker/modules/home_screen/home_screen.dart';
+import 'package:attendance_tracker/modules/instructor_home/instructor_home_screen.dart';
+import 'package:attendance_tracker/modules/instructor_lecture/instructor_lecture_screen.dart';
+import 'package:attendance_tracker/modules/instructor_subjects/instructor_subjects_screen.dart';
 import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:attendance_tracker/modules/on_boarding_screen/on_boarding_screen.dart';
 import 'package:attendance_tracker/shared/bloc_observer.dart';
@@ -42,7 +45,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'OpenSans',
         primarySwatch: Colors.indigo,
       ),
-      home: startWidget,
+      home:
+      startWidget,
     );
   }
 }
