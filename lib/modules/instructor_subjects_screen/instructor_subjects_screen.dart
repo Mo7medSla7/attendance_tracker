@@ -1,3 +1,4 @@
+import 'package:attendance_tracker/modules/all_students_screen/all_students_screen.dart';
 import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,11 @@ class InstructorSubjectScreen extends StatelessWidget {
                         const MiniTitle(title: '60 Active student'),
                         const Spacer(),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AllStudentsScreen(),
+                              ));
+                            },
                             child: const MiniTitle(
                               title: 'Show All',
                             )),

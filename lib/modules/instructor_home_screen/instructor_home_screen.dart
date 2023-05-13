@@ -1,5 +1,6 @@
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_cubit.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
+import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/modules/instructor_subjects_screen/instructor_subjects_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -42,7 +43,7 @@ class InstructorHomeScreen extends StatelessWidget {
           ),
           body: Column(
             children: [
-              nextLectureView(cubit),
+              nextLectureView(cubit, context),
               Expanded(
                 child: ListView.separated(
                     itemBuilder: (context, index) => buildCourseItem(context),
@@ -58,7 +59,7 @@ class InstructorHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget nextLectureView(cubit) {
+  Widget nextLectureView(cubit, context) {
     return Container(
       padding: const EdgeInsets.all(8),
       height: 290,
@@ -71,62 +72,69 @@ class InstructorHomeScreen extends StatelessWidget {
         Expanded(
           child: CarouselSlider(
             items: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const MiniTitle(
-                        title: "The name of the course",
-                        overflow: true,
-                      ),
-                      const MainBody(
-                        text: "lecture name",
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Row(
-                        children: [
-                          const Text('Date : '),
-                          Row(
-                            children: const [
-                              Text(
-                                'Wed 25/3/2023 ',
-                                style: TextStyle(
-                                  color: Colors.indigo,
-                                  fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => InstructorLectureScreen(),
+                  ));
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const MiniTitle(
+                          title: "The name of the course",
+                          overflow: true,
+                        ),
+                        const MainBody(
+                          text: "lecture name",
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          children: [
+                            const Text('Date : '),
+                            Row(
+                              children: const [
+                                Text(
+                                  'Wed 25/3/2023 ',
+                                  style: TextStyle(
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Icon(
-                                Icons.calendar_today,
-                                color: Colors.indigo,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          const Text('Time : '),
-                          Row(
-                            children: const [
-                              Text(
-                                '12:30 PM ',
-                                style: TextStyle(
+                                Icon(
+                                  Icons.calendar_today,
                                   color: Colors.indigo,
-                                  fontWeight: FontWeight.bold,
+                                  size: 16,
                                 ),
-                              ),
-                              Icon(
-                                Icons.access_time_rounded,
-                                color: Colors.indigo,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                              ],
+                            ),
+                            const Spacer(),
+                            const Text('Time : '),
+                            Row(
+                              children: const [
+                                Text(
+                                  '12:30 PM ',
+                                  style: TextStyle(
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.access_time_rounded,
+                                  color: Colors.indigo,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

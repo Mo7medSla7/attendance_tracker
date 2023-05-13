@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../shared/component.dart';
 
-class InstructorLectureScreen extends StatefulWidget {
-  const InstructorLectureScreen({Key? key}) : super(key: key);
-
-  @override
-  State<InstructorLectureScreen> createState() =>
-      _InstructorLectureScreenState();
-}
-
-class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
+class InstructorLectureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(
+          Icons.search,
+        ),
+      ),
       appBar: AppBar(
-        title: const Text('lecture'),
+        title: const Text('Lecture name'),
         actions: [
           TextButton(
             onPressed: () {},
@@ -31,80 +29,158 @@ class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: SizedBox(
-            height: double.maxFinite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: const [
-                    Subtitle(title: 'Lecture name'),
-                    Spacer(),
-                    MiniTitle(
-                      title: 'Code: cs223',
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const MiniTitle(title: 'status: Attended'),
-                      const SizedBox(
-                        height: 10,
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Subtitle(title: 'Lecture name'),
+                  const Spacer(),
+                  const Text('Status : '),
+                  5 == 5
+                      ? Row(
+                          children: const [
+                            Text(
+                              'Finished ',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                            Icon(
+                              Icons.check_circle_rounded,
+                              color: Colors.green,
+                              size: 16,
+                            )
+                          ],
+                        )
+                      : Row(
+                          children: const [
+                            Text(
+                              'In Future ',
+                              style: TextStyle(color: Colors.orange),
+                            ),
+                            Icon(
+                              Icons.watch_later_rounded,
+                              color: Colors.orange,
+                              size: 16,
+                            )
+                          ],
+                        ),
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      Text('Scheduled Date : '),
+                      Text(
+                        'Wed 25/3/2023 ',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                      Icon(
+                        Icons.calendar_today,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: const [
+                      Text('Scheduled Time : '),
+                      Text(
+                        '12:30 PM ',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        Icons.calendar_today,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    children: const [
+                      Text('Created Date : '),
+                      Text(
+                        'Wed 25/3/2023 ',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        Icons.calendar_today,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: const [
+                      Text('Created Time : '),
+                      Text(
+                        '12:30 PM ',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        Icons.calendar_today,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    children: [
+                      const MainBody(text: 'Attendance : '),
                       Row(
                         children: const [
-                          Text(
-                            'Wed 25/3/2023 ',
-                            style: TextStyle(
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          MainBody(
+                            text: '30',
+                            color: Colors.green,
                           ),
                           Icon(
-                            Icons.calendar_today,
-                            color: Colors.indigo,
+                            Icons.person,
+                            color: Colors.green,
                             size: 16,
                           ),
                         ],
                       ),
-                      Row(
-                        children: const [
-                          MiniTitle(title: 'Active students: 33'),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          CircleAvatar(
-                            child: Icon(
-                              Icons.person,
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
                     ],
                   ),
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              const Subtitle(title: 'Attended Students'),
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) => buildStudentAttendItem(),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 4,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Subtitle(title: 'Students'),
-                Expanded(
-                  child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => buildStudentAttendItem(),
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 10,
-                    ),
-                    itemCount: 15,
-                  ),
-                )
-              ],
-            ),
+                itemCount: 10,
+              )
+            ],
           ),
         ),
       ),
@@ -114,17 +190,36 @@ class _InstructorLectureScreenState extends State<InstructorLectureScreen> {
 
 Widget buildStudentAttendItem() => Card(
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: const [
-                MiniTitle(
-                  title: "Student name",
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: const [
+                    MiniTitle(
+                      title: "Name : ",
+                    ),
+                    const MainBody(
+                      text: "Mohamed Salah Mohamed Ahmed",
+                    ),
+                  ],
                 ),
-                Spacer(),
-                MiniTitle(title: 'ID: 190900013'),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  children: const [
+                    MiniTitle(
+                      title: "ID : ",
+                    ),
+                    const MainBody(
+                      text: "190900013",
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
