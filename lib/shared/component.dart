@@ -434,3 +434,22 @@ class DefaultDivider extends StatelessWidget {
     );
   }
 }
+Widget buildStudentAttendItem() => Card(
+  child: Padding(
+    padding: const EdgeInsets.all(20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: const [
+            MiniTitle(
+              title: "Student name",
+            ),
+            Spacer(),
+            MiniTitle(title: 'ID: 190900013'),
+          ],
+        ),
+      ],
+    ),
+  ),
+);
