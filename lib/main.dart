@@ -9,6 +9,7 @@ import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_
 import 'package:attendance_tracker/modules/instructor_subjects_screen/instructor_subjects_screen.dart';
 import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:attendance_tracker/modules/on_boarding_screen/on_boarding_screen.dart';
+import 'package:attendance_tracker/modules/subject_details_screen/subject_details_screen.dart';
 import 'package:attendance_tracker/shared/bloc_observer.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'OpenSans',
         primarySwatch: Colors.indigo,
       ),
-      home: startWidget,
+      home: const SubjectDetailsScreen(),
+      //startWidget,
     );
   }
 }
