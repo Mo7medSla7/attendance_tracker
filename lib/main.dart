@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'OpenSans',
         primarySwatch: Colors.indigo,
       ),
-      home: InstructorHomeScreen(),
+      home: startWidget,
     );
   }
 }
