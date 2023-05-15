@@ -37,15 +37,8 @@ class AppCubit extends Cubit<AppStates> {
     ProfileScreen(),
   ];
 
-  late List<Widget> floatingButtons = [
-    FloatingActionButton(
-      onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const ScannerScreen(),
-        ));
-      },
-      child: const Icon(Icons.qr_code_scanner, size: 26),
-    ),
+  late List<Widget?> floatingButtons = [
+    null,
     FloatingActionButton(
       onPressed: () {},
       child: const Icon(Icons.manage_search, size: 26),

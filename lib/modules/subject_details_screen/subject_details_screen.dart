@@ -15,7 +15,7 @@ class SubjectDetailsScreen extends StatelessWidget {
             builder: (context) => const ScannerScreen(),
           ));
         },
-        child:  const Icon(Icons.qr_code_scanner, size: 26),
+        child: const Icon(Icons.qr_code_scanner, size: 26),
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -36,6 +36,10 @@ class SubjectDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const MiniTitle(title: 'Instructor Name'),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     Row(
                       children: const [
                         MiniTitle(title: 'Level two'),
@@ -73,7 +77,7 @@ class SubjectDetailsScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        const MiniTitle(title: 'Attendence progress : '),
+                        const MiniTitle(title: 'Attendance progress : '),
                         Row(
                           children: const [
                             Text(
@@ -93,6 +97,7 @@ class SubjectDetailsScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    MainBody(text: 'You Attended 10 lectures from 15 lectures'),
                   ],
                 ),
               ),
@@ -202,39 +207,41 @@ Widget buildLectureItem(context) => Card(
                 )
               ],
             ),
-            if (5 == 5)
-              Row(
-                children: [
-                  const Spacer(),
-                  5 == 5
-                      ? Row(
-                    children: const [
-                      Text(
-                        'Attended',
-                        style: TextStyle(color: Colors.indigo),
-                      ),
-                      Icon(
-                        Icons.check_circle_rounded,
-                        color: Colors.indigo,
-                        size: 16,
+            const SizedBox(
+              height: 4,
+            ),
+            Row(
+              children: [
+                const Spacer(),
+                5 == 5
+                    ? Row(
+                        children: const [
+                          Text(
+                            'Attended ',
+                            style: TextStyle(color: Colors.indigo),
+                          ),
+                          Icon(
+                            Icons.check_circle_rounded,
+                            color: Colors.indigo,
+                            size: 16,
+                          )
+                        ],
                       )
-                    ],
-                  )
-                      : Row(
-                    children: const [
-                      Text(
-                        'Not attended',
-                        style: TextStyle(color: Colors.orange),
+                    : Row(
+                        children: const [
+                          Text(
+                            'Not attended ',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          Icon(
+                            Icons.watch_later_rounded,
+                            color: Colors.red,
+                            size: 16,
+                          )
+                        ],
                       ),
-                      Icon(
-                        Icons.watch_later_rounded,
-                        color: Colors.red,
-                        size: 16,
-                      )
-                    ],
-                  ),
-                ],
-              ),
+              ],
+            ),
           ],
         ),
       ),

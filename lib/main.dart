@@ -54,8 +54,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'OpenSans',
         primarySwatch: Colors.indigo,
       ),
-      home: const SubjectDetailsScreen(),
-      //startWidget,
+      home: startWidget,
     );
   }
 }
