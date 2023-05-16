@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/cubit/states.dart';
+import 'package:attendance_tracker/models/lecture_model.dart';
 import 'package:attendance_tracker/models/subject_model.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
@@ -50,6 +51,27 @@ class AppCubit extends Cubit<AppStates> {
       child: const Icon(Icons.edit, size: 26),
     ),
   ];
+
+  void getSubjects() {
+    getNextLectures();
+    getRegisteredSubjects();
+  }
+
+  List<LectureModel> nextLectures = [];
+
+  Future<void> getNextLectures() async {
+    emit(GetNextLecturesLoadingState());
+    DioHelper.getData(url: NEXT_LECTURES, token: 'Bearer $STUDENT_TOKEN')
+        .then((Response response) {
+      response.data.forEach((lecture) {
+        nextLectures.add(LectureModel.fromMap(lecture));
+      });
+      emit(GetNextLecturesSuccessState());
+    }).catchError((e) {
+      print(e.toString());
+      emit(GetNextLecturesErrorState());
+    });
+  }
 
   void getDeviceId() async {
     final deviceInfoPlugin = DeviceInfoPlugin();

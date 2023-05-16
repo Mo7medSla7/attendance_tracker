@@ -87,15 +87,20 @@ class Subtitle extends StatelessWidget {
 class MiniTitle extends StatelessWidget {
   final String title;
   final bool overflow;
-  const MiniTitle({super.key, required this.title, this.overflow = false});
+  final bool bold;
+  const MiniTitle(
+      {super.key,
+      required this.title,
+      this.overflow = false,
+      this.bold = false});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 20,
-        fontWeight: FontWeight.w600,
+        fontWeight: bold ? FontWeight.bold : FontWeight.w600,
       ),
       overflow: overflow ? TextOverflow.ellipsis : null,
     );
@@ -434,22 +439,23 @@ class DefaultDivider extends StatelessWidget {
     );
   }
 }
+
 Widget buildStudentAttendItem() => Card(
-  child: Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: const [
-            MiniTitle(
-              title: "Student name",
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: const [
+                MiniTitle(
+                  title: "Student name",
+                ),
+                Spacer(),
+                MiniTitle(title: 'ID: 190900013'),
+              ],
             ),
-            Spacer(),
-            MiniTitle(title: 'ID: 190900013'),
           ],
         ),
-      ],
-    ),
-  ),
-);
+      ),
+    );

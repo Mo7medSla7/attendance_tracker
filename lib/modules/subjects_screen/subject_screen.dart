@@ -1,4 +1,5 @@
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
+import 'package:attendance_tracker/modules/subject_details_screen/subject_details_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,8 @@ class Subject_Screen extends StatelessWidget {
       builder: (context, state) {
         var cubit = AppCubit.get(context);
         return cubit.subjectsToRegister.isEmpty &&
-                cubit.registeredSubjects.isEmpty
+                cubit.registeredSubjects.isEmpty &&
+                state is! GetRegisteredSubjectsLoadingState
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: () => cubit.refreshSubjects(),
@@ -38,65 +40,82 @@ class Subject_Screen extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               var subject = cubit.registeredSubjects[index];
-                              return Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              child: MiniTitle(
-                                            title: subject.name,
-                                          )),
-                                          const Text('Status : '),
-                                          subject.isAccepted!
-                                              ? Row(
-                                                  children: const [
-                                                    Text(
-                                                      'Accepted ',
-                                                      style: TextStyle(
-                                                          color: Colors.green),
-                                                    ),
-                                                    Icon(
-                                                      Icons
-                                                          .check_circle_rounded,
-                                                      color: Colors.green,
-                                                      size: 16,
-                                                    )
-                                                  ],
-                                                )
-                                              : Row(
-                                                  children: const [
-                                                    Text(
-                                                      'In Progress ',
-                                                      style: TextStyle(
-                                                          color: Colors.orange),
-                                                    ),
-                                                    Icon(
-                                                      Icons.watch_later_rounded,
-                                                      color: Colors.orange,
-                                                      size: 16,
-                                                    )
-                                                  ],
-                                                ),
-                                        ],
+                              return GestureDetector(
+                                onTap: () {
+                                  if (subject.isAccepted!) {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SubjectDetailsScreen(
+                                          subject,
+                                        ),
                                       ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      MainBody(
-                                        text: subject.faculty,
-                                        color: Colors.grey[700],
-                                      ),
-                                      MiniBody(
-                                        text:
-                                            'Level ${subject.year} ${subject.semester} semester',
-                                        color: Colors.grey[700],
-                                      ),
-                                    ],
+                                    );
+                                  }
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                                child: MiniTitle(
+                                              title: subject.name,
+                                            )),
+                                            const Text('Status : '),
+                                            subject.isAccepted!
+                                                ? Row(
+                                                    children: const [
+                                                      Text(
+                                                        'Accepted ',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.green),
+                                                      ),
+                                                      Icon(
+                                                        Icons
+                                                            .check_circle_rounded,
+                                                        color: Colors.green,
+                                                        size: 16,
+                                                      )
+                                                    ],
+                                                  )
+                                                : Row(
+                                                    children: const [
+                                                      Text(
+                                                        'In Progress ',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.orange),
+                                                      ),
+                                                      Icon(
+                                                        Icons
+                                                            .watch_later_rounded,
+                                                        color: Colors.orange,
+                                                        size: 16,
+                                                      )
+                                                    ],
+                                                  ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        MainBody(
+                                          text: subject.faculty,
+                                          color: Colors.grey[700],
+                                        ),
+                                        MiniBody(
+                                          text:
+                                              'Level ${subject.year} ${subject.semester} semester',
+                                          color: Colors.grey[700],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );

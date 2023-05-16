@@ -7,6 +7,8 @@ class SubjectModel {
   String faculty;
   String semester;
   String year;
+  String instructor;
+  num numberOfStudents;
   bool? isAccepted;
 
   SubjectModel({
@@ -15,6 +17,8 @@ class SubjectModel {
     required this.faculty,
     required this.semester,
     required this.year,
+    required this.instructor,
+    required this.numberOfStudents,
     this.isAccepted,
   });
 
@@ -25,7 +29,9 @@ class SubjectModel {
       'faculty': faculty,
       'semester': semester,
       'year': year,
-      'accepted': isAccepted ?? false,
+      'subjectInstructor': instructor,
+      'numberOfStudents': numberOfStudents,
+      'isAccepted': isAccepted ?? false,
     };
   }
 
@@ -36,7 +42,9 @@ class SubjectModel {
       faculty: map['faculty'] as String,
       semester: map['semester'] as String,
       year: map['year'] as String,
-      isAccepted: map['accepted'] ?? false,
+      instructor: map['subjectInstructor'][0] ?? '',
+      numberOfStudents: map['numberOfStudents'] ?? 0,
+      isAccepted: map['isAccepted'] ?? false,
     );
   }
 

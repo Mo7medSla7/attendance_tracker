@@ -24,7 +24,7 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
-        create: (context) => AppCubit()..getRegisteredSubjects(),
+        create: (context) => AppCubit()..getSubjects(),
       ),
       BlocProvider(
         create: (context) => InstructorCubit(),

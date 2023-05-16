@@ -1,4 +1,5 @@
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
+import 'package:attendance_tracker/modules/lecture_details_screen/lecture_details_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -18,35 +19,42 @@ class HomeScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = AppCubit.get(context);
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                nextLecturesView(lectures[1], cubit),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Subtitle(title: 'Your Progress In Courses'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: GridView.count(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.78,
-                    children: List.generate(lectures.length,
-                        (index) => buildLectureItem(lectures[index], context)),
+          return cubit.nextLectures.isEmpty &&
+                  (state is! GetNextLecturesErrorState ||
+                      state is! GetNextLecturesSuccessState)
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      nextLecturesView(cubit, context),
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        child: Subtitle(title: 'Your Progress In Courses'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: GridView.count(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.78,
+                          children: List.generate(
+                              cubit.nextLectures.length,
+                              (index) => buildLectureItem(
+                                  cubit.nextLectures[index], context)),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
+                );
         });
   }
 
-  Widget nextLecturesView(LectureModel lecture, cubit) {
+  Widget nextLecturesView(cubit, context) {
     return Container(
       padding: const EdgeInsets.all(8),
       height: 270,
@@ -61,81 +69,86 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: CarouselSlider(
               items: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        MiniTitle(
-                          title: lecture.subject,
-                        ),
-                        MainBody(
-                          text: lecture.drName,
-                          color: Colors.grey[700],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        const Spacer(),
-                        SubBody(
-                          text:
-                              'You have attended ${lecture.attendancePercent.toInt()} % lectures of this course',
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          children: [
-                            const Text('Date : '),
-                            Row(
-                              children: const [
-                                Text(
-                                  'Wed 25/3/2023 ',
-                                  style: TextStyle(
-                                    color: Colors.indigo,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                ...cubit.nextLectures
+                    .map(
+                      (LectureModel lecture) => GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LectureDetailsScreen(
+                              lecture,
+                            ),
+                          ));
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                MiniTitle(
+                                  title: lecture.subjectName,
                                 ),
-                                Icon(
-                                  Icons.calendar_today,
-                                  color: Colors.indigo,
-                                  size: 16,
+                                MainBody(
+                                  text: lecture.instructorName,
+                                  color: Colors.grey[700],
                                 ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                const Spacer(),
+                                const SubBody(
+                                  text:
+                                      'You have attended 80 % lectures of this course',
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Row(
+                                  children: [
+                                    const Text('Date : '),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          lecture.date,
+                                          style: const TextStyle(
+                                            color: Colors.indigo,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.calendar_today,
+                                          color: Colors.indigo,
+                                          size: 16,
+                                        ),
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    const Text('Time : '),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          lecture.time,
+                                          style: const TextStyle(
+                                            color: Colors.indigo,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.access_time_rounded,
+                                          color: Colors.indigo,
+                                          size: 16,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                )
                               ],
                             ),
-                            const Spacer(),
-                            const Text('Time : '),
-                            Row(
-                              children: const [
-                                Text(
-                                  '12:30 PM ',
-                                  style: TextStyle(
-                                    color: Colors.indigo,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.access_time_rounded,
-                                  color: Colors.indigo,
-                                  size: 16,
-                                ),
-                              ],
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const Card(
-                  child:
-                      SizedBox(width: double.infinity, child: Text('page 2')),
-                ),
-                const Card(
-                  child:
-                      SizedBox(width: double.infinity, child: Text('page 3')),
-                ),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList()
               ],
               options: CarouselOptions(
                 autoPlay: false,
@@ -152,7 +165,7 @@ class HomeScreen extends StatelessWidget {
           ),
           Center(
             child: DotsIndicator(
-              dotsCount: 3,
+              dotsCount: cubit.nextLectures.length,
               position: cubit.lecturePosition,
               decorator: DotsDecorator(
                 size: const Size.square(9.0),
@@ -176,9 +189,9 @@ Widget buildLectureItem(LectureModel lecture, context) => Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MainBody(text: lecture.subject),
+            MainBody(text: lecture.subjectName),
             MiniBody(
-              text: 'Dr.${lecture.drName}',
+              text: 'Dr.${lecture.instructorName}',
               color: Colors.grey[700],
             ),
             const Spacer(),
@@ -187,11 +200,10 @@ Widget buildLectureItem(LectureModel lecture, context) => Card(
                 radius: 50.0,
                 lineWidth: 13.0,
                 animation: true,
-                percent: (lecture.attendancePercent / 100),
-                center: Text(
-                  '${lecture.attendancePercent.round()} %',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                percent: (80 / 100),
+                center: const Text(
+                  '${80} %',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
                 ),
                 footer: const Padding(
                   padding: EdgeInsets.only(top: 16.0),

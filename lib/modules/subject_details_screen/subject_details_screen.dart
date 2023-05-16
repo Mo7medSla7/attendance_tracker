@@ -1,10 +1,12 @@
+import 'package:attendance_tracker/models/subject_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/component.dart';
 import '../scanner_screen/scanner_screen.dart';
 
 class SubjectDetailsScreen extends StatelessWidget {
-  const SubjectDetailsScreen({Key? key}) : super(key: key);
+  const SubjectDetailsScreen(this.subject, {Key? key}) : super(key: key);
+  final SubjectModel subject;
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +32,30 @@ class SubjectDetailsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Subtitle(title: 'Subject name'),
+              Subtitle(title: subject.name),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const MiniTitle(title: 'Instructor Name'),
+                    if (subject.instructor != '')
+                      Wrap(
+                        children: [
+                          const MiniTitle(
+                            title: 'Instructor : ',
+                            bold: true,
+                          ),
+                          MiniTitle(title: subject.instructor),
+                        ],
+                      ),
                     const SizedBox(
                       height: 8,
                     ),
                     Row(
-                      children: const [
-                        MiniTitle(title: 'Level two'),
-                        Spacer(),
-                        MiniTitle(title: 'First Semester'),
+                      children: [
+                        MiniTitle(title: 'Level ${subject.year}'),
+                        const Spacer(),
+                        MiniTitle(title: '${subject.semester} Semester'),
                       ],
                     ),
                     const SizedBox(
@@ -52,18 +63,18 @@ class SubjectDetailsScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        const MiniTitle(title: 'Active student: '),
+                        const MiniTitle(title: 'Active student : '),
                         Row(
-                          children: const [
+                          children: [
                             Text(
-                              '60',
-                              style: TextStyle(
+                              subject.numberOfStudents.toString(),
+                              style: const TextStyle(
                                 fontSize: 20,
                                 color: Colors.indigo,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.person,
                               color: Colors.indigo,
                               size: 20,

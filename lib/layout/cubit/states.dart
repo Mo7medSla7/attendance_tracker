@@ -18,6 +18,12 @@ class GetRegisteredSubjectsSuccessState extends AppStates {}
 
 class GetRegisteredSubjectsErrorState extends AppStates {}
 
+class GetNextLecturesLoadingState extends AppStates {}
+
+class GetNextLecturesSuccessState extends AppStates {}
+
+class GetNextLecturesErrorState extends AppStates {}
+
 class RegisterSubjectLoadingState extends AppStates {}
 
 class RegisterSubjectSuccessState extends AppStates {}
