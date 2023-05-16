@@ -15,7 +15,7 @@ class LectureDetailsScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const ScannerScreen(),
+            builder: (context) => ScannerScreen(lecture.id),
           ));
         },
         child: const Icon(Icons.qr_code_scanner, size: 26),

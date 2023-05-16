@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:attendance_tracker/models/subject_model.dart';
 
 class LectureModel {
-  String subjectId;
+  String id;
   String subjectName;
   String faculty;
   String year;
@@ -18,7 +18,7 @@ class LectureModel {
   String time;
 
   LectureModel({
-    required this.subjectId,
+    required this.id,
     required this.subjectName,
     required this.faculty,
     required this.year,
@@ -33,7 +33,7 @@ class LectureModel {
 
   factory LectureModel.fromMap(Map<String, dynamic> map) {
     return LectureModel(
-      subjectId: map['_id'] as String,
+      id: map['_id'] as String,
       subjectName: map['subject']['name'] as String,
       faculty: map['subject']['faculty'] as String,
       year: map['subject']['year'] as String,

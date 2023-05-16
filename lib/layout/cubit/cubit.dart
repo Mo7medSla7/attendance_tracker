@@ -53,6 +53,7 @@ class AppCubit extends Cubit<AppStates> {
   ];
 
   void getSubjects() {
+    print(STUDENT_TOKEN);
     getNextLectures();
     getRegisteredSubjects();
   }
@@ -73,11 +74,11 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  void getDeviceId() async {
+  Future<String> getDeviceId() async {
     final deviceInfoPlugin = DeviceInfoPlugin();
     final deviceInfo = await deviceInfoPlugin.androidInfo;
     final deviceId = deviceInfo.id;
-    print(deviceId);
+    return deviceId;
   }
 
   bool isEnabled = false;
@@ -90,6 +91,7 @@ class AppCubit extends Cubit<AppStates> {
   int currentIndex = 0;
   void changeNavBar(int index) {
     currentIndex = index;
+    lecturePosition = 0.0;
     if (index == 1 &&
         subjectsToRegister.isEmpty &&
         registeredSubjects.isEmpty) {
@@ -130,6 +132,30 @@ class AppCubit extends Cubit<AppStates> {
       print(e.toString());
       emit(GetRegisteredSubjectsErrorState());
     });
+  }
+
+  Future<String> qrScan(String decodedQr, String lectureId) async {
+    final deviceId = await getDeviceId();
+    String result = '';
+    DioHelper.postData(
+      url: SCAN,
+      token: 'Bearer $STUDENT_TOKEN',
+      data: {
+        'qr': decodedQr,
+        'deviceId': deviceId,
+        'lectureId': lectureId,
+      },
+    ).then((Response response) {
+      emit(QrScanSuccessState());
+      result = 'success';
+      return 'success';
+    }).catchError((e) {
+      print(e.toString());
+      emit(QrScanErrorState());
+      result = 'failed';
+      return 'failed';
+    });
+    return result;
   }
 
   List<String> subjectsIdToRegister = [];

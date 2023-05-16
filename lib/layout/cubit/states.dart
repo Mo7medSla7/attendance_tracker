@@ -12,6 +12,10 @@ class RefreshSubjectsState extends AppStates {}
 
 class AddOrRemoveSubjectToRegisterState extends AppStates {}
 
+class QrScanSuccessState extends AppStates {}
+
+class QrScanErrorState extends AppStates {}
+
 class GetRegisteredSubjectsLoadingState extends AppStates {}
 
 class GetRegisteredSubjectsSuccessState extends AppStates {}

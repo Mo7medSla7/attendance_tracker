@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScannerScreen extends StatefulWidget {
-  const ScannerScreen({super.key});
+  const ScannerScreen(this.id, {super.key});
+  final String id;
 
   @override
   State<ScannerScreen> createState() => _ScannerScreenState();
@@ -45,14 +47,32 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
       if (!isPageOpened) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AfterScanScreen(scanData.code ?? 'No Data'),
-          ),
-        );
+        var cubit = AppCubit.get(context);
+        String result = await cubit.qrScan(scanData.code!, widget.id);
+        if (result == 'success') {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Attendance recorded successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to record attendance'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => AfterScanScreen(scanData.code ?? 'No Data'),
+        //   ),
+        // );
         isPageOpened = true;
       }
     });
