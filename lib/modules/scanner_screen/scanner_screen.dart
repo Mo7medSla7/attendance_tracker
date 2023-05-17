@@ -50,7 +50,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
     controller.scannedDataStream.listen((scanData) async {
       if (!isPageOpened) {
         var cubit = AppCubit.get(context);
-        cubit.qrScan(scanData.code!, widget.id);
+        await cubit.qrScan(scanData.code!, widget.id);
         if (cubit.qrSuccessScan) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
