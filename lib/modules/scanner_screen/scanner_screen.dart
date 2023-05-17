@@ -50,8 +50,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
     controller.scannedDataStream.listen((scanData) async {
       if (!isPageOpened) {
         var cubit = AppCubit.get(context);
-        String result = await cubit.qrScan(scanData.code!, widget.id);
-        if (result == 'success') {
+        cubit.qrScan(scanData.code!, widget.id);
+        if (cubit.qrSuccessScan) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -60,6 +60,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
             ),
           );
         } else {
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Failed to record attendance'),

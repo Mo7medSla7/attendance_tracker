@@ -142,9 +142,10 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  Future<String> qrScan(String decodedQr, String lectureId) async {
+  bool qrSuccessScan = false;
+
+  Future<void> qrScan(String decodedQr, String lectureId) async {
     final deviceId = await getDeviceId();
-    String result = '';
     DioHelper.postData(
       url: SCAN,
       token: 'Bearer $STUDENT_TOKEN',
@@ -154,16 +155,13 @@ class AppCubit extends Cubit<AppStates> {
         'lectureId': lectureId,
       },
     ).then((Response response) {
+      qrSuccessScan = true;
       emit(QrScanSuccessState());
-      result = 'success';
-      return 'success';
     }).catchError((e) {
       print(e.toString());
+      qrSuccessScan = false;
       emit(QrScanErrorState());
-      result = 'failed';
-      return 'failed';
     });
-    return result;
   }
 
   List<String> subjectsIdToRegister = [];
