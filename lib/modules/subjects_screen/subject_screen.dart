@@ -17,7 +17,7 @@ class Subject_Screen extends StatelessWidget {
         var cubit = AppCubit.get(context);
         return cubit.subjectsToRegister.isEmpty &&
                 cubit.registeredSubjects.isEmpty &&
-                state is! GetRegisteredSubjectsLoadingState
+                cubit.isGettingSubjects
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: () => cubit.refreshSubjects(),

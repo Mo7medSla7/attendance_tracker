@@ -19,14 +19,17 @@ class HomeScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = AppCubit.get(context);
-          return cubit.nextLectures.isEmpty &&
-                  (state is! GetNextLecturesErrorState ||
-                      state is! GetNextLecturesSuccessState)
+          return cubit.nextLectures.isEmpty && cubit.isGettingLectures
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        child: Subtitle(title: 'Your Next Lectures'),
+                      ),
                       nextLecturesView(cubit, context),
                       const Padding(
                         padding:
@@ -57,126 +60,129 @@ class HomeScreen extends StatelessWidget {
   Widget nextLecturesView(cubit, context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      height: 270,
+      height: 205,
       width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: Subtitle(title: 'Your Next Lectures'),
-          ),
-          Expanded(
-            child: CarouselSlider(
-              items: [
-                ...cubit.nextLectures
-                    .map(
-                      (LectureModel lecture) => GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => LectureDetailsScreen(
-                              lecture,
-                            ),
-                          ));
-                        },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                MiniTitle(
-                                  title: lecture.subjectName,
-                                ),
-                                MainBody(
-                                  text: lecture.instructorName,
-                                  color: Colors.grey[700],
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const Spacer(),
-                                const SubBody(
-                                  text:
-                                      'You have attended 80 % lectures of this course',
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Row(
-                                  children: [
-                                    const Text('Date : '),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          lecture.date,
-                                          style: const TextStyle(
-                                            color: Colors.indigo,
-                                            fontWeight: FontWeight.bold,
+      child: cubit.nextLectures.isEmpty
+          ? const Card(
+              child: Center(
+                child: MainBody(text: 'There is not scheduled lectures yet'),
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: CarouselSlider(
+                    items: [
+                      ...cubit.nextLectures
+                          .map(
+                            (LectureModel lecture) => GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => LectureDetailsScreen(
+                                    lecture,
+                                  ),
+                                ));
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      MiniTitle(
+                                        title: lecture.subjectName,
+                                      ),
+                                      MainBody(
+                                        text: lecture.instructorName,
+                                        color: Colors.grey[700],
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      const Spacer(),
+                                      const SubBody(
+                                        text:
+                                            'You have attended 80 % lectures of this course',
+                                      ),
+                                      const SizedBox(
+                                        height: 4,
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text('Date : '),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                lecture.date,
+                                                style: const TextStyle(
+                                                  color: Colors.indigo,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.calendar_today,
+                                                color: Colors.indigo,
+                                                size: 16,
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        const Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.indigo,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    const Text('Time : '),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          lecture.time,
-                                          style: const TextStyle(
-                                            color: Colors.indigo,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const Icon(
-                                          Icons.access_time_rounded,
-                                          color: Colors.indigo,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ],
+                                          const Spacer(),
+                                          const Text('Time : '),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                lecture.time,
+                                                style: const TextStyle(
+                                                  color: Colors.indigo,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.access_time_rounded,
+                                                color: Colors.indigo,
+                                                size: 16,
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList()
+                          )
+                          .toList()
+                    ],
+                    options: CarouselOptions(
+                      autoPlay: false,
+                      initialPage: 0,
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                      height: double.infinity,
+                      scrollPhysics: const BouncingScrollPhysics(),
+                      onPageChanged: (index, reason) {
+                        cubit.changeNextLecture(index);
+                      },
+                    ),
+                  ),
+                ),
+                Center(
+                  child: DotsIndicator(
+                    dotsCount: cubit.nextLectures.length,
+                    position: cubit.lecturePosition,
+                    decorator: DotsDecorator(
+                      size: const Size.square(9.0),
+                      activeSize: const Size(18.0, 9.0),
+                      activeShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0)),
+                    ),
+                  ),
+                ),
               ],
-              options: CarouselOptions(
-                autoPlay: false,
-                initialPage: 0,
-                viewportFraction: 1,
-                enableInfiniteScroll: false,
-                height: double.infinity,
-                scrollPhysics: const BouncingScrollPhysics(),
-                onPageChanged: (index, reason) {
-                  cubit.changeNextLecture(index);
-                },
-              ),
             ),
-          ),
-          Center(
-            child: DotsIndicator(
-              dotsCount: cubit.nextLectures.length,
-              position: cubit.lecturePosition,
-              decorator: DotsDecorator(
-                size: const Size.square(9.0),
-                activeSize: const Size(18.0, 9.0),
-                activeShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

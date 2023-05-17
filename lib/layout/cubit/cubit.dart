@@ -58,17 +58,21 @@ class AppCubit extends Cubit<AppStates> {
     getRegisteredSubjects();
   }
 
+  bool isGettingLectures = false;
   List<LectureModel> nextLectures = [];
 
   Future<void> getNextLectures() async {
+    isGettingLectures = true;
     emit(GetNextLecturesLoadingState());
     DioHelper.getData(url: NEXT_LECTURES, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
       response.data.forEach((lecture) {
         nextLectures.add(LectureModel.fromMap(lecture));
       });
+      isGettingLectures = false;
       emit(GetNextLecturesSuccessState());
     }).catchError((e) {
+      isGettingLectures = false;
       print(e.toString());
       emit(GetNextLecturesErrorState());
     });
@@ -113,9 +117,11 @@ class AppCubit extends Cubit<AppStates> {
 
   List<SubjectModel> subjectsToRegister = [];
   List<SubjectModel> registeredSubjects = [];
+  bool isGettingSubjects = false;
 
   Future<void> getRegisteredSubjects() async {
     emit(GetRegisteredSubjectsLoadingState());
+    isGettingSubjects = true;
     DioHelper.getData(url: SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
       registeredSubjects.clear();
@@ -127,8 +133,10 @@ class AppCubit extends Cubit<AppStates> {
           subjectsToRegister.add(SubjectModel.fromMap(subject));
         }
       });
+      isGettingSubjects = false;
       emit(GetRegisteredSubjectsSuccessState());
     }).catchError((e) {
+      isGettingSubjects = false;
       print(e.toString());
       emit(GetRegisteredSubjectsErrorState());
     });

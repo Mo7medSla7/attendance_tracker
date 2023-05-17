@@ -42,7 +42,9 @@ class SubjectModel {
       faculty: map['faculty'] as String,
       semester: map['semester'] as String,
       year: map['year'] as String,
-      instructor: map['subjectInstructor'][0] ?? '',
+      instructor: map['subjectInstructor'].isNotEmpty
+          ? map['subjectInstructor'][0]
+          : '',
       numberOfStudents: map['numberOfStudents'] ?? 0,
       isAccepted: map['isAccepted'] ?? false,
     );
