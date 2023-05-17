@@ -68,12 +68,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
             ),
           );
         }
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => AfterScanScreen(scanData.code ?? 'No Data'),
-        //   ),
-        // );
         isPageOpened = true;
       }
     });
