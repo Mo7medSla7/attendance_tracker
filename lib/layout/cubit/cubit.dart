@@ -142,11 +142,11 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  bool qrSuccessScan = false;
+  late bool qrSuccessScan;
 
   Future<void> qrScan(String decodedQr, String lectureId) async {
     final deviceId = await getDeviceId();
-    DioHelper.postData(
+    await DioHelper.postData(
       url: SCAN,
       token: 'Bearer $STUDENT_TOKEN',
       data: {
