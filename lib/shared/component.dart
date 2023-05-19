@@ -20,6 +20,7 @@ class DefaultFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+
       decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
@@ -55,7 +56,7 @@ class HeaderTitle extends StatelessWidget {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: 48,
+        fontSize: 36,
         fontWeight: FontWeight.w800,
       ),
     );

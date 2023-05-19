@@ -2,6 +2,7 @@ import 'package:attendance_tracker/helpers/cache_helper.dart';
 import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/layout_screen.dart';
 import 'package:attendance_tracker/models/student_model.dart';
+import 'package:attendance_tracker/modules/instructor_login_screen/instructor_login_screen.dart';
 import 'package:attendance_tracker/modules/sign_up_screen/sign_up_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
@@ -29,100 +30,141 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(20),
-          width: double.infinity,
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.asset(height: 200, 'assets/images/app_logo.png'),
-                ),
-                const SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: HeaderTitle(title: 'Welcome'),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: SubBody(
-                        text: 'Login to your account', color: Colors.grey[600]),
+        child: SafeArea(
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            width: double.infinity,
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.asset(height: 200, 'assets/images/app_logo.png'),
                   ),
-                ),
-                const SizedBox(height: 40),
-                DefaultFormField(
-                  hintText: 'Student Email',
-                  controller: emailController,
-                  errorMessage: 'Student Email',
-                  icon: Icons.email,
-                ),
-                const SizedBox(height: 15),
-                DefaultFormField(
-                  hintText: 'Password',
-                  controller: passwordController,
-                  errorMessage: 'Password',
-                  isPassword: true,
-                  icon: Icons.lock,
-                ),
-                const SizedBox(height: 20),
-                if (isLoading)
-                  const CircularProgressIndicator()
-                else
-                  FullWidthElevatedButton(
-                    text: 'Login',
-                    onTap: () {
-                      if (formKey.currentState!.validate()) {
-                        login(context);
-                      }
-                    },
+                  const SizedBox(height: 20),
+                  const Align(
+                    alignment: Alignment.topLeft,
+                    child: HeaderTitle(title: 'Welcome'),
                   ),
-                const SizedBox(height: 8.0),
-                Text(
-                  errorMessage,
-                  style: TextStyle(color: Colors.red[800], fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                buildLoginDivider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Create new account',
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: SubBody(
+                          text: 'Login to your account', color: Colors.grey[600]),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(
-                          MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
-                          ),
-                        )
-                            .then((value) {
-                          if (value != null) {
-                            emailController.text = value['email'];
-                            passwordController.text = value['password'];
-                          }
-                        });
+                  ),
+                  const SizedBox(height: 40),
+                  DefaultFormField(
+                    hintText: 'Student Email',
+                    controller: emailController,
+                    errorMessage: 'Student Email',
+                    icon: Icons.email,
+                  ),
+                  const SizedBox(height: 15),
+                  DefaultFormField(
+                    hintText: 'Password',
+                    controller: passwordController,
+                    errorMessage: 'Password',
+                    isPassword: true,
+                    icon: Icons.lock,
+                  ),
+                  const SizedBox(height: 20),
+                  if (isLoading)
+                    const CircularProgressIndicator()
+                  else
+                    FullWidthElevatedButton(
+                      text: 'Login',
+                      onTap: () {
+                        if (formKey.currentState!.validate()) {
+                          login(context);
+                        }
                       },
-                      child: const Text('Sign Up'),
-                    )
-                  ],
-                )
-              ],
+                    ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    errorMessage,
+                    style: TextStyle(color: Colors.red[800], fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  buildLoginDivider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Create new account',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(
+                            MaterialPageRoute(
+                              builder: (context) => SignUpScreen(),
+                            ),
+                          )
+                              .then((value) {
+                            if (value != null) {
+                              emailController.text = value['email'];
+                              passwordController.text = value['password'];
+                            }
+                          });
+                        },
+                        child: const Text(
+                            'Sign Up',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  /*const SizedBox(height: 8,),*/
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Are you instructor ?  ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(40, 20),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(
+                            MaterialPageRoute(
+                              builder: (context) => InstructorLoginScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                            'Login as instructor',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -50,25 +50,24 @@ class _ScannerScreenState extends State<ScannerScreen> {
     controller.scannedDataStream.listen((scanData) async {
       if (!isPageOpened) {
         var cubit = AppCubit.get(context);
-        cubit.qrScan(scanData.code!, widget.id).then((value) {
-          if (cubit.qrSuccessScan) {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Attendance recorded successfully'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          } else {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Failed to record attendance'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        }).catchError((e) => print(e));
+        await cubit.qrScan(scanData.code!, widget.id);
+        if (cubit.qrSuccessScan) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Attendance recorded successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to record attendance'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
         isPageOpened = true;
       }
     });
