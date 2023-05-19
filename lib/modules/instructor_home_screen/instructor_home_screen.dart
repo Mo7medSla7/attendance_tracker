@@ -206,10 +206,6 @@ class InstructorHomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const MainBody(
-                  text: 'Computer science',
-                  color: Colors.blueGrey,
-                ),
                 Row(
                   children: [
                     const MiniBody(

@@ -11,4 +11,29 @@ class InstructorCubit extends Cubit<InstructorStates> {
     lecturePosition = index.toDouble();
     emit(ChangeNextLectureState());
   }
+
+  // void getSubjects() {
+  //   getNextLectures();
+  //   getRegisteredSubjects();
+  // }
+
+  // bool isGettingLectures = false;
+  // List<LectureModel> nextLectures = [];
+
+  // Future<void> getNextLectures() async {
+  //   isGettingLectures = true;
+  //   emit(GetNextLecturesLoadingState());
+  //   DioHelper.getData(url: NEXT_LECTURES, token: 'Bearer $STUDENT_TOKEN')
+  //       .then((Response response) {
+  //     response.data.forEach((lecture) {
+  //       nextLectures.add(LectureModel.fromMap(lecture));
+  //     });
+  //     isGettingLectures = false;
+  //     emit(GetNextLecturesSuccessState());
+  //   }).catchError((e) {
+  //     isGettingLectures = false;
+  //     print(e.toString());
+  //     emit(GetNextLecturesErrorState());
+  //   });
+  // }
 }
