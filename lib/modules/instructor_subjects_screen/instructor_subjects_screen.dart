@@ -1,17 +1,25 @@
+import 'package:attendance_tracker/models/instructor_lecture_model.dart';
+import 'package:attendance_tracker/models/instructor_subject_model.dart';
 import 'package:attendance_tracker/modules/all_students_screen/all_students_screen.dart';
+import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_cubit.dart';
+import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
 import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class InstructorSubjectScreen extends StatelessWidget {
-  const InstructorSubjectScreen({Key? key}) : super(key: key);
+  const InstructorSubjectScreen(this.subject, {Key? key}) : super(key: key);
+  final InstructorSubjectModel subject;
 
   @override
   Widget build(BuildContext context) {
+    var cubit = InstructorCubit.get(context);
+    cubit.getLecturesOfSubject(subject.id);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Subject name',
+        title: Text(
+          subject.name,
         ),
         actions: [
           TextButton(
@@ -25,65 +33,81 @@ class InstructorSubjectScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const MiniTitle(title: 'Subject ID'),
-                    const MiniTitle(title: 'Faculty name'),
-                    const MiniTitle(title: 'Level one'),
-                    const MiniTitle(title: 'first semester'),
-                    Row(
+      body: BlocConsumer<InstructorCubit, InstructorStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const MiniTitle(title: '60 Active student'),
-                        const Spacer(),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AllStudentsScreen(),
-                              ));
-                            },
-                            child: const MiniTitle(
-                              title: 'Show All',
-                            )),
+                        const MiniTitle(title: 'Subject ID'),
+                        MiniTitle(title: subject.faculty),
+                        MiniTitle(title: 'Level ${subject.year}'),
+                        MiniTitle(title: '${subject.semester} semester'),
+                        Row(
+                          children: [
+                            MiniTitle(
+                                title:
+                                    '${subject.activeStudents} Active student'),
+                            const Spacer(),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AllStudentsScreen(),
+                                  ));
+                                },
+                                child: const MiniTitle(
+                                  title: 'Show All',
+                                )),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  const Subtitle(title: 'Course lectures'),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  cubit.isGettingLecturesOfSubject
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 160.0),
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => buildCourseLectures(
+                              cubit.lecturesOfSubject[index], context),
+                          separatorBuilder: (context, index) => const SizedBox(
+                            height: 4,
+                          ),
+                          itemCount: cubit.lecturesOfSubject.length,
+                        ),
+                ],
               ),
-              const Subtitle(title: 'Course lectures'),
-              const SizedBox(
-                height: 8,
-              ),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => buildCourseLectures(context),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 4,
-                ),
-                itemCount: 15,
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-Widget buildCourseLectures(context) => GestureDetector(
+Widget buildCourseLectures(InstructorLectureModel lecture, context) =>
+    GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => InstructorLectureScreen(),
+          builder: (context) => InstructorLectureScreen(lecture),
         ));
       },
       child: Card(
@@ -96,11 +120,11 @@ Widget buildCourseLectures(context) => GestureDetector(
                 children: [
                   Expanded(
                     child: MiniTitle(
-                      title: "Lecture name",
+                      title: lecture.name,
                     ),
                   ),
                   const Text('Status : '),
-                  5 == 5
+                  lecture.finished
                       ? Row(
                           children: const [
                             Text(
@@ -136,15 +160,15 @@ Widget buildCourseLectures(context) => GestureDetector(
                 children: [
                   const Text('Date : '),
                   Row(
-                    children: const [
+                    children: [
                       Text(
-                        'Wed 25/3/2023 ',
-                        style: TextStyle(
+                        lecture.date,
+                        style: const TextStyle(
                           color: Colors.indigo,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.calendar_today,
                         color: Colors.indigo,
                         size: 16,
@@ -154,15 +178,15 @@ Widget buildCourseLectures(context) => GestureDetector(
                   const Spacer(),
                   const Text('Time : '),
                   Row(
-                    children: const [
+                    children: [
                       Text(
-                        '12:30 PM ',
-                        style: TextStyle(
+                        lecture.time,
+                        style: const TextStyle(
                           color: Colors.indigo,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.access_time_rounded,
                         color: Colors.indigo,
                         size: 16,
@@ -171,20 +195,20 @@ Widget buildCourseLectures(context) => GestureDetector(
                   )
                 ],
               ),
-              if (5 == 5)
+              if (lecture.finished)
                 Row(
                   children: [
                     const Text('Attendance : '),
                     Row(
-                      children: const [
+                      children: [
                         Text(
-                          '60',
-                          style: TextStyle(
+                          lecture.numOfAttendees.toString(),
+                          style: const TextStyle(
                             color: Colors.indigo,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           Icons.person,
                           color: Colors.indigo,
                           size: 16,

@@ -1,7 +1,10 @@
+import 'package:attendance_tracker/helpers/cache_helper.dart';
+import 'package:attendance_tracker/models/instructor_subject_model.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_cubit.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
 import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/modules/instructor_subjects_screen/instructor_subjects_screen.dart';
+import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +25,12 @@ class InstructorHomeScreen extends StatelessWidget {
         var cubit = InstructorCubit.get(context);
 
         return Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(
+              Icons.search,
+            ),
+          ),
           appBar: AppBar(
             title: const Text(
               'Home',
@@ -30,12 +39,45 @@ class InstructorHomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 4.0),
                 child: IconButton(
-                  onPressed: () {},
-                  icon: const CircleAvatar(
-                    radius: 30,
-                    child: Icon(
-                      Icons.search,
-                    ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Logout From This Account ?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text(
+                              'No',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ],
+                      ),
+                    ).then((logout) {
+                      if (logout ?? false) {
+                        CacheHelper.putData(key: 'isLoggedIn', value: false);
+                        CacheHelper.putData(key: 'isInstructor', value: false);
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(),
+                            ),
+                            (route) => false);
+                        cubit.logout();
+                      }
+                    });
+                  },
+                  icon: const Icon(
+                    color: Colors.white,
+                    Icons.logout,
                   ),
                 ),
               )
@@ -45,12 +87,16 @@ class InstructorHomeScreen extends StatelessWidget {
             children: [
               nextLectureView(cubit, context),
               Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context, index) => buildCourseItem(context),
-                    separatorBuilder: (context, index) => const SizedBox(
+                child: cubit.isGettingSubjects
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.separated(
+                        itemBuilder: (context, index) => buildCourseItem(
+                            cubit.instructorSubjects[index], context),
+                        separatorBuilder: (context, index) => const SizedBox(
                           height: 8,
                         ),
-                    itemCount: 15),
+                        itemCount: cubit.instructorSubjects.length,
+                      ),
               ),
             ],
           ),
@@ -75,7 +121,8 @@ class InstructorHomeScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => InstructorLectureScreen(),
+                    builder: (context) =>
+                        InstructorLectureScreen(cubit.lecturesOfSubject[0]),
                   ));
                 },
                 child: Card(
@@ -178,10 +225,11 @@ class InstructorHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildCourseItem(context) => GestureDetector(
+  Widget buildCourseItem(InstructorSubjectModel subject, context) =>
+      GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => InstructorSubjectScreen(),
+            builder: (context) => InstructorSubjectScreen(subject),
           ));
         },
         child: Card(
@@ -192,13 +240,13 @@ class InstructorHomeScreen extends StatelessWidget {
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Expanded(
                       child: MiniTitle(
-                        title: "Introduction to Computer Science",
+                        title: subject.name,
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.all(4.0),
                       child: MainBody(
                         text: 'ID : CS341',
@@ -206,23 +254,30 @@ class InstructorHomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 4,
+                ),
+                MiniBody(
+                  text: subject.faculty,
+                ),
                 Row(
                   children: [
-                    const MiniBody(
-                      text: 'Level one first semester',
+                    MiniBody(
+                      text:
+                          'Level ${subject.year} ${subject.semester} semester',
                     ),
                     const Spacer(),
                     const Text('Active Students : '),
                     Row(
-                      children: const [
+                      children: [
                         Text(
-                          '60',
-                          style: TextStyle(
+                          subject.activeStudents.toString(),
+                          style: const TextStyle(
                             color: Colors.indigo,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           Icons.person,
                           color: Colors.indigo,
                           size: 16,

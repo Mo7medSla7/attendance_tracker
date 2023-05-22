@@ -9,6 +9,7 @@ String? STUDENT_NAME;
 String? STUDENT_ACADEMIC_YEAR;
 String? STUDENT_FACULTY;
 String? STUDENT_ID;
+String? INSTRUCTOR_TOKEN;
 
 void setStudentData() {
   STUDENT_TOKEN = CacheHelper.getData('STUDENT_TOKEN');
@@ -18,4 +19,8 @@ void setStudentData() {
   STUDENT_FACULTY = CacheHelper.getData('STUDENT_FACULTY');
   STUDENT_SEMESTER = CacheHelper.getData('STUDENT_SEMESTER');
   STUDENT_ID = CacheHelper.getData('STUDENT_ID').toString();
+}
+
+void setInstructorData() {
+  INSTRUCTOR_TOKEN = CacheHelper.getData('INSTRUCTOR_TOKEN');
 }

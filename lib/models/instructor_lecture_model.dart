@@ -11,7 +11,7 @@ class InstructorLectureModel {
   String date;
   String time;
   bool finished;
-  num presencePercentage;
+  String presencePercentage;
   num numOfAttendees;
 
   InstructorLectureModel({
@@ -49,7 +49,9 @@ class InstructorLectureModel {
       date: DateFormat('EEE d/MM/yyyy ').format(DateTime.parse(map['date'])),
       time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
       finished: map['finished'] as bool,
-      presencePercentage: map['presencePercentage'] as num,
+      presencePercentage: map['presencePercentage'] == "N/A"
+          ? "N/A"
+          : map['presencePercentage'].toStringAsFixed(2) + '%',
       numOfAttendees: map['numOfAttendees'] as num,
     );
   }

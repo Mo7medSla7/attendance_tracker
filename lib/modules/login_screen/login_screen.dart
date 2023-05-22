@@ -43,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child: Image.asset(height: 200, 'assets/images/app_logo.png'),
+                    child:
+                        Image.asset(height: 200, 'assets/images/app_logo.png'),
                   ),
                   const SizedBox(height: 20),
                   const Align(
@@ -55,7 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: SubBody(
-                          text: 'Login to your account', color: Colors.grey[600]),
+                          text: 'Login to your account',
+                          color: Colors.grey[600]),
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -98,9 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text(
                         'Create new account',
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
                         onPressed: () {
@@ -118,11 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           });
                         },
                         child: const Text(
-                            'Sign Up',
+                          'Sign Up',
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
@@ -135,30 +133,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text(
                         'Are you instructor ?  ',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: Size(40, 20),
+                          minimumSize: const Size(40, 20),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         onPressed: () {
-                          Navigator.of(context)
-                              .push(
+                          Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => InstructorLoginScreen(),
                             ),
                           );
                         },
                         child: const Text(
-                            'Login as instructor',
+                          'Login as instructor',
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       )
                     ],

@@ -21,13 +21,14 @@ void main() async {
   DioHelper.init();
   await CacheHelper.init();
   setStudentData();
+  setInstructorData();
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
         create: (context) => AppCubit()..getSubjects(),
       ),
       BlocProvider(
-        create: (context) => InstructorCubit(),
+        create: (context) => InstructorCubit()..getSubjects(),
       ),
     ],
     child: MyApp(),
@@ -38,12 +39,14 @@ class MyApp extends StatelessWidget {
   final bool isOnboardingFinished =
       CacheHelper.getData('isOnboardingFinished') ?? false;
   final bool isLoggedIn = CacheHelper.getData('isLoggedIn') ?? false;
-
+  final bool isInstructor = CacheHelper.getData('isInstructor') ?? false;
   late final Widget startWidget = !isOnboardingFinished
       ? OnBoardingScreen()
       : !isLoggedIn
           ? LoginScreen()
-          : LayoutScreen();
+          : isInstructor
+              ? InstructorHomeScreen()
+              : LayoutScreen();
 
   @override
   Widget build(BuildContext context) {

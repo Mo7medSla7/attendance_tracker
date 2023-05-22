@@ -6,3 +6,6 @@ const String SUBJECTS = 'user/subjects'; //get
 const String REGISTER_SUBJECT = 'user/registerSubject'; //post
 const String NEXT_LECTURES = 'user/lectures'; //get
 const String SCAN = 'user/takeAttendance'; //post
+const String INSTRUCTOR_LOGIN = 'instructorAuth/login'; //post
+const String INSTRUCTOR_SUBJECT = 'instructor/dashboard'; //get
+const String INSTRUCTOR_SUBJECT_QUERIES = 'instructor/subjects/'; //get

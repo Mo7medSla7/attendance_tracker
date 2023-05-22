@@ -1,8 +1,12 @@
+import 'package:attendance_tracker/models/instructor_lecture_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/component.dart';
 
 class InstructorLectureScreen extends StatelessWidget {
+  InstructorLectureScreen(this.lecture, {super.key});
+  final InstructorLectureModel lecture;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +17,6 @@ class InstructorLectureScreen extends StatelessWidget {
         ),
       ),
       appBar: AppBar(
-        title: const Text('Lecture name'),
         actions: [
           TextButton(
             onPressed: () {},
@@ -35,10 +38,15 @@ class InstructorLectureScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Subtitle(title: 'Lecture name'),
-                  const Spacer(),
+                  Expanded(
+                      child: Subtitle(
+                    title: lecture.name,
+                  )),
+                  const SizedBox(
+                    width: 16,
+                  ),
                   const Text('Status : '),
-                  5 == 5
+                  lecture.finished
                       ? Row(
                           children: const [
                             Text(
@@ -74,16 +82,16 @@ class InstructorLectureScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    children: const [
-                      Text('Scheduled Date : '),
+                    children: [
+                      const Text('Scheduled Date : '),
                       Text(
-                        'Wed 25/3/2023 ',
-                        style: TextStyle(
+                        lecture.date,
+                        style: const TextStyle(
                           color: Colors.indigo,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.calendar_today,
                         color: Colors.indigo,
                         size: 16,
@@ -91,16 +99,16 @@ class InstructorLectureScreen extends StatelessWidget {
                     ],
                   ),
                   Row(
-                    children: const [
-                      Text('Scheduled Time : '),
+                    children: [
+                      const Text('Scheduled Time : '),
                       Text(
-                        '12:30 PM ',
-                        style: TextStyle(
+                        lecture.time,
+                        style: const TextStyle(
                           color: Colors.indigo,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.calendar_today,
                         color: Colors.indigo,
                         size: 16,
@@ -110,53 +118,24 @@ class InstructorLectureScreen extends StatelessWidget {
                   const SizedBox(
                     height: 8,
                   ),
-                  Row(
-                    children: const [
-                      Text('Created Date : '),
-                      Text(
-                        'Wed 25/3/2023 ',
-                        style: TextStyle(
-                          color: Colors.indigo,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Icon(
-                        Icons.calendar_today,
-                        color: Colors.indigo,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: const [
-                      Text('Created Time : '),
-                      Text(
-                        '12:30 PM ',
-                        style: TextStyle(
-                          color: Colors.indigo,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Icon(
-                        Icons.calendar_today,
-                        color: Colors.indigo,
-                        size: 16,
-                      ),
-                    ],
-                  ),
+                  MainBody(text: 'Type : ${lecture.type}'),
+                  MainBody(text: 'Location : ${lecture.location}'),
                   const SizedBox(
                     height: 8,
                   ),
+                  MainBody(
+                      text:
+                          'Attendance percentage : ${lecture.presencePercentage}'),
                   Row(
                     children: [
                       const MainBody(text: 'Attendance : '),
                       Row(
-                        children: const [
+                        children: [
                           MainBody(
-                            text: '30',
+                            text: lecture.numOfAttendees.toString(),
                             color: Colors.green,
                           ),
-                          Icon(
+                          const Icon(
                             Icons.person,
                             color: Colors.green,
                             size: 16,

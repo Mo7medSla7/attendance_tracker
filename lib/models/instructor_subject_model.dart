@@ -5,7 +5,7 @@ class InstructorSubjectModel {
   String id;
   num activeStudents;
   String name;
-  String subjectCode;
+  // String subjectCode;
   String faculty;
   String semester;
   String year;
@@ -14,7 +14,7 @@ class InstructorSubjectModel {
     required this.id,
     required this.activeStudents,
     required this.name,
-    required this.subjectCode,
+    // required this.subjectCode,
     required this.faculty,
     required this.semester,
     required this.year,
@@ -25,7 +25,7 @@ class InstructorSubjectModel {
       '_id': id,
       'activeStudents': activeStudents,
       'name': name,
-      'subjectCode': subjectCode,
+      // 'subjectCode': subjectCode,
       'faculty': faculty,
       'semester': semester,
       'year': year,
@@ -37,7 +37,7 @@ class InstructorSubjectModel {
       id: map['_id'] as String,
       activeStudents: map['activeStudents'] as num,
       name: map['name'] as String,
-      subjectCode: map['subjectCode'] as String,
+      // subjectCode: map['subjectCode'] as String,
       faculty: map['faculty'] as String,
       semester: map['semester'] as String,
       year: map['year'] as String,
