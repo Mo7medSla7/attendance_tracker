@@ -35,11 +35,13 @@ dependencies:
   device_info_plus: ^8.2.2
   dio: ^4.0.6
   dots_indicator: ^2.1.0
+  excel: ^2.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
   flutter_svg: ^1.1.5
   intl: ^0.18.1
+  path: ^1.8.2
   percent_indicator: ^4.0.1
   qr_code_scanner: ^1.0.1
   shared_preferences: ^2.0.15

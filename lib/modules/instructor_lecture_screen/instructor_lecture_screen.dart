@@ -1,7 +1,10 @@
 import 'package:attendance_tracker/models/instructor_lecture_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../shared/component.dart';
+import '../instructor_home_screen/instructor_cubit/instructor_cubit.dart';
+import '../instructor_home_screen/instructor_cubit/instructor_states.dart';
 
 class InstructorLectureScreen extends StatelessWidget {
   InstructorLectureScreen(this.lecture, {super.key});
@@ -9,6 +12,8 @@ class InstructorLectureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = InstructorCubit.get(context);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
@@ -19,7 +24,26 @@ class InstructorLectureScreen extends StatelessWidget {
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              cubit.createAttendanceExcel([
+                {
+                  'name': 'John Doe',
+                  'rollNumber': 'A001',
+                  'attendance': 'Present',
+                },
+                {
+                  'name': 'Jane Smith',
+                  'rollNumber': 'A002',
+                  'attendance': 'Absent',
+                },
+                {
+                  'name': 'MO Salah',
+                  'rollNumber': 'A002',
+                  'attendance': 'Absent',
+                },
+                // Add more students as needed
+              ]);
+            },
             child: const Text('Extract as File',
                 style: TextStyle(
                   color: Colors.white,
@@ -29,139 +53,144 @@ class InstructorLectureScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                      child: Subtitle(
-                    title: lecture.name,
-                  )),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  const Text('Status : '),
-                  lecture.finished
-                      ? Row(
-                          children: const [
-                            Text(
-                              'Finished ',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                            Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.green,
-                              size: 16,
-                            )
-                          ],
-                        )
-                      : Row(
-                          children: const [
-                            Text(
-                              'In Future ',
-                              style: TextStyle(color: Colors.orange),
-                            ),
-                            Icon(
-                              Icons.watch_later_rounded,
-                              color: Colors.orange,
-                              size: 16,
-                            )
-                          ],
-                        ),
-                ],
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Column(
+      body: BlocConsumer<InstructorCubit, InstructorStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      const Text('Scheduled Date : '),
-                      Text(
-                        lecture.date,
-                        style: const TextStyle(
-                          color: Colors.indigo,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Expanded(
+                          child: Subtitle(
+                        title: lecture.name,
+                      )),
+                      const SizedBox(
+                        width: 16,
                       ),
-                      const Icon(
-                        Icons.calendar_today,
-                        color: Colors.indigo,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text('Scheduled Time : '),
-                      Text(
-                        lecture.time,
-                        style: const TextStyle(
-                          color: Colors.indigo,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.calendar_today,
-                        color: Colors.indigo,
-                        size: 16,
-                      ),
+                      const Text('Status : '),
+                      lecture.finished
+                          ? Row(
+                              children: const [
+                                Text(
+                                  'Finished ',
+                                  style: TextStyle(color: Colors.green),
+                                ),
+                                Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.green,
+                                  size: 16,
+                                )
+                              ],
+                            )
+                          : Row(
+                              children: const [
+                                Text(
+                                  'In Future ',
+                                  style: TextStyle(color: Colors.orange),
+                                ),
+                                Icon(
+                                  Icons.watch_later_rounded,
+                                  color: Colors.orange,
+                                  size: 16,
+                                )
+                              ],
+                            ),
                     ],
                   ),
                   const SizedBox(
                     height: 8,
                   ),
-                  MainBody(text: 'Type : ${lecture.type}'),
-                  MainBody(text: 'Location : ${lecture.location}'),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  MainBody(
-                      text:
-                          'Attendance percentage : ${lecture.presencePercentage}'),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const MainBody(text: 'Attendance : '),
                       Row(
                         children: [
-                          MainBody(
-                            text: lecture.numOfAttendees.toString(),
-                            color: Colors.green,
+                          const Text('Scheduled Date : '),
+                          Text(
+                            lecture.date,
+                            style: const TextStyle(
+                              color: Colors.indigo,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const Icon(
-                            Icons.person,
-                            color: Colors.green,
+                            Icons.calendar_today,
+                            color: Colors.indigo,
                             size: 16,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text('Scheduled Time : '),
+                          Text(
+                            lecture.time,
+                            style: const TextStyle(
+                              color: Colors.indigo,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Icon(
+                            Icons.calendar_today,
+                            color: Colors.indigo,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      MainBody(text: 'Type : ${lecture.type}'),
+                      MainBody(text: 'Location : ${lecture.location}'),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      MainBody(
+                          text:
+                              'Attendance percentage : ${lecture.presencePercentage}'),
+                      Row(
+                        children: [
+                          const MainBody(text: 'Attendance : '),
+                          Row(
+                            children: [
+                              MainBody(
+                                text: lecture.numOfAttendees.toString(),
+                                color: Colors.green,
+                              ),
+                              const Icon(
+                                Icons.person,
+                                color: Colors.green,
+                                size: 16,
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const Subtitle(title: 'Attended Students'),
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => buildStudentAttendItem(),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 4,
+                    ),
+                    itemCount: 10,
+                  )
                 ],
               ),
-              const SizedBox(
-                height: 8,
-              ),
-              const Subtitle(title: 'Attended Students'),
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) => buildStudentAttendItem(),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 4,
-                ),
-                itemCount: 10,
-              )
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

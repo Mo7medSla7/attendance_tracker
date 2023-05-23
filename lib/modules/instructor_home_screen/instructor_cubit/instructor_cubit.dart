@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:attendance_tracker/models/instructor_lecture_model.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
 import 'package:dio/dio.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart' as path;
 
 import '../../../helpers/dio_helper.dart';
 import '../../../models/instructor_subject_model.dart';
@@ -111,6 +115,50 @@ class InstructorCubit extends Cubit<InstructorStates> {
       print(e.toString());
       emit(GetLecturesAttendeesErrorState());
     });
+  }
+
+  Future<void> createAttendanceExcel(
+      List<Map<String, dynamic>> students) async {
+    // Create a new Excel workbook
+    final Excel excel = Excel.createExcel();
+    excel.rename('Sheet1', 'Attendance');
+    // Create the "Attendance" sheet
+    final Sheet sheet = excel['Attendance'];
+
+    // Set the headers for the Excel sheet
+    final List<String> headers = ['Name', 'Roll Number', 'Attendance'];
+    sheet.appendRow(headers);
+
+    // Add student attendance details to the sheet
+    for (final student in students) {
+      final List<String> rowData = [
+        student['name'],
+        student['rollNumber'],
+        student['attendance'],
+      ];
+      sheet.appendRow(rowData);
+    }
+
+    // Get the root directory
+    final Directory root = Directory('/storage/emulated/0/');
+
+    // Create the custom directory if it doesn't exist
+    final String customDirectoryName = 'SU Attendance';
+    final Directory customDirectory =
+        Directory(path.join(root.path, customDirectoryName));
+    if (!await customDirectory.exists()) {
+      await customDirectory.create();
+    }
+
+    // Save the Excel file to the custom directory
+    final String fileName = 'attendance.xlsx';
+    final String filePath = path.join(customDirectory.path, fileName);
+
+    final File file = File(filePath);
+    await file.writeAsBytes(excel.encode()!);
+
+    // Show a message with the file path
+    print('Excel file created: $filePath');
   }
 
   void logout() {}
