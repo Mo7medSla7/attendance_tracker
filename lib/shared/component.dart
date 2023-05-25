@@ -1,6 +1,8 @@
 import 'package:attendance_tracker/shared/constants.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class DefaultFormField extends StatelessWidget {
   final String hintText;
@@ -460,3 +462,71 @@ Widget buildStudentAttendItem() => Card(
         ),
       ),
     );
+class DefaultFormField2 extends StatelessWidget {
+  DefaultFormField2 ({Key? key,
+    required this.controller,
+    required this.onSubmit,
+    required this.onChange,
+    required this.label,
+    required this.type,
+    this.suffix,
+    this.onPressedSuffix,
+    this.enableReadOnly = false,
+    this.errorMessage,
+    required this.isSuffixClicked ,
+  }) : super(key: key);
+  final TextEditingController controller;
+  final TextInputType type;
+  final Function onSubmit;
+  final Function onChange;
+  final String label;
+  final String? errorMessage;
+  IconData? suffix;
+  Function? onPressedSuffix;
+  bool? enableReadOnly;
+  bool isSuffixClicked ;
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller:controller,
+      readOnly: enableReadOnly!,
+      keyboardType: type,
+      onFieldSubmitted: onSubmit(),
+      onChanged: onChange(),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return '${errorMessage ?? 'This field'} can not be empty';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: label,
+        suffixIcon: isSuffixClicked ? IconButton(
+          onPressed: (){onPressedSuffix!();},
+          icon: Icon(suffix),
+        ) : Icon(suffix),
+        border: const OutlineInputBorder(),
+      ),
+    ) ;
+  }
+}
+
+
+void showDefaultSnackBar(BuildContext context, String toastText) {
+  final scaffold = ScaffoldMessenger.of(context);
+  scaffold.showSnackBar(
+    SnackBar(
+      duration: const Duration(seconds: 2),
+      content:  Text(toastText),
+      action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+    ),
+  );
+}
+void showDefaultToast(BuildContext context, String msg,
+    )=> Fluttertoast.showToast(
+          msg: msg,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0
+        );

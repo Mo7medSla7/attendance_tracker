@@ -7,6 +7,7 @@ import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class InstructorSubjectScreen extends StatelessWidget {
   const InstructorSubjectScreen(this.subject, {Key? key}) : super(key: key);
@@ -22,15 +23,7 @@ class InstructorSubjectScreen extends StatelessWidget {
           subject.name,
         ),
         actions: [
-          TextButton(
-            onPressed: () {},
-            child: const Text('Add Lecture',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
+          AddNewLectureAlert()
         ],
       ),
       body: BlocConsumer<InstructorCubit, InstructorStates>(
@@ -61,7 +54,7 @@ class InstructorSubjectScreen extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => AllStudentsScreen(),
+                                    builder: (context) => const AllStudentsScreen(),
                                   ));
                                 },
                                 child: const MiniTitle(
@@ -222,3 +215,200 @@ Widget buildCourseLectures(InstructorLectureModel lecture, context) =>
         ),
       ),
     );
+
+class AddNewLectureAlert extends StatelessWidget {
+
+
+  var lectureName = TextEditingController();
+
+  var lectureLocation = TextEditingController();
+
+  var dateController = TextEditingController();
+
+  var timeController = TextEditingController();
+
+  var formKey = GlobalKey<FormState>();
+
+  String? selectedType;
+
+  List <String> types =
+  [
+    'Lecture',
+    'Section'
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: ()
+      {
+        showDialog (context: context, builder: (context)=>AlertDialog(
+          title:const MiniTitle(title: 'Add New lecture'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children : [
+              SizedBox(
+                width: 1500,
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      DefaultFormField2(
+                        controller: lectureName,
+                        onSubmit:(){},
+                        onChange: (){},
+                        label: 'Lecture title',
+                        type: TextInputType.text,
+                        suffix: Icons.title,
+                        isSuffixClicked: false,
+                      ),
+                      const SizedBox(height: 5,),
+                      DefaultFormField2(
+                        controller: lectureLocation,
+                        onSubmit:(){},
+                        onChange: (){},
+                        label: 'Lecture location',
+                        type: TextInputType.text,
+                        suffix: Icons.location_on_outlined, isSuffixClicked: false,
+                      ),
+                      const SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DefaultFormField2(
+                              controller: dateController,
+                              onSubmit:(){},
+                              onChange: (){},
+                              isSuffixClicked: true,
+                              enableReadOnly: true,
+                              label: 'Date',
+                              type: TextInputType.text,
+                              suffix:Icons.date_range_outlined,
+                              onPressedSuffix: ()
+                              {
+                                showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate:DateTime.now(),
+                                  lastDate: DateTime.parse('2044-05-23'),
+                                ).then((value) {
+                                  dateController.text = DateFormat.MMMd().format(value!);
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 4,),
+                          Expanded(
+                            child: DefaultFormField2(
+                              controller: timeController,
+                              onSubmit:(){},
+                              onChange: (){},
+                              isSuffixClicked: true,
+                              enableReadOnly: true,
+                              label: 'Time',
+                              type: TextInputType.text,
+                              suffix:Icons.access_time_outlined,
+                              onPressedSuffix: ()
+                              {
+                                showTimePicker(context: context, initialTime: TimeOfDay.now()
+                                ).then((value)
+                                {
+                                  timeController.text=(value!.format(context).toString());
+                                }
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5,),
+                      StatefulBuilder(
+                          builder: (context,setState) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: Colors.black54,
+                                  width: 1,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  hint: const Text('Choose Type'),
+                                  isExpanded: true,
+                                  items: types
+                                      .map(
+                                        (item) => DropdownMenuItem(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    ),
+                                  )
+                                      .toList(),
+                                  onChanged: (item) {
+                                    setState(() {
+                                      selectedType = item!;
+                                    });
+                                  },
+                                  value: selectedType,
+                                ),
+                              ),
+                            );
+                          }
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.grey[400]),
+                    ),
+                    onPressed: ()
+                    {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel',),
+                  ),
+                  const Spacer(),
+                  StatefulBuilder(
+                    builder: (context,setState) {
+                      return ElevatedButton(
+                        onPressed: ()
+                        {
+                          setState(() {
+                            formKey.currentState!.validate();
+                          });
+                        },
+                        child: const Text('Submit',),
+                      );
+                    }
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        );
+      },
+      child: const Text('Add Lecture',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          )),
+    );
+  }
+}
