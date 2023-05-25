@@ -190,8 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
   void login(context) {
-    //mohamedsalah@mail.com
-    //987987987987
+    FocusScope.of(context).unfocus();
     setState(() {
       isLoading = true;
     });

@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.18.1
   path: ^1.8.2
   percent_indicator: ^4.0.1
+  permission_handler: ^10.2.0
   qr_code_scanner: ^1.0.1
   shared_preferences: ^2.0.15
   smooth_page_indicator: ^1.0.0+2

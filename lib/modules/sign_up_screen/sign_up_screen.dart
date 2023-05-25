@@ -244,6 +244,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   void signUp(context) {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       isLoading = true;
     });

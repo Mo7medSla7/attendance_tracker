@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../helpers/dio_helper.dart';
 import '../../../models/instructor_subject_model.dart';
@@ -146,20 +147,51 @@ class InstructorCubit extends Cubit<InstructorStates> {
     final String customDirectoryName = 'SU Attendance';
     final Directory customDirectory =
         Directory(path.join(root.path, customDirectoryName));
-    if (!await customDirectory.exists()) {
-      await customDirectory.create();
+
+    // if (await Permission.speech.isPermanentlyDenied) {
+    //  openAppSettings();
+    if (await _hasAcceptedPermissions()) {
+      if (!await customDirectory.exists()) {
+        await customDirectory.create();
+      }
+
+      // Save the Excel file to the custom directory
+      final String fileName = 'attendance.xlsx';
+      final String filePath = path.join(customDirectory.path, fileName);
+
+      final File file = File(filePath);
+      await file.writeAsBytes(excel.encode()!);
+      print('Excel file created: $filePath');
     }
 
-    // Save the Excel file to the custom directory
-    final String fileName = 'attendance.xlsx';
-    final String filePath = path.join(customDirectory.path, fileName);
-
-    final File file = File(filePath);
-    await file.writeAsBytes(excel.encode()!);
-
     // Show a message with the file path
-    print('Excel file created: $filePath');
+  }
+
+  Future<bool> _hasAcceptedPermissions() async {
+    if (Platform.isAndroid) {
+      if (await _requestPermission(Permission.storage) &&
+          // access media location needed for android 10/Q
+          await _requestPermission(Permission.accessMediaLocation)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    if (Platform.isIOS) {
+      if (await _requestPermission(Permission.photos)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // not android or ios
+      return false;
+    }
   }
 
   void logout() {}
+
+  _requestPermission(Permission permission) async {
+    return await permission.request().isGranted;
+  }
 }

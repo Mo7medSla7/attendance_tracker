@@ -94,8 +94,8 @@ class _InstructorLoginScreenState extends State<InstructorLoginScreen> {
   }
 
   void login(context) {
-    //mohamedsalah@mail.com
-    //987987987987
+    FocusScope.of(context).unfocus();
+
     setState(() {
       isLoading = true;
     });
@@ -119,7 +119,7 @@ class _InstructorLoginScreenState extends State<InstructorLoginScreen> {
     }).catchError((error) {
       setState(() {
         isLoading = false;
-        errorMessage = error.response.data['message'];
+        errorMessage = error.response.data['message'].toString();
       });
     });
   }
