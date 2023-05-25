@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:attendance_tracker/models/instructor_lecture_model.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -170,8 +171,14 @@ class InstructorCubit extends Cubit<InstructorStates> {
   Future<bool> _hasAcceptedPermissions() async {
     if (Platform.isAndroid) {
       if (await _requestPermission(Permission.storage) &&
-          // access media location needed for android 10/Q
-          await _requestPermission(Permission.accessMediaLocation)) {
+              // access media location needed for android 10/Q
+              await _requestPermission(Permission.accessMediaLocation)
+          // manage external storage needed for android 11/R
+          ) {
+        var androidInfo = await DeviceInfoPlugin().androidInfo;
+        if (androidInfo.version.sdkInt >= 30) {
+          return await _requestPermission(Permission.manageExternalStorage);
+        }
         return true;
       } else {
         return false;
