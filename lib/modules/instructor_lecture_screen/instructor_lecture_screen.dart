@@ -13,6 +13,9 @@ class InstructorLectureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = InstructorCubit.get(context);
+    if (lecture.finished) {
+      cubit.getLectureAttendees(lecture.id);
+    }
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -23,39 +26,29 @@ class InstructorLectureScreen extends StatelessWidget {
       ),
       appBar: AppBar(
         actions: [
-          TextButton(
-            onPressed: () {
-              cubit.createAttendanceExcel([
-                {
-                  'name': 'John Doe',
-                  'rollNumber': 'A001',
-                  'attendance': 'Present',
-                },
-                {
-                  'name': 'Jane Smith',
-                  'rollNumber': 'A002',
-                  'attendance': 'Absent',
-                },
-                {
-                  'name': 'MO Salah',
-                  'rollNumber': 'A002',
-                  'attendance': 'Absent',
-                },
-                // Add more students as needed
-              ]);
-            },
-            child: const Text('Extract as File',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
+          if (lecture.finished)
+            TextButton(
+              onPressed: () {
+                cubit.createAttendanceExcel(
+                  cubit.lectureAttendees,
+                  lecture.name,
+                  lecture.date,
+                );
+              },
+              child: const Text('Extract as File',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
         ],
       ),
       body: BlocConsumer<InstructorCubit, InstructorStates>(
         listener: (context, state) {},
         builder: (context, state) {
+          var cubit = InstructorCubit.get(context);
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -150,42 +143,57 @@ class InstructorLectureScreen extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      MainBody(
-                          text:
-                              'Attendance percentage : ${lecture.presencePercentage}'),
-                      Row(
-                        children: [
-                          const MainBody(text: 'Attendance : '),
-                          Row(
-                            children: [
-                              MainBody(
-                                text: lecture.numOfAttendees.toString(),
-                                color: Colors.green,
-                              ),
-                              const Icon(
-                                Icons.person,
-                                color: Colors.green,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      if (lecture.finished)
+                        MainBody(
+                            text:
+                                'Attendance percentage : ${lecture.presencePercentage}'),
+                      if (lecture.finished)
+                        Row(
+                          children: [
+                            const MainBody(text: 'Attendance : '),
+                            Row(
+                              children: [
+                                MainBody(
+                                  text: lecture.numOfAttendees.toString(),
+                                  color: Colors.green,
+                                ),
+                                const Icon(
+                                  Icons.person,
+                                  color: Colors.green,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                   const SizedBox(
                     height: 8,
                   ),
-                  const Subtitle(title: 'Attended Students'),
-                  ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => buildStudentAttendItem(),
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 4,
-                    ),
-                    itemCount: 10,
-                  )
+                  if (lecture.finished)
+                    const Subtitle(title: 'Attended Students'),
+                  if (lecture.finished)
+                    cubit.isGettingAttendees
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 200.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : ListView.separated(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return buildStudentAttendItem(
+                                  cubit.lectureAttendees[index]);
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 4,
+                            ),
+                            itemCount: cubit.lectureAttendees.length,
+                          )
                 ],
               ),
             ),
@@ -196,7 +204,7 @@ class InstructorLectureScreen extends StatelessWidget {
   }
 }
 
-Widget buildStudentAttendItem() => Card(
+Widget buildStudentAttendItem(student) => Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -206,25 +214,25 @@ Widget buildStudentAttendItem() => Card(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: const [
-                    MiniTitle(
+                  children: [
+                    const MiniTitle(
                       title: "Name : ",
                     ),
-                    const MainBody(
-                      text: "Mohamed Salah Mohamed Ahmed",
+                    MainBody(
+                      text: student['name'],
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Row(
-                  children: const [
-                    MiniTitle(
+                  children: [
+                    const MiniTitle(
                       title: "ID : ",
                     ),
-                    const MainBody(
-                      text: "190900013",
+                    MainBody(
+                      text: student['studentId'],
                     ),
                   ],
                 ),

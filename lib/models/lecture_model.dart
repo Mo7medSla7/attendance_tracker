@@ -42,7 +42,7 @@ class LectureModel {
       type: map['type'] as String,
       instructorName: map['instructor']['name'] as String,
       instructorId: map['instructor']['_id'] as String,
-      date: DateFormat('EEE d/MM/yyyy ').format(DateTime.parse(map['date'])),
+      date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
       time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
     );
   }

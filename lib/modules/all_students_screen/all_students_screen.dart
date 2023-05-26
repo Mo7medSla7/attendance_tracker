@@ -1,11 +1,19 @@
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../instructor_home_screen/instructor_cubit/instructor_cubit.dart';
+import '../instructor_home_screen/instructor_cubit/instructor_states.dart';
 
 class AllStudentsScreen extends StatelessWidget {
-  const AllStudentsScreen({super.key});
+  const AllStudentsScreen(this.subjectId, {super.key});
+
+  final String subjectId;
 
   @override
   Widget build(BuildContext context) {
+    var cubit = InstructorCubit.get(context);
+    cubit.getSubjectActiveStudents(subjectId);
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Students'),
@@ -24,18 +32,37 @@ class AllStudentsScreen extends StatelessWidget {
           )
         ],
       ),
-      body: ListView.separated(
-        itemBuilder: (context, index) => buildStudentItem(),
-        separatorBuilder: (context, index) => const SizedBox(
-          height: 4,
-        ),
-        itemCount: 15,
+      body: BlocConsumer<InstructorCubit, InstructorStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return cubit.isGettingActiveStudents
+              ? const Center(child: CircularProgressIndicator())
+              : cubit.activeStudents.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'There is no active students for this course yet',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  : ListView.separated(
+                      itemBuilder: (context, index) =>
+                          buildStudentItem(cubit.activeStudents[index]),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 4,
+                      ),
+                      itemCount: cubit.activeStudents.length,
+                    );
+        },
       ),
     );
   }
 }
 
-Widget buildStudentItem() => Card(
+Widget buildStudentItem(student) => Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -45,25 +72,25 @@ Widget buildStudentItem() => Card(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: const [
-                    MiniTitle(
+                  children: [
+                    const MiniTitle(
                       title: "Name : ",
                     ),
-                    const MainBody(
-                      text: "Mohamed Salah Mohamed Ahmed",
+                    MainBody(
+                      text: student['name'],
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Row(
-                  children: const [
-                    MiniTitle(
+                  children: [
+                    const MiniTitle(
                       title: "ID : ",
                     ),
-                    const MainBody(
-                      text: "190900013",
+                    MainBody(
+                      text: student['studentId'].toString(),
                     ),
                   ],
                 ),

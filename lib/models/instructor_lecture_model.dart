@@ -46,7 +46,7 @@ class InstructorLectureModel {
       location: map['location'] as String,
       name: map['name'] as String,
       type: map['type'] as String,
-      date: DateFormat('EEE d/MM/yyyy ').format(DateTime.parse(map['date'])),
+      date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
       time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
       finished: map['finished'] as bool,
       presencePercentage: map['presencePercentage'] == "N/A"

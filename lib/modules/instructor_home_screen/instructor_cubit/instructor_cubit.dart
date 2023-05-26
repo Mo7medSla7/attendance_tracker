@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:attendance_tracker/models/instructor_lecture_model.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
+import 'package:attendance_tracker/shared/component.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:excel/excel.dart';
@@ -96,19 +97,49 @@ class InstructorCubit extends Cubit<InstructorStates> {
     });
   }
 
-  List<InstructorLectureModel> lectureAttendees = [];
+  List<Map> activeStudents = [];
+  bool isGettingActiveStudents = false;
+
+  Future<void> getSubjectActiveStudents(id) async {
+    emit(GetSubjectActiveStudentsLoadingState());
+    isGettingActiveStudents = true;
+    final url = '$INSTRUCTOR_SUBJECT_QUERIES/$id/students';
+
+    DioHelper.getData(url: url, token: 'Bearer $INSTRUCTOR_TOKEN')
+        .then((Response response) {
+      activeStudents.clear();
+      response.data.forEach((student) {
+        activeStudents.add({
+          'name': student['student']['name'],
+          'studentId': student['student']['studentId'],
+        });
+      });
+      isGettingActiveStudents = false;
+      emit(GetSubjectActiveStudentsSuccessState());
+    }).catchError((e) {
+      isGettingActiveStudents = false;
+      print(e.toString());
+      emit(GetSubjectActiveStudentsErrorState());
+    });
+  }
+
+  List<Map> lectureAttendees = [];
   bool isGettingAttendees = false;
 
   Future<void> getLectureAttendees(id) async {
     emit(GetLecturesAttendeesLoadingState());
     isGettingAttendees = true;
-    final url = '$INSTRUCTOR_SUBJECT_QUERIES/$id/lectures';
+    final url = '$INSTRUCTOR_SUBJECT_QUERIES/lectures/$id/attendance';
 
     DioHelper.getData(url: url, token: 'Bearer $INSTRUCTOR_TOKEN')
         .then((Response response) {
       lectureAttendees.clear();
-      response.data.forEach((lecture) {
-        lectureAttendees.add(InstructorLectureModel.fromMap(lecture));
+      response.data.forEach((student) {
+        print(student);
+        lectureAttendees.add({
+          'name': student['name'],
+          'studentId': student['studentId'].toString(),
+        });
       });
       isGettingAttendees = false;
       emit(GetLecturesAttendeesSuccessState());
@@ -119,62 +150,86 @@ class InstructorCubit extends Cubit<InstructorStates> {
     });
   }
 
+  late bool isLectureCreated;
+  Future<void> createLecture({
+    required String subjectId,
+    required String name,
+    required String location,
+    required String date,
+    required String type,
+  }) async {
+    await DioHelper.postData(
+      url: INSTRUCTOR_ADD_LECTURE,
+      token: 'Bearer $INSTRUCTOR_TOKEN',
+      data: {
+        'subjectId': subjectId,
+        'name': name,
+        'location': location,
+        'date': date,
+        'type': type,
+      },
+    ).then((Response response) {
+      isLectureCreated = true;
+      getLecturesOfSubject(subjectId);
+      emit(CreateLectureSuccessState());
+    }).catchError((e) {
+      isLectureCreated = false;
+      emit(CreateLectureErrorState());
+    });
+  }
+
   Future<void> createAttendanceExcel(
-      List<Map<String, dynamic>> students) async {
-    // Create a new Excel workbook
-    final Excel excel = Excel.createExcel();
-    excel.rename('Sheet1', 'Attendance');
-    // Create the "Attendance" sheet
-    final Sheet sheet = excel['Attendance'];
+      List<Map<dynamic, dynamic>> students, lectureName, lectureDate) async {
+    try {
+      final Excel excel = Excel.createExcel();
 
-    // Set the headers for the Excel sheet
-    final List<String> headers = ['Name', 'Roll Number', 'Attendance'];
-    sheet.appendRow(headers);
+      excel.rename('Sheet1', 'Attendance');
+      final Sheet sheet = excel['Attendance'];
 
-    // Add student attendance details to the sheet
-    for (final student in students) {
-      final List<String> rowData = [
-        student['name'],
-        student['rollNumber'],
-        student['attendance'],
-      ];
-      sheet.appendRow(rowData);
-    }
+      final List<String> headers = ['Student Name', 'Student ID'];
+      sheet.appendRow(headers);
 
-    // Get the root directory
-    final Directory root = Directory('/storage/emulated/0/');
-
-    // Create the custom directory if it doesn't exist
-    final String customDirectoryName = 'SU Attendance';
-    final Directory customDirectory =
-        Directory(path.join(root.path, customDirectoryName));
-
-    // if (await Permission.speech.isPermanentlyDenied) {
-    //  openAppSettings();
-    if (await _hasAcceptedPermissions()) {
-      if (!await customDirectory.exists()) {
-        await customDirectory.create();
+      for (final student in students) {
+        final List<String> rowData = [
+          student['name'],
+          student['studentId'],
+        ];
+        sheet.appendRow(rowData);
       }
 
-      // Save the Excel file to the custom directory
-      final String fileName = 'attendance.xlsx';
-      final String filePath = path.join(customDirectory.path, fileName);
+      final Directory root = Directory('/storage/emulated/0/');
 
-      final File file = File(filePath);
-      await file.writeAsBytes(excel.encode()!);
-      print('Excel file created: $filePath');
+      const String customDirectoryName = 'SU Attendance';
+      final Directory customDirectory =
+          Directory(path.join(root.path, customDirectoryName));
+
+      if (await _hasAcceptedPermissions()) {
+        if (!await customDirectory.exists()) {
+          await customDirectory.create();
+        }
+
+        final String fileName = '$lectureName - $lectureDate- attendance.xlsx';
+
+        final String filePath = path.join(customDirectory.path, fileName);
+
+        final File file = await File(filePath);
+
+        await file.writeAsBytes(excel.encode()!);
+        showDefaultToast('Excel file created: $filePath');
+        emit(ExtractStudentsSuccessState());
+      }
+    } catch (e) {
+      print(e);
+
+      showDefaultToast('Error happened while creating excel file');
+      emit(ExtractStudentsErrorState());
     }
-
-    // Show a message with the file path
   }
 
   Future<bool> _hasAcceptedPermissions() async {
     if (Platform.isAndroid) {
       if (await _requestPermission(Permission.storage) &&
-              // access media location needed for android 10/Q
-              await _requestPermission(Permission.accessMediaLocation)
-          // manage external storage needed for android 11/R
-          ) {
+          await _requestPermission(Permission.accessMediaLocation)) {
         var androidInfo = await DeviceInfoPlugin().androidInfo;
         if (androidInfo.version.sdkInt >= 30) {
           return await _requestPermission(Permission.manageExternalStorage);
@@ -191,14 +246,13 @@ class InstructorCubit extends Cubit<InstructorStates> {
         return false;
       }
     } else {
-      // not android or ios
       return false;
     }
   }
 
-  void logout() {}
-
   _requestPermission(Permission permission) async {
     return await permission.request().isGranted;
   }
+
+  void logout() {}
 }

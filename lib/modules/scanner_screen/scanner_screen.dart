@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
+import 'package:attendance_tracker/shared/component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -53,19 +56,19 @@ class _ScannerScreenState extends State<ScannerScreen> {
         await cubit.qrScan(scanData.code!, widget.id);
         if (cubit.qrSuccessScan) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Attendance recorded successfully'),
-              backgroundColor: Colors.green,
-            ),
+          showDefaultSnackBar(
+            context,
+            'Attendance recorded successfully',
+            Colors.green,
+            Colors.white,
           );
         } else {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to record attendance'),
-              backgroundColor: Colors.red,
-            ),
+          showDefaultSnackBar(
+            context,
+            'Failed to record attendance',
+            Colors.red,
+            Colors.white,
           );
         }
         isPageOpened = true;

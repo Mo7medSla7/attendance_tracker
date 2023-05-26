@@ -22,9 +22,7 @@ class InstructorSubjectScreen extends StatelessWidget {
         title: Text(
           subject.name,
         ),
-        actions: [
-          AddNewLectureAlert()
-        ],
+        actions: [AddNewLectureAlert(subject.id)],
       ),
       body: BlocConsumer<InstructorCubit, InstructorStates>(
         listener: (context, state) {},
@@ -51,15 +49,18 @@ class InstructorSubjectScreen extends StatelessWidget {
                                 title:
                                     '${subject.activeStudents} Active student'),
                             const Spacer(),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const AllStudentsScreen(),
-                                  ));
-                                },
-                                child: const MiniTitle(
-                                  title: 'Show All',
-                                )),
+                            if (subject.activeStudents > 0)
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          AllStudentsScreen(subject.id),
+                                    ));
+                                  },
+                                  child: const MiniTitle(
+                                    title: 'Show All',
+                                  )),
                           ],
                         ),
                       ],
@@ -217,191 +218,260 @@ Widget buildCourseLectures(InstructorLectureModel lecture, context) =>
     );
 
 class AddNewLectureAlert extends StatelessWidget {
-
+  AddNewLectureAlert(this.subjectId, {super.key});
+  final String subjectId;
 
   var lectureName = TextEditingController();
-
   var lectureLocation = TextEditingController();
-
   var dateController = TextEditingController();
-
   var timeController = TextEditingController();
-
   var formKey = GlobalKey<FormState>();
 
   String? selectedType;
+  List<String> types = ['Lecture', 'Section'];
 
-  List <String> types =
-  [
-    'Lecture',
-    'Section'
-  ];
+  String formattedDate = '';
+  String formattedTime = '';
+  String isoDate = '';
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: ()
-      {
-        showDialog (context: context, builder: (context)=>AlertDialog(
-          title:const MiniTitle(title: 'Add New lecture'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children : [
-              SizedBox(
-                width: 1500,
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      DefaultFormField2(
-                        controller: lectureName,
-                        onSubmit:(){},
-                        onChange: (){},
-                        label: 'Lecture title',
-                        type: TextInputType.text,
-                        suffix: Icons.title,
-                        isSuffixClicked: false,
-                      ),
-                      const SizedBox(height: 5,),
-                      DefaultFormField2(
-                        controller: lectureLocation,
-                        onSubmit:(){},
-                        onChange: (){},
-                        label: 'Lecture location',
-                        type: TextInputType.text,
-                        suffix: Icons.location_on_outlined, isSuffixClicked: false,
-                      ),
-                      const SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DefaultFormField2(
-                              controller: dateController,
-                              onSubmit:(){},
-                              onChange: (){},
-                              isSuffixClicked: true,
-                              enableReadOnly: true,
-                              label: 'Date',
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => Center(
+            child: SingleChildScrollView(
+              child: AlertDialog(
+                title: const MiniTitle(title: 'Add New lecture'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 1500,
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            DefaultFormField2(
+                              controller: lectureName,
+                              label: 'Lecture title',
                               type: TextInputType.text,
-                              suffix:Icons.date_range_outlined,
-                              onPressedSuffix: ()
-                              {
-                                showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate:DateTime.now(),
-                                  lastDate: DateTime.parse('2044-05-23'),
-                                ).then((value) {
-                                  dateController.text = DateFormat.MMMd().format(value!);
-                                });
-                              },
+                              suffix: Icons.title,
+                              isSuffixClicked: false,
                             ),
-                          ),
-                          const SizedBox(width: 4,),
-                          Expanded(
-                            child: DefaultFormField2(
-                              controller: timeController,
-                              onSubmit:(){},
-                              onChange: (){},
-                              isSuffixClicked: true,
-                              enableReadOnly: true,
-                              label: 'Time',
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            DefaultFormField2(
+                              controller: lectureLocation,
+                              label: 'Lecture location',
                               type: TextInputType.text,
-                              suffix:Icons.access_time_outlined,
-                              onPressedSuffix: ()
-                              {
-                                showTimePicker(context: context, initialTime: TimeOfDay.now()
-                                ).then((value)
-                                {
-                                  timeController.text=(value!.format(context).toString());
-                                }
-                                );
-                              },
+                              suffix: Icons.location_on_outlined,
+                              isSuffixClicked: false,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5,),
-                      StatefulBuilder(
-                          builder: (context,setState) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black54,
-                                  width: 1,
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: DefaultFormField2(
+                                    controller: dateController,
+                                    isSuffixClicked: true,
+                                    enableReadOnly: true,
+                                    label: 'Date',
+                                    type: TextInputType.text,
+                                    suffix: Icons.date_range_outlined,
+                                    onPressedSuffix: () {
+                                      showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime.parse('2044-05-23'),
+                                      ).then((value) {
+                                        if (value == null) return;
+                                        formattedDate = '';
+                                        formattedDate = DateFormat("yyyy-MM-dd")
+                                            .format(value);
+                                        dateController.text =
+                                            DateFormat.MMMd().format(value);
+                                      });
+                                    },
+                                  ),
                                 ),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  hint: const Text('Choose Type'),
-                                  isExpanded: true,
-                                  items: types
-                                      .map(
-                                        (item) => DropdownMenuItem(
-                                      value: item,
-                                      child: Text(
-                                        item,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(fontSize: 14),
-                                      ),
-                                    ),
-                                  )
-                                      .toList(),
-                                  onChanged: (item) {
-                                    setState(() {
-                                      selectedType = item!;
-                                    });
-                                  },
-                                  value: selectedType,
+                                const SizedBox(
+                                  width: 4,
                                 ),
-                              ),
-                            );
-                          }
+                                Expanded(
+                                  child: DefaultFormField2(
+                                    controller: timeController,
+                                    isSuffixClicked: true,
+                                    enableReadOnly: true,
+                                    label: 'Time',
+                                    type: TextInputType.text,
+                                    suffix: Icons.access_time_outlined,
+                                    onPressedSuffix: () {
+                                      showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                      ).then((value) {
+                                        if (value == null) return;
+                                        timeController.text =
+                                            (value.format(context).toString());
+                                        formattedTime = '';
+                                        formattedTime += 'T';
+                                        String hour = '0';
+                                        if (value.period == DayPeriod.am) {
+                                          hour += value.hour.toString();
+                                        }
+                                        if (value.period == DayPeriod.pm) {
+                                          hour = value.hour.toString();
+                                        }
+                                        formattedTime += hour;
+                                        formattedTime += ':${value.minute}';
+                                        formattedTime += ':00.000Z';
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            StatefulBuilder(builder: (context, setState) {
+                              return Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: Colors.black54,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    hint: const Text('Choose Type'),
+                                    isExpanded: true,
+                                    items: types
+                                        .map(
+                                          (item) => DropdownMenuItem(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                    onChanged: (item) {
+                                      setState(() {
+                                        selectedType = item!;
+                                      });
+                                    },
+                                    value: selectedType,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.grey[400]),
                     ),
-                    onPressed: ()
-                    {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel',),
-                  ),
-                  const Spacer(),
-                  StatefulBuilder(
-                    builder: (context,setState) {
-                      return ElevatedButton(
-                        onPressed: ()
-                        {
-                          setState(() {
-                            formKey.currentState!.validate();
-                          });
-                        },
-                        child: const Text('Submit',),
-                      );
-                    }
+                  ],
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.grey[400]),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Cancel',
+                          ),
+                        ),
+                        const Spacer(),
+                        StatefulBuilder(builder: (context, setState) {
+                          var cubit = InstructorCubit.get(context);
+                          return ElevatedButton(
+                            onPressed: () {
+                              FocusScope.of(context).unfocus();
+                              setState(() {
+                                if (formKey.currentState!.validate()) {
+                                  isoDate = formattedDate + formattedTime;
+                                  cubit
+                                      .createLecture(
+                                    subjectId: subjectId,
+                                    name: lectureName.text,
+                                    location: lectureLocation.text,
+                                    date: isoDate,
+                                    type: selectedType ?? 'Lecture',
+                                  )
+                                      .then((value) {
+                                    if (cubit.isLectureCreated) {
+                                      Navigator.of(context).pop({
+                                        'status': 'success',
+                                        'message':
+                                            '${lectureName.text} created successfully at $formattedDate',
+                                      });
+                                    } else {
+                                      Navigator.of(context).pop({
+                                        'status': 'error',
+                                        'message':
+                                            'Something went wrong, try again',
+                                      });
+                                    }
+                                  });
+                                }
+                              });
+                            },
+                            child: const Text(
+                              'Submit',
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-        );
+          ),
+        ).then((value) {
+          lectureName.clear();
+          lectureLocation.clear();
+          dateController.clear();
+          timeController.clear();
+          selectedType = null;
+          if (value != null) {
+            if (value['status'] == 'success') {
+              showDefaultSnackBar(
+                context,
+                value['message'] ?? 'Lecture created successfully',
+              );
+            } else {
+              showDefaultSnackBar(
+                context,
+                value['message'] ?? 'Something went wrong, try again',
+                Colors.red,
+                Colors.white,
+              );
+            }
+          }
+        });
       },
       child: const Text('Add Lecture',
           style: TextStyle(

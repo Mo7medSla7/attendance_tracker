@@ -3,7 +3,6 @@ import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 class DefaultFormField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
@@ -22,7 +21,6 @@ class DefaultFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-
       decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
@@ -462,37 +460,33 @@ Widget buildStudentAttendItem() => Card(
         ),
       ),
     );
+
 class DefaultFormField2 extends StatelessWidget {
-  DefaultFormField2 ({Key? key,
+  DefaultFormField2({
+    Key? key,
     required this.controller,
-    required this.onSubmit,
-    required this.onChange,
     required this.label,
     required this.type,
     this.suffix,
     this.onPressedSuffix,
     this.enableReadOnly = false,
     this.errorMessage,
-    required this.isSuffixClicked ,
+    required this.isSuffixClicked,
   }) : super(key: key);
   final TextEditingController controller;
   final TextInputType type;
-  final Function onSubmit;
-  final Function onChange;
   final String label;
   final String? errorMessage;
   IconData? suffix;
   Function? onPressedSuffix;
   bool? enableReadOnly;
-  bool isSuffixClicked ;
+  bool isSuffixClicked;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller:controller,
+      controller: controller,
       readOnly: enableReadOnly!,
       keyboardType: type,
-      onFieldSubmitted: onSubmit(),
-      onChanged: onChange(),
       validator: (value) {
         if (value!.isEmpty) {
           return '${errorMessage ?? 'This field'} can not be empty';
@@ -501,32 +495,49 @@ class DefaultFormField2 extends StatelessWidget {
       },
       decoration: InputDecoration(
         labelText: label,
-        suffixIcon: isSuffixClicked ? IconButton(
-          onPressed: (){onPressedSuffix!();},
-          icon: Icon(suffix),
-        ) : Icon(suffix),
+        suffixIcon: isSuffixClicked
+            ? IconButton(
+                onPressed: () {
+                  onPressedSuffix!();
+                },
+                icon: Icon(suffix),
+              )
+            : Icon(suffix),
         border: const OutlineInputBorder(),
       ),
-    ) ;
+    );
   }
 }
 
-
-void showDefaultSnackBar(BuildContext context, String toastText) {
+void showDefaultSnackBar(BuildContext context, String snakeBarText,
+    [color, textColor]) {
   final scaffold = ScaffoldMessenger.of(context);
+  scaffold.hideCurrentSnackBar();
   scaffold.showSnackBar(
     SnackBar(
-      duration: const Duration(seconds: 2),
-      content:  Text(toastText),
-      action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+      duration: const Duration(seconds: 6),
+      content: Text(
+        snakeBarText,
+        style: TextStyle(color: textColor ?? Colors.indigo),
+      ),
+      backgroundColor: color ?? Colors.grey[200]!,
+      action: SnackBarAction(
+        label: 'OK',
+        textColor: textColor ?? Colors.indigo,
+        onPressed: scaffold.hideCurrentSnackBar,
+      ),
     ),
   );
 }
-void showDefaultToast(BuildContext context, String msg,
-    )=> Fluttertoast.showToast(
-          msg: msg,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          fontSize: 16.0
-        );
+
+void showDefaultToast(
+  String toastMassage,
+) =>
+    Fluttertoast.showToast(
+      msg: toastMassage,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );

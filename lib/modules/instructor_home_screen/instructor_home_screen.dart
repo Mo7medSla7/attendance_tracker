@@ -26,7 +26,12 @@ class InstructorHomeScreen extends StatelessWidget {
 
         return Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              showDefaultSnackBar(
+                context,
+                'Lecture created successfully',
+              );
+            },
             child: const Icon(
               Icons.search,
             ),
