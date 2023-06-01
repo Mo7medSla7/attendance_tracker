@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:attendance_tracker/helpers/cache_helper.dart';
 import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/layout_screen.dart';
@@ -7,7 +9,10 @@ import 'package:attendance_tracker/modules/sign_up_screen/sign_up_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+
+import '../no_internet_screen/no_internet_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -26,6 +31,31 @@ class _LoginScreenState extends State<LoginScreen> {
   String errorMessage = '';
 
   var formKey = GlobalKey<FormState>();
+
+  late Connectivity _connectivity;
+  late StreamSubscription<ConnectivityResult> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _connectivity = Connectivity();
+    _subscription = _connectivity.onConnectivityChanged.listen((event) {
+      setState(() {
+        if (event == ConnectivityResult.none) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const NoInternetScreen()),
+          );
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
