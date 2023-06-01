@@ -498,6 +498,7 @@ class DefaultFormField2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: const TextStyle(fontSize: 13),
       controller: controller,
       readOnly: enableReadOnly!,
       keyboardType: type,

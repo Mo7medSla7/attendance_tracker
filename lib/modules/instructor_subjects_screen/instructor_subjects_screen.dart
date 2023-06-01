@@ -262,7 +262,7 @@ class AddNewLectureAlert extends StatelessWidget {
                               isSuffixClicked: false,
                             ),
                             const SizedBox(
-                              height: 4,
+                              height: 6,
                             ),
                             DefaultFormField2(
                               controller: lectureLocation,
@@ -272,7 +272,7 @@ class AddNewLectureAlert extends StatelessWidget {
                               isSuffixClicked: false,
                             ),
                             const SizedBox(
-                              height: 4,
+                              height: 6,
                             ),
                             Row(
                               children: [
@@ -339,7 +339,7 @@ class AddNewLectureAlert extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(
-                              height: 4,
+                              height: 6,
                             ),
                             StatefulBuilder(builder: (context, setState) {
                               return Container(
@@ -354,7 +354,12 @@ class AddNewLectureAlert extends StatelessWidget {
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton(
-                                    hint: const Text('Choose Type'),
+                                    hint: const Text(
+                                        'Choose Type',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                      ),
+                                    ),
                                     isExpanded: true,
                                     items: types
                                         .map(
@@ -364,7 +369,7 @@ class AddNewLectureAlert extends StatelessWidget {
                                               item,
                                               overflow: TextOverflow.ellipsis,
                                               style:
-                                                  const TextStyle(fontSize: 14),
+                                                  const TextStyle(fontSize: 13),
                                             ),
                                           ),
                                         )
