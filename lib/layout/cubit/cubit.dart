@@ -11,8 +11,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../helpers/cache_helper.dart';
+import '../../models/students_statistics_model.dart';
 import '../../modules/home_screen/home_screen.dart';
-import '../../modules/scanner_screen/scanner_screen.dart';
 import '../../modules/subjects_screen/subject_screen.dart';
 import '../../modules/profile_screen/profile_screen.dart';
 
@@ -33,8 +34,8 @@ class AppCubit extends Cubit<AppStates> {
     Text('Profile'),
   ];
   List<Widget> screens = [
-    const HomeScreen(),
-    const Subject_Screen(),
+    HomeScreen(),
+    const SubjectScreen(),
     ProfileScreen(),
   ];
 
@@ -53,7 +54,7 @@ class AppCubit extends Cubit<AppStates> {
   ];
 
   void getSubjects() {
-    print(STUDENT_TOKEN);
+    getSubjectsStats();
     getNextLectures();
     getRegisteredSubjects();
   }
@@ -78,6 +79,26 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  bool isGettingSubjectsStats = false;
+  List<StudentStatisticsModel> subjectsStats = [];
+
+  Future<void> getSubjectsStats() async {
+    isGettingSubjectsStats = true;
+    emit(GetSubjectsStatsLoadingState());
+    DioHelper.getData(url: STATS, token: 'Bearer $STUDENT_TOKEN')
+        .then((Response response) {
+      response.data.forEach((stats) {
+        subjectsStats.add(StudentStatisticsModel.formMap(stats));
+      });
+      isGettingSubjectsStats = false;
+      emit(GetSubjectsStatsSuccessState());
+    }).catchError((e) {
+      isGettingSubjectsStats = false;
+      print(e.toString());
+      emit(GetSubjectsStatsErrorState());
+    });
+  }
+
   Future<String> getDeviceId() async {
     final deviceInfoPlugin = DeviceInfoPlugin();
     final deviceInfo = await deviceInfoPlugin.androidInfo;
@@ -90,6 +111,41 @@ class AppCubit extends Cubit<AppStates> {
   void enableEdit() {
     isEnabled = !isEnabled;
     emit(EnableEditState());
+  }
+
+  bool isEdited = false;
+  Future<void> editProfile(String fieldToEdit, String newValue) async {
+    await DioHelper.putData(
+        url: EDIT,
+        token: 'Bearer $STUDENT_TOKEN',
+        data: {fieldToEdit: newValue}).then((value) {
+      isEdited = true;
+      switch (fieldToEdit) {
+        case 'name':
+          STUDENT_NAME = newValue;
+          CacheHelper.putData(key: 'STUDENT_NAME', value: newValue);
+          break;
+
+        case 'email':
+          STUDENT_EMAIL = newValue;
+          CacheHelper.putData(key: 'STUDENT_EMAIL', value: newValue);
+          break;
+
+        case 'year':
+          STUDENT_ACADEMIC_YEAR = newValue;
+          CacheHelper.putData(key: 'STUDENT_ACADEMIC_YEAR', value: newValue);
+          break;
+
+        case 'semester':
+          STUDENT_SEMESTER = newValue;
+          CacheHelper.putData(key: 'STUDENT_SEMESTER', value: newValue);
+      }
+      emit(EditProfileSuccessState());
+    }).catchError((e) {
+      isEdited = false;
+      print(e.toString());
+      emit(EditProfileErrorState());
+    });
   }
 
   int currentIndex = 0;
@@ -108,6 +164,12 @@ class AppCubit extends Cubit<AppStates> {
   void changeNextLecture(int index) {
     lecturePosition = index.toDouble();
     emit(ChangeNextLectureState());
+  }
+
+  bool isLecture = true;
+  void changeStatsMode(bool newVal) {
+    isLecture = newVal;
+    emit(ChangeStatsModeState());
   }
 
   refreshSubjects() async {

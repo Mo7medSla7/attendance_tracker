@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../layout/cubit/states.dart';
 
-class Subject_Screen extends StatelessWidget {
-  const Subject_Screen({Key? key}) : super(key: key);
+class SubjectScreen extends StatelessWidget {
+  const SubjectScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -195,10 +195,11 @@ class Subject_Screen extends StatelessWidget {
                                 },
                                 itemCount: cubit.subjectsToRegister.length,
                               ),
-                        FullWidthElevatedButton(
-                          text: 'Register',
-                          onTap: () => cubit.sendSubjectsToRegister(),
-                        ),
+                        if (cubit.subjectsToRegister.isNotEmpty)
+                          FullWidthElevatedButton(
+                            text: 'Register',
+                            onTap: () => cubit.sendSubjectsToRegister(),
+                          ),
                         if (state is RegisterSubjectLoadingState)
                           const LinearProgressIndicator(),
                       ],

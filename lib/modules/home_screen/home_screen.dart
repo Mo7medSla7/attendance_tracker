@@ -9,9 +9,10 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../layout/cubit/states.dart';
 import '../../models/lecture_model.dart';
+import '../../models/students_statistics_model.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,9 @@ class HomeScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = AppCubit.get(context);
-          return cubit.nextLectures.isEmpty && cubit.isGettingLectures
+          return cubit.nextLectures.isEmpty &&
+                  cubit.isGettingLectures &&
+                  cubit.isGettingSubjectsStats
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   child: Column(
@@ -31,26 +34,47 @@ class HomeScreen extends StatelessWidget {
                         child: Subtitle(title: 'Your Next Lectures'),
                       ),
                       nextLecturesView(cubit, context),
-                      const Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        child: Subtitle(title: 'Your Progress In Courses'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GridView.count(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.78,
-                          children: List.generate(
-                              cubit.nextLectures.length,
-                              (index) => buildLectureItem(
-                                  cubit.nextLectures[index], context)),
+                      if (cubit.subjectsStats.isNotEmpty)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          child: Subtitle(title: 'Your Progress In Courses'),
                         ),
-                      ),
+                      if (cubit.subjectsStats.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              MainBody(
+                                  text:
+                                      'You now see your progress in ${cubit.isLecture ? 'Lectures' : 'Sections'}'),
+                              Switch(
+                                  value: cubit.isLecture,
+                                  onChanged: (value) =>
+                                      cubit.changeStatsMode(value)),
+                            ],
+                          ),
+                        ),
+                      if (cubit.subjectsStats.isNotEmpty)
+                        cubit.isGettingSubjectsStats
+                            ? const CircularProgressIndicator()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GridView.count(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.78,
+                                  children: List.generate(
+                                      cubit.subjectsStats.length,
+                                      (index) => buildLectureItem(
+                                          cubit.subjectsStats[index],
+                                          context,
+                                          cubit)),
+                                ),
+                              ),
                     ],
                   ),
                 );
@@ -60,7 +84,7 @@ class HomeScreen extends StatelessWidget {
   Widget nextLecturesView(cubit, context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      height: 205,
+      height: 260,
       width: double.infinity,
       child: cubit.nextLectures.isEmpty
           ? const Card(
@@ -69,7 +93,7 @@ class HomeScreen extends StatelessWidget {
               ),
             )
           : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: CarouselSlider(
@@ -95,17 +119,41 @@ class HomeScreen extends StatelessWidget {
                                         title: lecture.subjectName,
                                       ),
                                       MainBody(
-                                        text: lecture.instructorName,
+                                        text: 'Dr. ${lecture.instructorName}',
                                         color: Colors.grey[700],
                                       ),
                                       const SizedBox(
                                         height: 8,
                                       ),
-                                      const Spacer(),
-                                      const SubBody(
-                                        text:
-                                            'You have attended 80 % lectures of this course',
+                                      MainBody(
+                                        text: (lecture.type == 'Lecture'
+                                                ? 'Lecture name : '
+                                                : 'Section name : ') +
+                                            lecture.name,
                                       ),
+                                      Row(
+                                        children: [
+                                          MainBody(
+                                            text: 'Type : ${lecture.type}',
+                                          ),
+                                          const Spacer(),
+                                          MainBody(
+                                            text:
+                                                'Location : ${lecture.location}',
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      Builder(builder: (context) {
+                                        final state = cubit.subjectsStats
+                                            .firstWhere((element) =>
+                                                element.subjectName ==
+                                                lecture.subjectName);
+                                        return SubBody(
+                                          text:
+                                              'You have attended ${state.lectureAttendancePercentage} % lectures of this course',
+                                        );
+                                      }),
                                       const SizedBox(
                                         height: 4,
                                       ),
@@ -173,15 +221,15 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 0.8),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Center(
-                      child: DotsIndicator(
-                        dotsCount: cubit.nextLectures.length,
-                        position: cubit.lecturePosition,
-                        decorator: DotsDecorator(
-                          size: const Size.square(9.0),
-                          activeSize: const Size(18.0, 9.0),
-                          activeShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
+                    child: DotsIndicator(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      dotsCount: cubit.nextLectures.length,
+                      position: cubit.lecturePosition,
+                      decorator: DotsDecorator(
+                        size: const Size.square(9.0),
+                        activeSize: const Size(18.0, 9.0),
+                        activeShape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
@@ -193,7 +241,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-Widget buildLectureItem(LectureModel lecture, context) => Card(
+Widget buildLectureItem(StudentStatisticsModel stat, context, cubit) => Card(
       margin: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
@@ -201,9 +249,9 @@ Widget buildLectureItem(LectureModel lecture, context) => Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MainBody(text: lecture.subjectName),
+            MainBody(text: stat.subjectName),
             MiniBody(
-              text: 'Dr.${lecture.instructorName}',
+              text: 'Dr. ${stat.instructorName}',
               color: Colors.grey[700],
             ),
             const Spacer(),
@@ -212,17 +260,22 @@ Widget buildLectureItem(LectureModel lecture, context) => Card(
                 radius: 50.0,
                 lineWidth: 13.0,
                 animation: true,
-                percent: (80 / 100),
-                center: const Text(
-                  '${80} %',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                percent: ((double.tryParse(cubit.isLecture
+                            ? stat.lectureAttendancePercentage
+                            : stat.sectionAttendancePercentage) ??
+                        0) /
+                    100),
+                center: Text(
+                  '${cubit.isLecture ? stat.lectureAttendancePercentage : stat.sectionAttendancePercentage} %',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20.0),
                 ),
-                footer: const Padding(
-                  padding: EdgeInsets.only(top: 16.0),
+                footer: Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
                   child: Text(
-                    "Lectures attended",
-                    style:
-                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
+                    "${cubit.isLecture ? 'Lectures' : 'Sections'} attended",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 16.0),
                   ),
                 ),
                 circularStrokeCap: CircularStrokeCap.round,

@@ -52,15 +52,18 @@ class ProfileScreen extends StatelessWidget {
                       DefaultTextField(
                         controller: nameController,
                         title: 'Name',
+                        fieldName: 'name',
                         isEnabled: isEnabled,
                       ),
                       DefaultTextField(
                         controller: emailController,
                         title: 'Email',
+                        fieldName: 'email',
                         isEnabled: isEnabled,
                       ),
                       DefaultTextField(
                         title: 'Faculty',
+                        fieldName: 'faculty',
                         controller: facultyController,
                       ),
                       Row(
@@ -68,6 +71,7 @@ class ProfileScreen extends StatelessWidget {
                           Expanded(
                               child: DefaultTextField(
                             title: 'Academic Year',
+                            fieldName: 'year',
                             controller: academicYearController,
                             isEnabled: isEnabled,
                           )),
@@ -77,6 +81,7 @@ class ProfileScreen extends StatelessWidget {
                           Expanded(
                               child: DefaultTextField(
                             title: 'Semester',
+                            fieldName: 'semester',
                             controller: semesterController,
                             isEnabled: isEnabled,
                           )),
@@ -84,26 +89,11 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       DefaultTextField(
                         title: 'Student ID',
+                        fieldName: 'studentID',
                         controller: studentIdController,
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 32,
-                ),
-                FullWidthElevatedButton(
-                  text: 'Log Out',
-                  color: Colors.red,
-                  onTap: () {
-                    CacheHelper.putData(key: 'isLoggedIn', value: false);
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
-                        ),
-                        (route) => false);
-                    BlocProvider.of<AppCubit>(context).logout();
-                  },
                 ),
               ],
             ),

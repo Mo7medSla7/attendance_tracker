@@ -1,3 +1,4 @@
+import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:attendance_tracker/shared/constants.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
@@ -217,9 +218,11 @@ class DefaultTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.title,
+    required this.fieldName,
     this.isEnabled = false,
   }) : super(key: key);
   final String title;
+  final String fieldName;
   final TextEditingController controller;
   bool isEnabled;
 
@@ -262,7 +265,8 @@ class DefaultTextField extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => EditAlert(title: title),
+                    builder: (context) =>
+                        EditAlert(title: title, fieldToEdit: fieldName),
                   ).then((value) => controller.text = value).catchError((e) {});
                 },
                 icon: const Icon(
@@ -283,10 +287,12 @@ class DefaultTextField extends StatelessWidget {
 class EditAlert extends StatelessWidget {
   EditAlert({
     Key? key,
+    required this.fieldToEdit,
     required this.title,
   }) : super(key: key);
 
   final String title;
+  final String fieldToEdit;
   final faculty = STUDENT_FACULTY;
 
   @override
@@ -389,8 +395,16 @@ class EditAlert extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(controller.text);
+          onPressed: () async {
+            await AppCubit.get(context)
+                .editProfile(fieldToEdit, controller.text);
+            if (AppCubit.get(context).isEdited) {
+              Navigator.of(context).pop(controller.text);
+              showDefaultToast('Profile Updated Successfully');
+            } else {
+              Navigator.of(context).pop();
+              showDefaultToast('Error Happened, try again');
+            }
           },
           child: const Text('Save'),
         ),

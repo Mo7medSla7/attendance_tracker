@@ -1,32 +1,31 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'package:intl/intl.dart';
 
-import 'package:attendance_tracker/models/subject_model.dart';
+import 'package:intl/intl.dart';
 
 class LectureModel {
   String id;
   String subjectName;
+  String location;
   String faculty;
   String year;
   String semester;
   String name;
   String type;
   String instructorName;
-  String instructorId;
   String date;
   String time;
 
   LectureModel({
     required this.id,
     required this.subjectName,
+    required this.location,
     required this.faculty,
     required this.year,
     required this.semester,
     required this.name,
     required this.type,
     required this.instructorName,
-    required this.instructorId,
     required this.date,
     required this.time,
   });
@@ -35,13 +34,13 @@ class LectureModel {
     return LectureModel(
       id: map['_id'] as String,
       subjectName: map['subject']['name'] as String,
+      location: map['location'] as String,
       faculty: map['subject']['faculty'] as String,
       year: map['subject']['year'] as String,
       semester: map['subject']['semester'] as String,
       name: map['name'] as String,
       type: map['type'] as String,
-      instructorName: map['instructor']['name'] as String,
-      instructorId: map['instructor']['_id'] as String,
+      instructorName: map['instructor'] as String,
       date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
       time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
     );

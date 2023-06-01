@@ -1,48 +1,48 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
 class StudentStatisticsModel {
-  String name;
   String id;
-  String location;
-  String year;
+  String subjectName;
+  String level;
   String semester;
+  String instructorName;
+  String lectureAttendancePercentage;
+  String sectionAttendancePercentage;
   num totalLectures;
   num totalSections;
 
-
   StudentStatisticsModel({
-    required this.name,
     required this.id,
-    required this.location,
-    required this.year,
+    required this.subjectName,
+    required this.level,
     required this.semester,
+    required this.instructorName,
     required this.totalLectures,
     required this.totalSections,
+    required this.lectureAttendancePercentage,
+    required this.sectionAttendancePercentage,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'name': name,
-      'studentId': id,
-    };
-  }
-
-  factory StudentStatisticsModel.formMap(Map<String, dynamic> map){
+  factory StudentStatisticsModel.formMap(Map<String, dynamic> map) {
     return StudentStatisticsModel(
-        name: map['email'] as String,
-        id: map['studentId'] as String,
-        location: map['location'] as String,
-        year: map['year'] as String,
-        semester: map['semester'] as String,
-        totalLectures: map['totalLectures'] as num,
-        totalSections: map['totalSections'] as num,
+      id: map['_id'] as String,
+      subjectName: map['name'] as String,
+      level: map['year'] as String,
+      semester: map['semester'] as String,
+      totalLectures: map['totalLectures'] as num,
+      totalSections: map['totalSections'] as num,
+      instructorName: map['instructors'][0] as String,
+      lectureAttendancePercentage: map['lectureAttendancePercentage'] == "N/A"
+          ? "N/A"
+          : map['lectureAttendancePercentage'].toStringAsFixed(1),
+      sectionAttendancePercentage: map['sectionAttendancePercentage'] == "N/A"
+          ? "N/A"
+          : map['sectionAttendancePercentage'].toStringAsFixed(1),
     );
   }
 
-  String toJson() => json.encode(toMap());
-
   factory StudentStatisticsModel.formJson(String source) =>
-      StudentStatisticsModel.formMap(json.decode(source) as Map<String, dynamic>);
-
+      StudentStatisticsModel.formMap(
+          json.decode(source) as Map<String, dynamic>);
 }

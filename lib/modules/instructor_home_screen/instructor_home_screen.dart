@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:attendance_tracker/helpers/cache_helper.dart';
 import 'package:attendance_tracker/models/instructor_subject_model.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_cubit.dart';
@@ -6,16 +8,46 @@ import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_
 import 'package:attendance_tracker/modules/instructor_subjects_screen/instructor_subjects_screen.dart';
 import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../shared/component.dart';
+import '../no_internet_screen/no_internet_screen.dart';
 
-class InstructorHomeScreen extends StatelessWidget {
+class InstructorHomeScreen extends StatefulWidget {
   InstructorHomeScreen({Key? key}) : super(key: key);
 
-  int index = 3;
+  @override
+  State<InstructorHomeScreen> createState() => _InstructorHomeScreenState();
+}
+
+class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
+  late Connectivity _connectivity;
+  late StreamSubscription<ConnectivityResult> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _connectivity = Connectivity();
+    _subscription = _connectivity.onConnectivityChanged.listen((event) {
+      setState(() {
+        if (event == ConnectivityResult.none) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const NoInternetScreen()),
+          );
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +122,10 @@ class InstructorHomeScreen extends StatelessWidget {
           ),
           body: Column(
             children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: Subtitle(title: 'Your Next Lectures'),
+              ),
               nextLectureView(cubit, context),
               Expanded(
                 child: cubit.isGettingSubjects
@@ -113,13 +149,17 @@ class InstructorHomeScreen extends StatelessWidget {
   Widget nextLectureView(cubit, context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      height: 290,
+      height: 250,
       width: double.infinity,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Subtitle(title: 'Your Next Lectures'),
-        ),
+      child:
+          // cubit.nextLectures.isEmpty
+          //     ? const Card(
+          //         child: Center(
+          //           child: MainBody(text: 'There is not scheduled lectures yet'),
+          //         ),
+          //       )
+          //     :
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(
           child: CarouselSlider(
             items: [

@@ -35,7 +35,10 @@ class DioHelper {
   static Future<Response> putData({
     required String url,
     required Map<String, dynamic> data,
+    String? token,
   }) async {
+    dio.options.headers['authorization'] = token ?? '';
+
     return await dio.put(
       url,
       data: data,
