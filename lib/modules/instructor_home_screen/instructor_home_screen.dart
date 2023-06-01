@@ -250,15 +250,21 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
             ),
           ),
         ),
-        Center(
-          child: DotsIndicator(
-            dotsCount: 3,
-            position: cubit.lecturePosition,
-            decorator: DotsDecorator(
-              size: const Size.square(9.0),
-              activeSize: const Size(18.0, 9.0),
-              activeShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0.8),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Center(
+              child: DotsIndicator(
+                dotsCount: 3,
+                position: cubit.lecturePosition,
+                decorator: DotsDecorator(
+                  size: const Size.square(9.0),
+                  activeSize: const Size(18.0, 9.0),
+                  activeShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
+                ),
+              ),
             ),
           ),
         ),
