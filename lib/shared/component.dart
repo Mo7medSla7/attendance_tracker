@@ -289,12 +289,14 @@ class EditAlert extends StatelessWidget {
     Key? key,
     required this.fieldToEdit,
     required this.title,
+    this.errorMessage,
   }) : super(key: key);
 
   final String title;
   final String fieldToEdit;
   final faculty = STUDENT_FACULTY;
-
+  var formKey = GlobalKey<FormState>();
+  final String? errorMessage;
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
@@ -303,86 +305,93 @@ class EditAlert extends StatelessWidget {
         'Change The $title : ',
         style: const TextStyle(color: Colors.indigo),
       ),
-      content: SizedBox(
-        width: 1500,
-        child: title == 'Semester'
-            ? Builder(
-                builder: (
-                  context,
-                ) {
-                  List<bool> selections = [false, false];
-                  List<String> semesters = ['first', 'second'];
-                  return StatefulBuilder(builder: (ctx, setInnerState) {
-                    return Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: List.generate(
-                        2,
-                        (index) => GestureDetector(
-                          child: ToggleContainer(
-                              title: semesters[index],
-                              isSelected: selections[index]),
-                          onTap: () {
-                            setInnerState(() {
-                              selections.setAll(0, [false, false]);
-                              selections[index] = true;
-                              controller.text = semesters[index];
-                            });
-                          },
+      content: Form(
+          key: formKey,
+          child: SizedBox(
+          width: 1500,
+          child: title == 'Semester'
+              ? Builder(
+                  builder: (
+                    context,
+                  ) {
+                    List<bool> selections = [false, false];
+                    List<String> semesters = ['first', 'second'];
+                    return StatefulBuilder(builder: (ctx, setInnerState) {
+                      return Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List.generate(
+                          2,
+                          (index) => GestureDetector(
+                            child: ToggleContainer(
+                                title: semesters[index],
+                                isSelected: selections[index]),
+                            onTap: () {
+                              setInnerState(() {
+                                selections.setAll(0, [false, false]);
+                                selections[index] = true;
+                                controller.text = semesters[index];
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  });
-                },
-              )
-            : title == 'Academic Year'
-                ? Builder(
-                    builder: (context) {
-                      List<bool> selections = List.generate(
-                          facultyToLevels[faculty]!.length, (index) => false);
-                      List<String> levels = facultyToLevels[faculty]!;
-                      return StatefulBuilder(builder: (ctx, setInnerState) {
-                        return Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: List.generate(
-                              facultyToLevels[faculty]!.length,
-                              (index) => GestureDetector(
-                                    child: ToggleContainer(
-                                        title: levels[index],
-                                        isSelected: selections[index]),
-                                    onTap: () {
-                                      setInnerState(() {
-                                        selections.setAll(
-                                            0,
-                                            List.generate(
-                                                facultyToLevels[faculty]!
-                                                    .length,
-                                                (index) => false));
-
-                                        selections[index] = true;
-                                        controller.text = levels[index];
-                                      });
-                                    },
-                                  )),
-                        );
-                      });
-                    },
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: controller,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          fillColor: Colors.grey[100],
-                          filled: true,
-                          hintText: 'Your New $title',
-                        ),
-                      ),
-                    ],
-                  ),
+                      );
+                    });
+                  },
+                )
+              : title == 'Academic Year'
+                  ? Builder(
+                      builder: (context) {
+                        List<bool> selections = List.generate(
+                            facultyToLevels[faculty]!.length, (index) => false);
+                        List<String> levels = facultyToLevels[faculty]!;
+                        return StatefulBuilder(builder: (ctx, setInnerState) {
+                          return Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: List.generate(
+                                facultyToLevels[faculty]!.length,
+                                (index) => GestureDetector(
+                                      child: ToggleContainer(
+                                          title: levels[index],
+                                          isSelected: selections[index]),
+                                      onTap: () {
+                                        setInnerState(() {
+                                          selections.setAll(
+                                              0,
+                                              List.generate(
+                                                  facultyToLevels[faculty]!
+                                                      .length,
+                                                  (index) => false));
+                                          selections[index] = true;
+                                          controller.text = levels[index];
+                                        });
+                                      },
+                                    )),
+                          );
+                        });
+                      },
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                         TextFormField(
+                           controller: controller,
+                           keyboardType: TextInputType.text,
+                           validator: (value) {
+                             if (value!.isEmpty) {
+                               return '${errorMessage ?? 'This field'} can not be empty';
+                             }
+                             return null;
+                           },
+                           decoration: InputDecoration(
+                             labelText: title,
+                             border: const OutlineInputBorder(),
+                           ),
+                         ),
+                      ],
+                    ),
+        ),
       ),
       actions: [
         TextButton(
@@ -396,14 +405,17 @@ class EditAlert extends StatelessWidget {
         ),
         TextButton(
           onPressed: () async {
-            await AppCubit.get(context)
+            if (formKey.currentState!.validate())
+            {
+              await AppCubit.get(context)
                 .editProfile(fieldToEdit, controller.text);
-            if (AppCubit.get(context).isEdited) {
-              Navigator.of(context).pop(controller.text);
-              showDefaultToast('Profile Updated Successfully');
-            } else {
-              Navigator.of(context).pop();
-              showDefaultToast('Error Happened, try again');
+              if (AppCubit.get(context).isEdited) {
+                Navigator.of(context).pop(controller.text);
+                showDefaultToast('Profile Updated Successfully');
+              } else {
+                Navigator.of(context).pop();
+                showDefaultToast('Error Happened, try again');
+              }
             }
           },
           child: const Text('Save'),
