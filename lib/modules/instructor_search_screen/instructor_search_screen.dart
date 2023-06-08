@@ -19,7 +19,9 @@ class InstructorSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = InstructorCubit.get(context);
-    cubit.filteredStudents = [];
+    cubit.toggleSearch(false);
+    cubit.filteredStudents =
+        isAttendance ? cubit.lectureAttendees : cubit.activeStudents;
     cubit.filteredSubjects = cubit.instructorSubjects;
     return BlocConsumer<InstructorCubit, InstructorStates>(
         listener: (context, state) {},
