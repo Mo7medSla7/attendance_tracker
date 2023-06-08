@@ -8,7 +8,6 @@ import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:attendance_tracker/modules/on_boarding_screen/on_boarding_screen.dart';
 import 'package:attendance_tracker/shared/bloc_observer.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';

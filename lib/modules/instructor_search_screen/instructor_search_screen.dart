@@ -18,11 +18,12 @@ class InstructorSearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = InstructorCubit.get(context);
+    cubit.filteredStudents = [];
+    cubit.filteredSubjects = cubit.instructorSubjects;
     return BlocConsumer<InstructorCubit, InstructorStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          var cubit = InstructorCubit.get(context);
-
           return Scaffold(
             appBar: AppBar(
               title: const Text('Search'),

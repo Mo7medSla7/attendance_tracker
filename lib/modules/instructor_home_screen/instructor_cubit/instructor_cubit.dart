@@ -57,6 +57,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
   Future<void> getInstructorSubjects() async {
     emit(GetInstructorSubjectsLoadingState());
+    instructorSubjects = [];
     isGettingSubjects = true;
 
     DioHelper.getData(
@@ -80,6 +81,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
   Future<void> getLecturesOfSubject(id) async {
     emit(GetLecturesOfSubjectLoadingState());
+    lecturesOfSubject = [];
     isGettingLecturesOfSubject = true;
     final url = '$INSTRUCTOR_SUBJECT_QUERIES/$id/lectures';
 
@@ -103,6 +105,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
   Future<void> getSubjectActiveStudents(id) async {
     emit(GetSubjectActiveStudentsLoadingState());
+    activeStudents = [];
     isGettingActiveStudents = true;
     final url = '$INSTRUCTOR_SUBJECT_QUERIES/$id/students';
 
@@ -112,7 +115,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
       response.data.forEach((student) {
         activeStudents.add({
           'name': student['student']['name'],
-          'studentId': student['student']['studentId'],
+          'studentId': student['student']['studentId'].toString(),
         });
       });
       isGettingActiveStudents = false;
@@ -129,6 +132,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
   Future<void> getLectureAttendees(id) async {
     emit(GetLecturesAttendeesLoadingState());
+    lectureAttendees = [];
     isGettingAttendees = true;
     final url = '$INSTRUCTOR_SUBJECT_QUERIES/lectures/$id/attendance';
 
