@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../instructor_home_screen/instructor_cubit/instructor_cubit.dart';
 import '../instructor_home_screen/instructor_cubit/instructor_states.dart';
+import '../instructor_search_screen/instructor_search_screen.dart';
 
 class AllStudentsScreen extends StatelessWidget {
   const AllStudentsScreen(this.subjectId, {super.key});
@@ -14,50 +15,49 @@ class AllStudentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var cubit = InstructorCubit.get(context);
     cubit.getSubjectActiveStudents(subjectId);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('All Students'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 4.0),
-            child: IconButton(
-              onPressed: () {},
-              icon: const CircleAvatar(
-                radius: 30,
-                child: Icon(
-                  Icons.search,
-                ),
-              ),
+    return BlocConsumer<InstructorCubit, InstructorStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+            floatingActionButton: cubit.activeStudents.isNotEmpty
+                ? FloatingActionButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => InstructorSearchScreen(
+                                isSubject: false,
+                                isAttendance: false,
+                              )));
+                    },
+                    child: const Icon(
+                      Icons.search,
+                    ),
+                  )
+                : null,
+            appBar: AppBar(
+              title: const Text('All Students'),
             ),
-          )
-        ],
-      ),
-      body: BlocConsumer<InstructorCubit, InstructorStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return cubit.isGettingActiveStudents
-              ? const Center(child: CircularProgressIndicator())
-              : cubit.activeStudents.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'There is no active students for this course yet',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+            body: cubit.isGettingActiveStudents
+                ? const Center(child: CircularProgressIndicator())
+                : cubit.activeStudents.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'There is no active students for this course yet',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    )
-                  : ListView.separated(
-                      itemBuilder: (context, index) =>
-                          buildStudentItem(cubit.activeStudents[index]),
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 4,
-                      ),
-                      itemCount: cubit.activeStudents.length,
-                    );
-        },
-      ),
+                      )
+                    : ListView.separated(
+                        itemBuilder: (context, index) =>
+                            buildStudentItem(cubit.activeStudents[index]),
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 4,
+                        ),
+                        itemCount: cubit.activeStudents.length,
+                      ));
+      },
     );
   }
 }

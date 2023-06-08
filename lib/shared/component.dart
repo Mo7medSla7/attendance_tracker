@@ -19,6 +19,7 @@ class DefaultFormField extends StatelessWidget {
     this.icon,
     this.isPassword = false,
   });
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -47,6 +48,7 @@ class DefaultFormField extends StatelessWidget {
 
 class HeaderTitle extends StatelessWidget {
   final String title;
+
   const HeaderTitle({
     super.key,
     required this.title,
@@ -67,6 +69,7 @@ class HeaderTitle extends StatelessWidget {
 class Subtitle extends StatelessWidget {
   final String title;
   final Color? color;
+
   const Subtitle({
     super.key,
     required this.title,
@@ -90,6 +93,7 @@ class MiniTitle extends StatelessWidget {
   final String title;
   final bool overflow;
   final bool bold;
+
   const MiniTitle(
       {super.key,
       required this.title,
@@ -112,6 +116,7 @@ class MiniTitle extends StatelessWidget {
 class MainBody extends StatelessWidget {
   final String text;
   final Color? color;
+
   const MainBody({
     super.key,
     required this.text,
@@ -297,6 +302,7 @@ class EditAlert extends StatelessWidget {
   final faculty = STUDENT_FACULTY;
   var formKey = GlobalKey<FormState>();
   final String? errorMessage;
+
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
@@ -306,8 +312,8 @@ class EditAlert extends StatelessWidget {
         style: const TextStyle(color: Colors.indigo),
       ),
       content: Form(
-          key: formKey,
-          child: SizedBox(
+        key: formKey,
+        child: SizedBox(
           width: 1500,
           child: title == 'Semester'
               ? Builder(
@@ -375,20 +381,16 @@ class EditAlert extends StatelessWidget {
                   : Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                         TextFormField(
-                           controller: controller,
-                           keyboardType: TextInputType.text,
-                           validator: (value) {
-                             if (value!.isEmpty) {
-                               return '${errorMessage ?? 'This field'} can not be empty';
-                             }
-                             return null;
-                           },
-                           decoration: InputDecoration(
-                             labelText: title,
-                             border: const OutlineInputBorder(),
-                           ),
-                         ),
+                        TextField(
+                          controller: controller,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            fillColor: Colors.grey[100],
+                            filled: true,
+                            labelText: 'New $title',
+                          ),
+                        ),
                       ],
                     ),
         ),
@@ -405,10 +407,12 @@ class EditAlert extends StatelessWidget {
         ),
         TextButton(
           onPressed: () async {
-            if (formKey.currentState!.validate())
-            {
+            if (controller.text.isEmpty) {
+              showDefaultToast('You must enter your $title');
+              Navigator.of(context).pop();
+            } else {
               await AppCubit.get(context)
-                .editProfile(fieldToEdit, controller.text);
+                  .editProfile(fieldToEdit, controller.text);
               if (AppCubit.get(context).isEdited) {
                 Navigator.of(context).pop(controller.text);
                 showDefaultToast('Profile Updated Successfully');
@@ -427,6 +431,7 @@ class EditAlert extends StatelessWidget {
 
 class ToggleContainer extends StatelessWidget {
   ToggleContainer({super.key, required this.title, required this.isSelected});
+
   final String title;
   bool isSelected;
 
@@ -507,6 +512,7 @@ class DefaultFormField2 extends StatelessWidget {
   Function? onPressedSuffix;
   bool? enableReadOnly;
   bool isSuffixClicked;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(

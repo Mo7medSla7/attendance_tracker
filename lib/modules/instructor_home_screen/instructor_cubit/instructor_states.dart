@@ -35,3 +35,9 @@ class ExtractStudentsErrorState extends InstructorStates {}
 class CreateLectureSuccessState extends InstructorStates {}
 
 class CreateLectureErrorState extends InstructorStates {}
+
+class SearchSubjectState extends InstructorStates {}
+
+class SearchStudentState extends InstructorStates {}
+
+class ToggleSearchState extends InstructorStates {}

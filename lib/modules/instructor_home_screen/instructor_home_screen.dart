@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../shared/component.dart';
+import '../instructor_search_screen/instructor_search_screen.dart';
 import '../no_internet_screen/no_internet_screen.dart';
 
 class InstructorHomeScreen extends StatefulWidget {
@@ -57,17 +58,20 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
         var cubit = InstructorCubit.get(context);
 
         return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showDefaultSnackBar(
-                context,
-                'Lecture created successfully',
-              );
-            },
-            child: const Icon(
-              Icons.search,
-            ),
-          ),
+          floatingActionButton: cubit.instructorSubjects.isNotEmpty
+              ? FloatingActionButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InstructorSearchScreen(
+                              isSubject: true,
+                              isAttendance: false,
+                            )));
+                  },
+                  child: const Icon(
+                    Icons.search,
+                  ),
+                )
+              : null,
           appBar: AppBar(
             title: const Text(
               'Home',
@@ -159,7 +163,7 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
           //         ),
           //       )
           //     :
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Expanded(
           child: CarouselSlider(
             items: [

@@ -152,6 +152,13 @@ class AppCubit extends Cubit<AppStates> {
   void changeNavBar(int index) {
     currentIndex = index;
     lecturePosition = 0.0;
+
+    if (index == 0 &&
+        nextLectures.isEmpty &&
+        subjectsStats.isEmpty) {
+        getSubjectsStats();
+        getNextLectures();
+    }
     if (index == 1 &&
         subjectsToRegister.isEmpty &&
         registeredSubjects.isEmpty) {
@@ -278,6 +285,8 @@ class AppCubit extends Cubit<AppStates> {
     lecturePosition = 0.0;
     subjectsToRegister = [];
     registeredSubjects = [];
+    nextLectures = [];
+    subjectsStats= [];
     subjectsIdToRegister = [];
     checkStates = [];
     emit(LogoutState());

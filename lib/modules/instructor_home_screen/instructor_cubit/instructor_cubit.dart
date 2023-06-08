@@ -21,6 +21,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
   static InstructorCubit get(context) => BlocProvider.of(context);
 
   double lecturePosition = 0.0;
+
   void changeNextLecture(int index) {
     lecturePosition = index.toDouble();
     emit(ChangeNextLectureState());
@@ -151,6 +152,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
   }
 
   late bool isLectureCreated;
+
   Future<void> createLecture({
     required String subjectId,
     required String name,
@@ -176,6 +178,47 @@ class InstructorCubit extends Cubit<InstructorStates> {
       isLectureCreated = false;
       emit(CreateLectureErrorState());
     });
+  }
+
+  bool isFocused = false;
+
+  void toggleSearch(bool toggle) {
+    isFocused = toggle;
+    emit(ToggleSearchState());
+  }
+
+  late List<InstructorSubjectModel> filteredSubjects = instructorSubjects;
+
+  List<Map> filteredStudents = [];
+
+  void searchSubjects(String query) {
+    filteredSubjects = [];
+    for (var subject in instructorSubjects) {
+      if (subject.name.toLowerCase().contains(query.toLowerCase())) {
+        filteredSubjects.add(subject);
+      }
+    }
+    emit(SearchSubjectState());
+  }
+
+  void searchStudent(String query, bool isAttendance) {
+    filteredStudents = [];
+    if (isAttendance) {
+      for (var student in lectureAttendees) {
+        if (student['name'].toLowerCase().contains(query.toLowerCase()) ||
+            student['studentId'].contains(query)) {
+          filteredStudents.add(student);
+        }
+      }
+    } else {
+      for (var student in activeStudents) {
+        if (student['name'].toLowerCase().contains(query.toLowerCase()) ||
+            student['studentId'].contains(query)) {
+          filteredStudents.add(student);
+        }
+      }
+    }
+    emit(SearchStudentState());
   }
 
   Future<void> createAttendanceExcel(

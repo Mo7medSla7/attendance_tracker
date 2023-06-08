@@ -1,4 +1,5 @@
 import 'package:attendance_tracker/models/instructor_lecture_model.dart';
+import 'package:attendance_tracker/modules/instructor_search_screen/instructor_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,6 +9,7 @@ import '../instructor_home_screen/instructor_cubit/instructor_states.dart';
 
 class InstructorLectureScreen extends StatelessWidget {
   InstructorLectureScreen(this.lecture, {super.key});
+
   final InstructorLectureModel lecture;
 
   @override
@@ -16,40 +18,43 @@ class InstructorLectureScreen extends StatelessWidget {
     if (lecture.finished) {
       cubit.getLectureAttendees(lecture.id);
     }
-
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(
-          Icons.search,
-        ),
-      ),
-      appBar: AppBar(
-        actions: [
-          if (lecture.finished)
-            TextButton(
-              onPressed: () {
-                cubit.createAttendanceExcel(
-                  cubit.lectureAttendees,
-                  lecture.name,
-                  lecture.date,
-                );
-              },
-              child: const Text('Extract as File',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ),
-        ],
-      ),
-      body: BlocConsumer<InstructorCubit, InstructorStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var cubit = InstructorCubit.get(context);
-
-          return Padding(
+    return BlocConsumer<InstructorCubit, InstructorStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          floatingActionButton: cubit.lectureAttendees.isNotEmpty
+              ? FloatingActionButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InstructorSearchScreen(
+                            isSubject: false, isAttendance: true)));
+                  },
+                  child: const Icon(
+                    Icons.search,
+                  ),
+                )
+              : null,
+          appBar: AppBar(
+            actions: [
+              if (lecture.finished)
+                TextButton(
+                  onPressed: () {
+                    cubit.createAttendanceExcel(
+                      cubit.lectureAttendees,
+                      lecture.name,
+                      lecture.date,
+                    );
+                  },
+                  child: const Text('Extract as File',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+            ],
+          ),
+          body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -197,9 +202,9 @@ class InstructorLectureScreen extends StatelessWidget {
                 ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

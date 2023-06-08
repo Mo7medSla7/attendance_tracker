@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:attendance_tracker/helpers/cache_helper.dart';
 import 'package:attendance_tracker/helpers/dio_helper.dart';
+import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:attendance_tracker/layout/layout_screen.dart';
 import 'package:attendance_tracker/models/student_model.dart';
 import 'package:attendance_tracker/modules/instructor_login_screen/instructor_login_screen.dart';
@@ -242,6 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
       CacheHelper.putData(key: 'STUDENT_ID', value: model.studentId);
       CacheHelper.putData(key: 'isLoggedIn', value: true);
       setStudentData();
+      AppCubit.get(context).getSubjects();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => LayoutScreen(),
       ));
