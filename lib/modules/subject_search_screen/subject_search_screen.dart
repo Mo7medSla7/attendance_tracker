@@ -45,9 +45,8 @@ class SubjectSearchScreen extends StatelessWidget {
                   child: Stack(alignment: Alignment.center, children: [
                     TextField(
                       onSubmitted: (value) {
-                        if(!cubit.isSearching )
-                        {
-                        cubit.subjectSearch(value);
+                        if (!cubit.isSearching) {
+                          cubit.subjectSearch(value);
                         }
                       },
                       controller: searchController,
@@ -74,8 +73,9 @@ class SubjectSearchScreen extends StatelessWidget {
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: IconButton(
-                        onPressed: !cubit.isSearching ? () =>
-                            cubit.subjectSearch(searchController.text) : null,
+                        onPressed: !cubit.isSearching
+                            ? () => cubit.subjectSearch(searchController.text)
+                            : null,
                         icon: const Icon(Icons.search, color: Colors.indigo),
                         padding: EdgeInsets.zero,
                         splashRadius: 20,
@@ -86,47 +86,50 @@ class SubjectSearchScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: cubit.isSearching? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 28.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                ) : ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    bool checkState = false;
-                    cubit.checkStates.add(checkState);
-                    var subject = cubit.searchedSubjects[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: CheckboxListTile(
-                        onChanged: (value) {
-                          if (value!) {
-                            cubit.addSubject(subject.id, index);
-                          } else {
-                            checkState = value;
-                            cubit.removeSubject(subject.id, index);
-                          }
-                        },
-                        value: cubit.checkStates[index],
-                        title: MiniTitle(title: subject.name),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MiniBody(text: subject.faculty),
-                              MiniBody(text: 'Level ${subject.year}'),
-                            ],
-                          ),
+                child: cubit.isSearching
+                    ? const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 28.0),
+                          child: CircularProgressIndicator(),
                         ),
-                        tileColor: Colors.white,
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          bool checkState = false;
+                          cubit.checkStates.add(checkState);
+                          var subject = cubit.searchedSubjects[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: CheckboxListTile(
+                              onChanged: (value) {
+                                if (value!) {
+                                  cubit.addSubject(subject.id, index);
+                                } else {
+                                  checkState = value;
+                                  cubit.removeSubject(subject.id, index);
+                                }
+                              },
+                              value: cubit.checkStates[index],
+                              title: MiniTitle(title: subject.name),
+                              subtitle: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MiniBody(text: subject.faculty),
+                                    MiniBody(text: 'Level ${subject.year}'),
+                                  ],
+                                ),
+                              ),
+                              tileColor: Colors.white,
+                            ),
+                          );
+                        },
+                        itemCount: cubit.searchedSubjects.length,
                       ),
-                    );
-                  },
-                  itemCount: cubit.searchedSubjects.length,
-                ),
               ),
               if (cubit.searchedSubjects.isNotEmpty)
                 Padding(

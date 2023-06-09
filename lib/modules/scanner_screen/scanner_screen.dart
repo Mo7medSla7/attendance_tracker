@@ -55,7 +55,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
         var cubit = AppCubit.get(context);
         await cubit.qrScan(scanData.code!, widget.id);
         if (cubit.qrSuccessScan) {
-          Navigator.pop(context);
           showDefaultSnackBar(
             context,
             'Attendance recorded successfully',
@@ -63,7 +62,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
             Colors.white,
           );
         } else {
-          Navigator.pop(context);
           showDefaultSnackBar(
             context,
             'Failed to record attendance',
@@ -71,6 +69,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
             Colors.white,
           );
         }
+        Navigator.pop(context);
+
         isPageOpened = true;
       }
     });

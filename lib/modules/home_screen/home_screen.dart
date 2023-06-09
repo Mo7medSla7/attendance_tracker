@@ -24,58 +24,67 @@ class HomeScreen extends StatelessWidget {
                   cubit.isGettingLectures &&
                   cubit.isGettingSubjectsStats
               ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        child: Subtitle(title: 'Your Next Lectures'),
-                      ),
-                      nextLecturesView(cubit, context),
-                      if (cubit.subjectsStats.isNotEmpty)
+              : RefreshIndicator(
+                  onRefresh: () {
+                    cubit.lecturePosition = 0.0;
+                    cubit.getSubjectsStats();
+                    return cubit.getNextLectures();
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         const Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 16, vertical: 16),
-                          child: Subtitle(title: 'Your Progress In Courses'),
+                          child: Subtitle(title: 'Your Next Lectures'),
                         ),
-                      if (cubit.subjectsStats.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            children: [
-                              MainBody(
-                                  text:
-                                      'You now see your progress in ${cubit.isLecture ? 'Lectures' : 'Sections'}'),
-                              Switch(
-                                  value: cubit.isLecture,
-                                  onChanged: (value) =>
-                                      cubit.changeStatsMode(value)),
-                            ],
+                        nextLecturesView(cubit, context),
+                        if (cubit.subjectsStats.isNotEmpty)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
+                            child: Subtitle(title: 'Your Progress In Courses'),
                           ),
-                        ),
-                      if (cubit.subjectsStats.isNotEmpty)
-                        cubit.isGettingSubjectsStats
-                            ? const CircularProgressIndicator()
-                            : Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: GridView.count(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.78,
-                                  children: List.generate(
-                                      cubit.subjectsStats.length,
-                                      (index) => buildLectureItem(
-                                          cubit.subjectsStats[index],
-                                          context,
-                                          cubit)),
+                        if (cubit.subjectsStats.isNotEmpty)
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              children: [
+                                MainBody(
+                                    text:
+                                        'You now see your progress in ${cubit.isLecture ? 'Lectures' : 'Sections'}'),
+                                Switch(
+                                    value: cubit.isLecture,
+                                    onChanged: (value) =>
+                                        cubit.changeStatsMode(value)),
+                              ],
+                            ),
+                          ),
+                        if (cubit.subjectsStats.isNotEmpty)
+                          cubit.isGettingSubjectsStats
+                              ? const CircularProgressIndicator()
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GridView.count(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    mainAxisSpacing: 10,
+                                    crossAxisSpacing: 10,
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 0.78,
+                                    children: List.generate(
+                                        cubit.subjectsStats.length,
+                                        (index) => buildLectureItem(
+                                            cubit.subjectsStats[index],
+                                            context,
+                                            cubit)),
+                                  ),
                                 ),
-                              ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
         });

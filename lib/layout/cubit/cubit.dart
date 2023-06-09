@@ -15,7 +15,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../helpers/cache_helper.dart';
 import '../../models/students_statistics_model.dart';
 import '../../modules/home_screen/home_screen.dart';
-import '../../modules/subject_search/subject_search.dart';
+import '../../modules/my_subjects_screen/my_subject_screen.dart';
+import '../../modules/subject_search_screen/subject_search_screen.dart';
 import '../../modules/subjects_screen/subject_screen.dart';
 import '../../modules/profile_screen/profile_screen.dart';
 
@@ -32,12 +33,14 @@ class AppCubit extends Cubit<AppStates> {
 
   List<Text> titles = const [
     Text('Home'),
-    Text('Subjects'),
+    Text('Level Subjects'),
+    Text('My Subjects'),
     Text('Profile'),
   ];
   List<Widget> screens = [
     HomeScreen(),
     const SubjectScreen(),
+    const MySubjectsScreen(),
     ProfileScreen(),
   ];
 
@@ -51,6 +54,7 @@ class AppCubit extends Cubit<AppStates> {
       },
       child: const Icon(Icons.manage_search, size: 26),
     ),
+    null,
     FloatingActionButton(
       onPressed: () {
         enableEdit();
@@ -62,6 +66,7 @@ class AppCubit extends Cubit<AppStates> {
   void getSubjects() {
     getSubjectsStats();
     getNextLectures();
+    getMySubjects();
     getRegisteredSubjects();
   }
 
@@ -69,6 +74,7 @@ class AppCubit extends Cubit<AppStates> {
   List<LectureModel> nextLectures = [];
 
   Future<void> getNextLectures() async {
+    nextLectures = [];
     isGettingLectures = true;
     emit(GetNextLecturesLoadingState());
     DioHelper.getData(url: NEXT_LECTURES, token: 'Bearer $STUDENT_TOKEN')
@@ -107,8 +113,9 @@ class AppCubit extends Cubit<AppStates> {
           .length
           .toString();
       allLectures = lecturesOfSubject.length.toString();
-      attendanceProgress = (int.parse(allLectures) / int.parse(attendedLecture))
-          .toStringAsFixed(0);
+      attendanceProgress =
+          (int.parse(attendedLecture) / int.parse(allLectures) * 100)
+              .toStringAsFixed(0);
 
       emit(GetLecturesOfSubjectSuccessState());
     }).catchError((e) {
@@ -122,6 +129,7 @@ class AppCubit extends Cubit<AppStates> {
   List<StudentStatisticsModel> subjectsStats = [];
 
   Future<void> getSubjectsStats() async {
+    subjectsStats = [];
     isGettingSubjectsStats = true;
     emit(GetSubjectsStatsLoadingState());
     DioHelper.getData(url: STATS, token: 'Bearer $STUDENT_TOKEN')
@@ -225,6 +233,9 @@ class AppCubit extends Cubit<AppStates> {
         registeredSubjects.isEmpty) {
       getRegisteredSubjects();
     }
+    if (index == 2 && mySubjects.isEmpty) {
+      getMySubjects();
+    }
     emit(ChangeNavBarState());
   }
 
@@ -276,6 +287,7 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> qrScan(String decodedQr, String lectureId) async {
     final deviceId = await getDeviceId();
+
     await DioHelper.postData(
       url: SCAN,
       token: 'Bearer $STUDENT_TOKEN',
@@ -347,10 +359,11 @@ class AppCubit extends Cubit<AppStates> {
     isFocused = toggle;
     emit(ToggleSearchState());
   }
+
   bool isSearching = false;
   List<SubjectModel> searchedSubjects = [];
 
- Future <void> subjectSearch(String query) async {
+  Future<void> subjectSearch(String query) async {
     isSearching = true;
     searchedSubjects = [];
     emit(SubjectsSearchLoadingState());

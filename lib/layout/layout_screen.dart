@@ -51,9 +51,9 @@ class _LayoutScreenState extends State<LayoutScreen> {
         return Scaffold(
           floatingActionButton: cubit.floatingButtons[cubit.currentIndex],
           appBar: AppBar(
-            centerTitle: cubit.currentIndex == 2 ? false : true,
+            centerTitle: cubit.currentIndex == 3 ? false : true,
             title: cubit.titles[cubit.currentIndex],
-            actions: cubit.currentIndex == 2
+            actions: cubit.currentIndex == 3
                 ? [
                     Padding(
                       padding: const EdgeInsets.only(right: 4.0),
@@ -117,6 +117,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
           ),
           body: cubit.screens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             currentIndex: cubit.currentIndex,
             onTap: (index) {
               cubit.changeNavBar(index);
@@ -129,9 +130,15 @@ class _LayoutScreenState extends State<LayoutScreen> {
                 ),
               ),
               BottomNavigationBarItem(
-                label: 'Subjects',
+                label: 'Level Subjects',
                 icon: Icon(
                   Icons.menu_book_rounded,
+                ),
+              ),
+              BottomNavigationBarItem(
+                label: 'My Subjects',
+                icon: Icon(
+                  Icons.bookmark_rounded,
                 ),
               ),
               BottomNavigationBarItem(

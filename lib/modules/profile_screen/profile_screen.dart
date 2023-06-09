@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../helpers/cache_helper.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../shared/component.dart';
+import '../my_subjects_screen/my_subject_screen.dart';
 import '../subject_details_screen/subject_details_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -49,22 +50,6 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          const MiniTitle(title: 'My All Courses'),
-                          const Spacer(),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AllCoursesScreen(),
-                                ));
-                              },
-                              child: const MiniTitle(
-                                title: 'Show All',
-                              )),
-                        ],
-                      ),
-                      const Divider(),
                       const SizedBox(
                         height: 8,
                       ),
@@ -120,111 +105,5 @@ class ProfileScreen extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-class AllCoursesScreen extends StatelessWidget {
-  const AllCoursesScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var cubit = AppCubit.get(context);
-    cubit.getMySubjects();
-
-    return BlocConsumer<AppCubit, AppStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('All Courses'),
-              centerTitle: true,
-            ),
-            body: cubit.isGettingMySubjects
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      var subject = cubit.mySubjects[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => SubjectDetailsScreen(
-                                subject,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: MiniTitle(
-                                        title: subject.name,
-                                      ),
-                                    ),
-                                    const Text('Status : '),
-                                    subject.isAccepted!
-                                        ? Row(
-                                      children: const [
-                                        Text(
-                                          'Accepted ',
-                                          style: TextStyle(
-                                              color:
-                                              Colors.green),
-                                        ),
-                                        Icon(
-                                          Icons
-                                              .check_circle_rounded,
-                                          color: Colors.green,
-                                          size: 16,
-                                        )
-                                      ],
-                                    )
-                                        : Row(
-                                      children: const [
-                                        Text(
-                                          'In Progress ',
-                                          style: TextStyle(
-                                              color:
-                                              Colors.orange),
-                                        ),
-                                        Icon(
-                                          Icons
-                                              .watch_later_rounded,
-                                          color: Colors.orange,
-                                          size: 16,
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                MainBody(
-                                  text: subject.faculty,
-                                  color: Colors.grey[700],
-                                ),
-                                MiniBody(
-                                  text:
-                                      'Level ${subject.year} ${subject.semester} semester',
-                                  color: Colors.grey[700],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    itemCount: cubit.mySubjects.length,
-                  ),
-          );
-        });
   }
 }
