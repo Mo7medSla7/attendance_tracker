@@ -138,12 +138,14 @@ class InstructorSearchScreen extends StatelessWidget {
                         title: subject.name,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: MainBody(
-                        text: 'ID : CS341',
-                      ),
-                    ),
+                    /*
+                                        const Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: MainBody(
+                                            text: 'ID : CS341',
+                                          ),
+                                        ),
+                    */
                   ],
                 ),
                 const SizedBox(

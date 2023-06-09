@@ -161,8 +161,48 @@ class AllCoursesScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                MiniTitle(
-                                  title: subject.name,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: MiniTitle(
+                                        title: subject.name,
+                                      ),
+                                    ),
+                                    const Text('Status : '),
+                                    subject.isAccepted!
+                                        ? Row(
+                                      children: const [
+                                        Text(
+                                          'Accepted ',
+                                          style: TextStyle(
+                                              color:
+                                              Colors.green),
+                                        ),
+                                        Icon(
+                                          Icons
+                                              .check_circle_rounded,
+                                          color: Colors.green,
+                                          size: 16,
+                                        )
+                                      ],
+                                    )
+                                        : Row(
+                                      children: const [
+                                        Text(
+                                          'In Progress ',
+                                          style: TextStyle(
+                                              color:
+                                              Colors.orange),
+                                        ),
+                                        Icon(
+                                          Icons
+                                              .watch_later_rounded,
+                                          color: Colors.orange,
+                                          size: 16,
+                                        )
+                                      ],
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(
                                   height: 8,

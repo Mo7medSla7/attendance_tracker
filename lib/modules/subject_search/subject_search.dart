@@ -45,7 +45,10 @@ class SubjectSearchScreen extends StatelessWidget {
                   child: Stack(alignment: Alignment.center, children: [
                     TextField(
                       onSubmitted: (value) {
+                        if(!cubit.isSearching )
+                        {
                         cubit.subjectSearch(value);
+                        }
                       },
                       controller: searchController,
                       onTap: () {
@@ -71,8 +74,8 @@ class SubjectSearchScreen extends StatelessWidget {
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: IconButton(
-                        onPressed: () =>
-                            cubit.subjectSearch(searchController.text),
+                        onPressed: !cubit.isSearching ? () =>
+                            cubit.subjectSearch(searchController.text) : null,
                         icon: const Icon(Icons.search, color: Colors.indigo),
                         padding: EdgeInsets.zero,
                         splashRadius: 20,
@@ -83,7 +86,12 @@ class SubjectSearchScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
+                child: cubit.isSearching? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 28.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                ) : ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {

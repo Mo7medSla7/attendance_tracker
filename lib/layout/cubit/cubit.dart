@@ -347,14 +347,13 @@ class AppCubit extends Cubit<AppStates> {
     isFocused = toggle;
     emit(ToggleSearchState());
   }
-
   bool isSearching = false;
   List<SubjectModel> searchedSubjects = [];
 
-  void subjectSearch(String query) {
+ Future <void> subjectSearch(String query) async {
     isSearching = true;
+    searchedSubjects = [];
     emit(SubjectsSearchLoadingState());
-    searchedSubjects.clear();
     var url = '$SEARCH?searchQuery=$query';
     DioHelper.getData(url: url, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
