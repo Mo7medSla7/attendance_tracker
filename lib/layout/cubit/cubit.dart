@@ -85,6 +85,39 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  bool isGettingLecturesOfSubject = false;
+  List<LectureModel> lecturesOfSubject = [];
+
+  String attendedLecture = '0';
+  String allLectures = '0';
+  String attendanceProgress = 'NaN';
+
+  Future<void> getLecturesOfSubjects(id) async {
+    lecturesOfSubject = [];
+    isGettingLecturesOfSubject = true;
+    emit(GetLecturesOfSubjectLoadingState());
+    DioHelper.getData(url: '$LECTURES$id', token: 'Bearer $STUDENT_TOKEN')
+        .then((Response response) {
+      response.data.forEach((lecture) {
+        lecturesOfSubject.add(LectureModel.fromMap(lecture));
+      });
+      isGettingLecturesOfSubject = false;
+      attendedLecture = lecturesOfSubject
+          .where((lecture) => lecture.hasAttended == true)
+          .length
+          .toString();
+      allLectures = lecturesOfSubject.length.toString();
+      attendanceProgress = (int.parse(allLectures) / int.parse(attendedLecture))
+          .toStringAsFixed(0);
+
+      emit(GetLecturesOfSubjectSuccessState());
+    }).catchError((e) {
+      isGettingLecturesOfSubject = false;
+      print(e.toString());
+      emit(GetLecturesOfSubjectErrorState());
+    });
+  }
+
   bool isGettingSubjectsStats = false;
   List<StudentStatisticsModel> subjectsStats = [];
 

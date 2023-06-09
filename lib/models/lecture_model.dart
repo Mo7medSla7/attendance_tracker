@@ -15,6 +15,8 @@ class LectureModel {
   String instructorName;
   String date;
   String time;
+  DateTime fullDate;
+  bool hasAttended;
 
   LectureModel({
     required this.id,
@@ -28,6 +30,8 @@ class LectureModel {
     required this.instructorName,
     required this.date,
     required this.time,
+    required this.fullDate,
+    required this.hasAttended,
   });
 
   factory LectureModel.fromMap(Map<String, dynamic> map) {
@@ -41,8 +45,10 @@ class LectureModel {
       name: map['name'] as String,
       type: map['type'] as String,
       instructorName: map['instructor'] as String,
+      fullDate: DateTime.parse(map['date']),
       date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
       time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
+      hasAttended: map['hasAttended'] ?? false,
     );
   }
 

@@ -34,6 +34,12 @@ class GetNextLecturesSuccessState extends AppStates {}
 
 class GetNextLecturesErrorState extends AppStates {}
 
+class GetLecturesOfSubjectLoadingState extends AppStates {}
+
+class GetLecturesOfSubjectSuccessState extends AppStates {}
+
+class GetLecturesOfSubjectErrorState extends AppStates {}
+
 class GetSubjectsStatsLoadingState extends AppStates {}
 
 class GetSubjectsStatsSuccessState extends AppStates {}

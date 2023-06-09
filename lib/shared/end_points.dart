@@ -9,6 +9,7 @@ const String SEARCH = 'user/subjects/search'; //get
 const String NEXT_LECTURES = 'user/lectures'; //get
 const String STATS = 'user/stats'; //get
 const String REGISTERED_SUBJECTS = 'user/subjects/registered'; //get
+const String LECTURES = 'user/subjects/lectures/'; //get
 const String EDIT = 'user/editInfo'; //put
 const String INSTRUCTOR_LOGIN = 'instructorAuth/login'; //post
 const String INSTRUCTOR_ADD_LECTURE = 'instructor/createLecture'; //post
