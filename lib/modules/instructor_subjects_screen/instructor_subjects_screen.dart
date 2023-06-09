@@ -5,6 +5,7 @@ import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cub
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
 import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
+import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -86,6 +87,7 @@ class InstructorSubjectScreen extends StatelessWidget {
                             height: 4,
                           ),
                           itemCount: cubit.lecturesOfSubject.length,
+
                         ),
                 ],
               ),

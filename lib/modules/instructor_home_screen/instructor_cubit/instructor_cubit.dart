@@ -88,7 +88,6 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
     DioHelper.getData(url: url, token: 'Bearer $INSTRUCTOR_TOKEN')
         .then((Response response) {
-      lecturesOfSubject.clear();
       response.data.forEach((lecture) {
         lecturesOfSubject.add(InstructorLectureModel.fromMap(lecture));
       });

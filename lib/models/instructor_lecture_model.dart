@@ -51,6 +51,7 @@ class InstructorLectureModel {
       finished: map['finished'] as bool,
       presencePercentage: map['presencePercentage'] == "N/A"
           ? "N/A"
+          : map['presencePercentage']is String? map['presencePercentage']
           : map['presencePercentage'].toStringAsFixed(2) + '%',
       numOfAttendees: map['numOfAttendees'] as num,
     );
