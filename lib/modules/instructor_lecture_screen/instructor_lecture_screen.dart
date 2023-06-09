@@ -57,7 +57,6 @@ class InstructorLectureScreen extends StatelessWidget {
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -205,6 +204,114 @@ class InstructorLectureScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class InstructorNextLectureScreen extends StatelessWidget {
+  InstructorNextLectureScreen(this.lecture, {super.key});
+
+  final InstructorNextLectureModel lecture;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lecture Details'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                      child: Subtitle(
+                    title: lecture.name,
+                  )),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  const Text('Status : '),
+                  Row(
+                    children: const [
+                      Text(
+                        'In Future ',
+                        style: TextStyle(color: Colors.orange),
+                      ),
+                      Icon(
+                        Icons.watch_later_rounded,
+                        color: Colors.orange,
+                        size: 16,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MainBody(
+                    text: 'Course : ${lecture.subjectName}',
+                  ),
+                  MainBody(
+                    text: 'Faculty : ${lecture.faculty}',
+                  ),
+                  Row(
+                    children: [
+                      MainBody(text: 'Type : ${lecture.type}'),
+                      const Spacer(),
+                      MainBody(text: 'Location : ${lecture.location}'),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    children: [
+                      const Text('Scheduled Date : '),
+                      Text(
+                        lecture.date,
+                        style: const TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_today,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text('Scheduled Time : '),
+                      Text(
+                        lecture.time,
+                        style: const TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_today,
+                        color: Colors.indigo,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

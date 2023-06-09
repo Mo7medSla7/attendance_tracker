@@ -28,29 +28,30 @@ class InstructorCubit extends Cubit<InstructorStates> {
   }
 
   void getSubjects() {
-    // getNextLectures();
+    getNextLectures();
     getInstructorSubjects();
   }
 
-  // bool isGettingLectures = false;
-  // List<LectureModel> nextLectures = [];
+  bool isGettingLectures = false;
+  List<InstructorNextLectureModel> nextLectures = [];
 
-  // Future<void> getNextLectures() async {
-  //   isGettingLectures = true;
-  //   emit(GetNextLecturesLoadingState());
-  //   DioHelper.getData(url: NEXT_LECTURES, token: 'Bearer $STUDENT_TOKEN')
-  //       .then((Response response) {
-  //     response.data.forEach((lecture) {
-  //       nextLectures.add(LectureModel.fromMap(lecture));
-  //     });
-  //     isGettingLectures = false;
-  //     emit(GetNextLecturesSuccessState());
-  //   }).catchError((e) {
-  //     isGettingLectures = false;
-  //     print(e.toString());
-  //     emit(GetNextLecturesErrorState());
-  //   });
-  // }
+  Future<void> getNextLectures() async {
+    isGettingLectures = true;
+    emit(GetNextLecturesLoadingState());
+    DioHelper.getData(
+            url: INSTRUCTOR_NEXT_LECTURES, token: 'Bearer $INSTRUCTOR_TOKEN')
+        .then((Response response) {
+      response.data.forEach((lecture) {
+        nextLectures.add(InstructorNextLectureModel.fromMap(lecture));
+      });
+      isGettingLectures = false;
+      emit(GetNextLecturesSuccessState());
+    }).catchError((e) {
+      isGettingLectures = false;
+      print(e.toString());
+      emit(GetNextLecturesErrorState());
+    });
+  }
 
   List<InstructorSubjectModel> instructorSubjects = [];
   bool isGettingSubjects = false;

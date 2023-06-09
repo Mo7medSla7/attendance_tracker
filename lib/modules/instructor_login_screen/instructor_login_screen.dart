@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/component.dart';
 import '../../shared/user_data.dart';
+import '../instructor_home_screen/instructor_cubit/instructor_cubit.dart';
 
 class InstructorLoginScreen extends StatefulWidget {
   const InstructorLoginScreen({Key? key}) : super(key: key);
@@ -109,8 +110,8 @@ class _InstructorLoginScreenState extends State<InstructorLoginScreen> {
       CacheHelper.putData(key: 'INSTRUCTOR_TOKEN', value: value.data['token']);
       CacheHelper.putData(key: 'isLoggedIn', value: true);
       CacheHelper.putData(key: 'isInstructor', value: true);
-
       setInstructorData();
+      InstructorCubit.get(context).getSubjects();
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => InstructorHomeScreen(),

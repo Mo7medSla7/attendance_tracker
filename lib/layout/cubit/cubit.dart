@@ -4,6 +4,7 @@ import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/layout/cubit/states.dart';
 import 'package:attendance_tracker/models/lecture_model.dart';
 import 'package:attendance_tracker/models/subject_model.dart';
+import 'package:attendance_tracker/shared/component.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
 import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../helpers/cache_helper.dart';
 import '../../models/students_statistics_model.dart';
 import '../../modules/home_screen/home_screen.dart';
+import '../../modules/subject_search/subject_search.dart';
 import '../../modules/subjects_screen/subject_screen.dart';
 import '../../modules/profile_screen/profile_screen.dart';
 
@@ -42,7 +44,11 @@ class AppCubit extends Cubit<AppStates> {
   late List<Widget?> floatingButtons = [
     null,
     FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SubjectSearchScreen(),
+        ));
+      },
       child: const Icon(Icons.manage_search, size: 26),
     ),
     FloatingActionButton(
@@ -99,6 +105,27 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  bool isGettingMySubjects = false;
+  List<SubjectModel> mySubjects = [];
+
+  Future<void> getMySubjects() async {
+    mySubjects = [];
+    isGettingMySubjects = true;
+    emit(GetMySubjectsLoadingState());
+    DioHelper.getData(url: REGISTERED_SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
+        .then((Response response) {
+      response.data.forEach((subject) {
+        mySubjects.add(SubjectModel.fromMap(subject));
+      });
+      isGettingMySubjects = false;
+      emit(GetMySubjectsSuccessState());
+    }).catchError((e) {
+      isGettingMySubjects = false;
+      print(e.toString());
+      emit(GetMySubjectsErrorState());
+    });
+  }
+
   Future<String> getDeviceId() async {
     final deviceInfoPlugin = DeviceInfoPlugin();
     final deviceInfo = await deviceInfoPlugin.androidInfo;
@@ -140,6 +167,8 @@ class AppCubit extends Cubit<AppStates> {
           STUDENT_SEMESTER = newValue;
           CacheHelper.putData(key: 'STUDENT_SEMESTER', value: newValue);
       }
+      enableEdit();
+      getRegisteredSubjects();
       emit(EditProfileSuccessState());
     }).catchError((e) {
       isEdited = false;
@@ -152,12 +181,11 @@ class AppCubit extends Cubit<AppStates> {
   void changeNavBar(int index) {
     currentIndex = index;
     lecturePosition = 0.0;
+    isEnabled = false;
 
-    if (index == 0 &&
-        nextLectures.isEmpty &&
-        subjectsStats.isEmpty) {
-        getSubjectsStats();
-        getNextLectures();
+    if (index == 0 && nextLectures.isEmpty && subjectsStats.isEmpty) {
+      getSubjectsStats();
+      getNextLectures();
     }
     if (index == 1 &&
         subjectsToRegister.isEmpty &&
@@ -260,7 +288,7 @@ class AppCubit extends Cubit<AppStates> {
       subjectsToRegister.removeWhere((subject) => subject.id == subjectId);
       emit(RegisterSubjectSuccessState());
     }).catchError((e) {
-      print(e.response.data);
+      print(e.toString());
       emit(RegisterSubjectErrorState());
     });
   }
@@ -280,13 +308,47 @@ class AppCubit extends Cubit<AppStates> {
     emit(RegisterAllSubjectState());
   }
 
+  bool isFocused = false;
+
+  void toggleSearch(bool toggle) {
+    isFocused = toggle;
+    emit(ToggleSearchState());
+  }
+
+  bool isSearching = false;
+  List<SubjectModel> searchedSubjects = [];
+
+  void subjectSearch(String query) {
+    isSearching = true;
+    emit(SubjectsSearchLoadingState());
+    searchedSubjects.clear();
+    var url = '$SEARCH?searchQuery=$query';
+    DioHelper.getData(url: url, token: 'Bearer $STUDENT_TOKEN')
+        .then((Response response) {
+      if (response.data.isEmpty) {
+        showDefaultToast('No subjects found');
+        emit(SubjectsSearchSuccessState());
+        return;
+      }
+      response.data.forEach((subject) {
+        searchedSubjects.add(SubjectModel.fromMap(subject));
+      });
+      isSearching = false;
+      emit(SubjectsSearchSuccessState());
+    }).catchError((e) {
+      isSearching = false;
+      print(e.toString());
+      emit(SubjectsSearchErrorState());
+    });
+  }
+
   void logout() {
     currentIndex = 0;
     lecturePosition = 0.0;
     subjectsToRegister = [];
     registeredSubjects = [];
     nextLectures = [];
-    subjectsStats= [];
+    subjectsStats = [];
     subjectsIdToRegister = [];
     checkStates = [];
     emit(LogoutState());

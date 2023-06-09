@@ -81,7 +81,7 @@ class HomeScreen extends StatelessWidget {
         });
   }
 
-  Widget nextLecturesView(cubit, context) {
+  Widget nextLecturesView(AppCubit cubit, context) {
     return Container(
       padding: const EdgeInsets.all(8),
       height: 260,
@@ -143,15 +143,30 @@ class HomeScreen extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      const Spacer(),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
                                       Builder(builder: (context) {
-                                        final state = cubit.subjectsStats
-                                            .firstWhere((element) =>
-                                                element.subjectName ==
-                                                lecture.subjectName);
+                                        final subjectState =
+                                            cubit.subjectsStats.firstWhere(
+                                          (element) =>
+                                              element.subjectName ==
+                                              lecture.subjectName,
+                                          orElse: () => StudentStatisticsModel(
+                                            id: '0',
+                                            instructorName: 'N/A',
+                                            level: 'N/A',
+                                            semester: 'N/A',
+                                            subjectName: 'N/A',
+                                            totalLectures: 0,
+                                            totalSections: 0,
+                                            lectureAttendancePercentage: '0',
+                                            sectionAttendancePercentage: '0',
+                                          ),
+                                        );
                                         return SubBody(
                                           text:
-                                              'You have attended ${state.lectureAttendancePercentage} % lectures of this course',
+                                              'You have attended ${subjectState.lectureAttendancePercentage} % lectures of this course',
                                         );
                                       }),
                                       const SizedBox(

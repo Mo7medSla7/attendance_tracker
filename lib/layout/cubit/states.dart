@@ -40,6 +40,18 @@ class GetSubjectsStatsSuccessState extends AppStates {}
 
 class GetSubjectsStatsErrorState extends AppStates {}
 
+class GetMySubjectsLoadingState extends AppStates {}
+
+class GetMySubjectsSuccessState extends AppStates {}
+
+class GetMySubjectsErrorState extends AppStates {}
+
+class SubjectsSearchLoadingState extends AppStates {}
+
+class SubjectsSearchSuccessState extends AppStates {}
+
+class SubjectsSearchErrorState extends AppStates {}
+
 class RegisterSubjectLoadingState extends AppStates {}
 
 class RegisterSubjectSuccessState extends AppStates {}
@@ -47,5 +59,7 @@ class RegisterSubjectSuccessState extends AppStates {}
 class RegisterSubjectErrorState extends AppStates {}
 
 class RegisterAllSubjectState extends AppStates {}
+
+class ToggleSearchState extends AppStates {}
 
 class LogoutState extends AppStates {}

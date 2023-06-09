@@ -39,7 +39,7 @@ class InstructorSubjectScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const MiniTitle(title: 'Subject ID'),
+                        // const MiniTitle(title: 'Subject ID'),
                         MiniTitle(title: subject.faculty),
                         MiniTitle(title: 'Level ${subject.year}'),
                         MiniTitle(title: '${subject.semester} semester'),
@@ -355,7 +355,7 @@ class AddNewLectureAlert extends StatelessWidget {
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton(
                                     hint: const Text(
-                                        'Choose Type',
+                                      'Choose Type',
                                       style: TextStyle(
                                         fontSize: 13,
                                       ),

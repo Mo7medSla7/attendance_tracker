@@ -62,3 +62,42 @@ class InstructorLectureModel {
       InstructorLectureModel.fromMap(
           json.decode(source) as Map<String, dynamic>);
 }
+
+class InstructorNextLectureModel {
+  String id;
+  String location;
+  String name;
+  String type;
+  String date;
+  String time;
+  String subjectName;
+  String faculty;
+
+  InstructorNextLectureModel({
+    required this.id,
+    required this.location,
+    required this.name,
+    required this.type,
+    required this.date,
+    required this.time,
+    required this.subjectName,
+    required this.faculty,
+  });
+
+  factory InstructorNextLectureModel.fromMap(Map<String, dynamic> map) {
+    return InstructorNextLectureModel(
+      id: map['_id'] as String,
+      location: map['location'] as String,
+      name: map['name'] as String,
+      type: map['type'] as String,
+      date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
+      time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
+      subjectName: map['subject']['name'] as String,
+      faculty: map['subject']['faculty'] as String,
+    );
+  }
+
+  factory InstructorNextLectureModel.fromJson(String source) =>
+      InstructorNextLectureModel.fromMap(
+          json.decode(source) as Map<String, dynamic>);
+}

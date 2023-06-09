@@ -22,6 +22,12 @@ class GetLecturesAttendeesSuccessState extends InstructorStates {}
 
 class GetLecturesAttendeesErrorState extends InstructorStates {}
 
+class GetNextLecturesLoadingState extends InstructorStates {}
+
+class GetNextLecturesSuccessState extends InstructorStates {}
+
+class GetNextLecturesErrorState extends InstructorStates {}
+
 class GetSubjectActiveStudentsLoadingState extends InstructorStates {}
 
 class GetSubjectActiveStudentsSuccessState extends InstructorStates {}

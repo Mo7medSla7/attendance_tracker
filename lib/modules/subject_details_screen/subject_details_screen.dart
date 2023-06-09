@@ -10,15 +10,8 @@ class SubjectDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(subject.id);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.of(context).push(MaterialPageRoute(
-          //   builder: (context) => const ScannerScreen(),
-          // ));
-        },
-        child: const Icon(Icons.qr_code_scanner, size: 26),
-      ),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
