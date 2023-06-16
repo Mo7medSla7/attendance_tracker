@@ -51,7 +51,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
+/*
       if (!isPageOpened) {
+*/
         var cubit = AppCubit.get(context);
         await cubit.qrScan(scanData.code!, widget.id);
         if (cubit.qrSuccessScan) {
@@ -69,11 +71,13 @@ class _ScannerScreenState extends State<ScannerScreen> {
             Colors.white,
           );
         }
+        if (!isPageOpened)
         Navigator.pop(context);
 
         isPageOpened = true;
       }
-    });
+    /*}*/
+    );
   }
 
   @override
@@ -83,13 +87,3 @@ class _ScannerScreenState extends State<ScannerScreen> {
   }
 }
 
-class AfterScanScreen extends StatelessWidget {
-  const AfterScanScreen(this.scannedData, {super.key});
-
-  final String scannedData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text(scannedData)));
-  }
-}

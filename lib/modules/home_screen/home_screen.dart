@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
   Widget nextLecturesView(AppCubit cubit, context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      height: 260,
+      height: 282,
       width: double.infinity,
       child: cubit.nextLectures.isEmpty
           ? const Card(
