@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:attendance_tracker/shared/component.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -51,9 +50,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
-/*
-      if (!isPageOpened) {
-*/
+      controller.pauseCamera();
       var cubit = AppCubit.get(context);
       await cubit.qrScan(scanData.code!, widget.id);
       if (cubit.qrSuccessScan) {

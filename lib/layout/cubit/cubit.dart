@@ -38,10 +38,10 @@ class AppCubit extends Cubit<AppStates> {
     Text('Profile'),
   ];
   List<Widget> screens = [
-    HomeScreen(),
+    const HomeScreen(),
     const SubjectScreen(),
     const MySubjectsScreen(),
-    ProfileScreen(),
+    const ProfileScreen(),
   ];
 
   late List<Widget?> floatingButtons = [
@@ -86,7 +86,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetNextLecturesSuccessState());
     }).catchError((e) {
       isGettingLectures = false;
-      print(e.toString());
       emit(GetNextLecturesErrorState());
     });
   }
@@ -120,7 +119,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetLecturesOfSubjectSuccessState());
     }).catchError((e) {
       isGettingLecturesOfSubject = false;
-      print(e.toString());
       emit(GetLecturesOfSubjectErrorState());
     });
   }
@@ -141,7 +139,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetSubjectsStatsSuccessState());
     }).catchError((e) {
       isGettingSubjectsStats = false;
-      print(e.toString());
       emit(GetSubjectsStatsErrorState());
     });
   }
@@ -162,7 +159,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetMySubjectsSuccessState());
     }).catchError((e) {
       isGettingMySubjects = false;
-      print(e.toString());
       emit(GetMySubjectsErrorState());
     });
   }
@@ -213,7 +209,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(EditProfileSuccessState());
     }).catchError((e) {
       isEdited = false;
-      print(e.toString());
       emit(EditProfileErrorState());
     });
   }
@@ -278,7 +273,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetRegisteredSubjectsSuccessState());
     }).catchError((e) {
       isGettingSubjects = false;
-      print(e.toString());
       emit(GetRegisteredSubjectsErrorState());
     });
   }
@@ -300,7 +294,6 @@ class AppCubit extends Cubit<AppStates> {
       qrSuccessScan = true;
       emit(QrScanSuccessState());
     }).catchError((e) {
-      print(e.toString());
       qrSuccessScan = false;
       emit(QrScanErrorState());
     });
@@ -321,34 +314,36 @@ class AppCubit extends Cubit<AppStates> {
     emit(AddOrRemoveSubjectToRegisterState());
   }
 
-  registerSubject(String subjectId) {
+  registerSubject(String subjectId, bool fromSearch) {
     emit(RegisterSubjectLoadingState());
     DioHelper.postData(
       url: REGISTER_SUBJECT,
       data: {'subjectId': subjectId},
       token: 'Bearer $STUDENT_TOKEN',
     ).then((value) {
-      registeredSubjects.add(
-          subjectsToRegister.firstWhere((subject) => subject.id == subjectId));
-      subjectsToRegister.removeWhere((subject) => subject.id == subjectId);
+      if (!fromSearch) {
+        registeredSubjects.add(subjectsToRegister
+            .firstWhere((subject) => subject.id == subjectId));
+        subjectsToRegister.removeWhere((subject) => subject.id == subjectId);
+      }
       emit(RegisterSubjectSuccessState());
     }).catchError((e) {
-      print(e.toString());
       emit(RegisterSubjectErrorState());
     });
   }
 
-  sendSubjectsToRegister() async {
+  sendSubjectsToRegister(bool fromSearch) async {
     for (String subjectId in subjectsIdToRegister) {
       try {
-        registerSubject(subjectId);
+        registerSubject(subjectId, fromSearch);
       } catch (err) {
-        print(err.toString());
+        err.toString();
       }
     }
     subjectsIdToRegister = [];
     checkStates = [];
     await getRegisteredSubjects();
+    await getMySubjects();
 
     emit(RegisterAllSubjectState());
   }
@@ -373,6 +368,7 @@ class AppCubit extends Cubit<AppStates> {
       if (response.data.isEmpty) {
         showDefaultToast('No subjects found');
         emit(SubjectsSearchSuccessState());
+        isSearching = false;
         return;
       }
       response.data.forEach((subject) {
@@ -382,7 +378,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(SubjectsSearchSuccessState());
     }).catchError((e) {
       isSearching = false;
-      print(e.toString());
       emit(SubjectsSearchErrorState());
     });
   }

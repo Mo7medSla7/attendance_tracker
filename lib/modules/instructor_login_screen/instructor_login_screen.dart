@@ -1,7 +1,6 @@
 import 'package:attendance_tracker/helpers/cache_helper.dart';
 import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_home_screen.dart';
-import 'package:attendance_tracker/modules/login_screen/login_screen.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
 import 'package:flutter/material.dart';
 
@@ -114,7 +113,7 @@ class _InstructorLoginScreenState extends State<InstructorLoginScreen> {
       InstructorCubit.get(context).getSubjects();
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => InstructorHomeScreen(),
+            builder: (context) => const InstructorHomeScreen(),
           ),
           (route) => false);
     }).catchError((error) {

@@ -2,10 +2,11 @@ import 'package:attendance_tracker/helpers/dio_helper.dart';
 import 'package:attendance_tracker/models/student_model.dart';
 import 'package:attendance_tracker/shared/component.dart';
 import 'package:attendance_tracker/shared/end_points.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }

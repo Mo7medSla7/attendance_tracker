@@ -8,7 +8,7 @@ import '../instructor_home_screen/instructor_cubit/instructor_cubit.dart';
 import '../instructor_home_screen/instructor_cubit/instructor_states.dart';
 
 class InstructorLectureScreen extends StatelessWidget {
-  InstructorLectureScreen(this.lecture, {super.key});
+  const InstructorLectureScreen(this.lecture, {super.key});
 
   final InstructorLectureModel lecture;
 
@@ -209,7 +209,7 @@ class InstructorLectureScreen extends StatelessWidget {
 }
 
 class InstructorNextLectureScreen extends StatelessWidget {
-  InstructorNextLectureScreen(this.lecture, {super.key});
+  const InstructorNextLectureScreen(this.lecture, {super.key});
 
   final InstructorNextLectureModel lecture;
 

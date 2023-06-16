@@ -19,7 +19,7 @@ import '../instructor_search_screen/instructor_search_screen.dart';
 import '../no_internet_screen/no_internet_screen.dart';
 
 class InstructorHomeScreen extends StatefulWidget {
-  InstructorHomeScreen({Key? key}) : super(key: key);
+  const InstructorHomeScreen({Key? key}) : super(key: key);
 
   @override
   State<InstructorHomeScreen> createState() => _InstructorHomeScreenState();
@@ -110,7 +110,7 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
                         CacheHelper.putData(key: 'isInstructor', value: false);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                              builder: (context) => LoginScreen(),
+                              builder: (context) => const LoginScreen(),
                             ),
                             (route) => false);
                         cubit.logout();

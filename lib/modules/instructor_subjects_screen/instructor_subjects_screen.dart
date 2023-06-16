@@ -5,7 +5,6 @@ import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cub
 import 'package:attendance_tracker/modules/instructor_home_screen/instructor_cubit/instructor_states.dart';
 import 'package:attendance_tracker/modules/instructor_lecture_screen/instructor_lecture_screen.dart';
 import 'package:attendance_tracker/shared/component.dart';
-import 'package:attendance_tracker/shared/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -87,7 +86,6 @@ class InstructorSubjectScreen extends StatelessWidget {
                             height: 4,
                           ),
                           itemCount: cubit.lecturesOfSubject.length,
-
                         ),
                 ],
               ),
@@ -219,6 +217,7 @@ Widget buildCourseLectures(InstructorLectureModel lecture, context) =>
       ),
     );
 
+// ignore: must_be_immutable
 class AddNewLectureAlert extends StatelessWidget {
   AddNewLectureAlert(this.subjectId, {super.key});
   final String subjectId;
@@ -332,7 +331,9 @@ class AddNewLectureAlert extends StatelessWidget {
                                           hour = value.hour.toString();
                                         }
                                         formattedTime += hour;
-                                        formattedTime += ':${value.minute}';
+                                        formattedTime += value.minute > 9
+                                            ? ':${value.minute}'
+                                            : ':0${value.minute}';
                                         formattedTime += ':00.000Z';
                                       });
                                     },
@@ -418,7 +419,10 @@ class AddNewLectureAlert extends StatelessWidget {
                               FocusScope.of(context).unfocus();
                               setState(() {
                                 if (formKey.currentState!.validate()) {
-                                  isoDate = formattedDate + formattedTime;
+                                  isoDate = DateTime.parse(
+                                          (formattedDate + formattedTime))
+                                      .subtract(const Duration(hours: 3))
+                                      .toString();
                                   cubit
                                       .createLecture(
                                     subjectId: subjectId,

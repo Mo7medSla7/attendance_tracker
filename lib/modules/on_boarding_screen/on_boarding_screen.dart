@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+// ignore: must_be_immutable
 class OnBoardingScreen extends StatelessWidget {
   OnBoardingScreen({super.key});
 
@@ -141,7 +142,7 @@ class OnBoardingScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) {
           CacheHelper.putData(key: 'isOnboardingFinished', value: true);
-          return LoginScreen();
+          return const LoginScreen();
         },
       ),
     );

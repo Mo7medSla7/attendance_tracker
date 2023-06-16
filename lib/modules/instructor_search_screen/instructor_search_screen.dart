@@ -7,6 +7,7 @@ import '../instructor_home_screen/instructor_cubit/instructor_cubit.dart';
 import '../instructor_home_screen/instructor_cubit/instructor_states.dart';
 import '../instructor_subjects_screen/instructor_subjects_screen.dart';
 
+// ignore: must_be_immutable
 class InstructorSearchScreen extends StatelessWidget {
   InstructorSearchScreen(
       {required this.isSubject, required this.isAttendance, Key? key})

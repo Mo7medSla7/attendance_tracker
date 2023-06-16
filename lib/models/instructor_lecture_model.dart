@@ -47,12 +47,13 @@ class InstructorLectureModel {
       name: map['name'] as String,
       type: map['type'] as String,
       date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
-      time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
+      time: DateFormat('h:mm a ').format(DateTime.parse(map['date']).toLocal()),
       finished: map['finished'] as bool,
       presencePercentage: map['presencePercentage'] == "N/A"
           ? "N/A"
-          : map['presencePercentage']is String? map['presencePercentage']
-          : map['presencePercentage'].toStringAsFixed(2) + '%',
+          : map['presencePercentage'] is String
+              ? map['presencePercentage']
+              : map['presencePercentage'].toStringAsFixed(2) + '%',
       numOfAttendees: map['numOfAttendees'] as num,
     );
   }

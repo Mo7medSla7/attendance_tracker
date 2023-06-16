@@ -1,5 +1,4 @@
 import 'package:attendance_tracker/models/lecture_model.dart';
-import 'package:attendance_tracker/models/subject_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/component.dart';

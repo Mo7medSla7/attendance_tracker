@@ -11,6 +11,8 @@ import '../modules/no_internet_screen/no_internet_screen.dart';
 import 'cubit/states.dart';
 
 class LayoutScreen extends StatefulWidget {
+  const LayoutScreen({super.key});
+
   @override
   State<LayoutScreen> createState() => _LayoutScreenState();
 }
@@ -87,7 +89,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
                                   key: 'isLoggedIn', value: false);
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
-                                    builder: (context) => LoginScreen(),
+                                    builder: (context) => const LoginScreen(),
                                   ),
                                   (route) => false);
                               cubit.logout();

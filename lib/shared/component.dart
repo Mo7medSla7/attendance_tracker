@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
+
 import 'package:attendance_tracker/layout/cubit/cubit.dart';
 import 'package:attendance_tracker/shared/constants.dart';
 import 'package:attendance_tracker/shared/user_data.dart';

@@ -5,6 +5,7 @@ import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
 import '../../shared/component.dart';
 
+// ignore: must_be_immutable
 class SubjectSearchScreen extends StatelessWidget {
   SubjectSearchScreen({Key? key}) : super(key: key);
 
@@ -137,7 +138,7 @@ class SubjectSearchScreen extends StatelessWidget {
                   child: FullWidthElevatedButton(
                     text: 'Register',
                     onTap: () {
-                      cubit.sendSubjectsToRegister();
+                      cubit.sendSubjectsToRegister(true);
                     },
                   ),
                 ),

@@ -12,7 +12,7 @@ import '../../models/lecture_model.dart';
 import '../../models/students_statistics_model.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

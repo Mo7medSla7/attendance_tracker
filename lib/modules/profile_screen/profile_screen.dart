@@ -5,11 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../helpers/cache_helper.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../shared/component.dart';
-import '../my_subjects_screen/my_subject_screen.dart';
-import '../subject_details_screen/subject_details_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

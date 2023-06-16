@@ -198,7 +198,7 @@ class SubjectScreen extends StatelessWidget {
                         if (cubit.subjectsToRegister.isNotEmpty)
                           FullWidthElevatedButton(
                             text: 'Register',
-                            onTap: () => cubit.sendSubjectsToRegister(),
+                            onTap: () => cubit.sendSubjectsToRegister(false),
                           ),
                         if (state is RegisterSubjectLoadingState)
                           const LinearProgressIndicator(),

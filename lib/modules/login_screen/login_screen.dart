@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import '../no_internet_screen/no_internet_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.of(context)
                               .push(
                             MaterialPageRoute(
-                              builder: (context) => SignUpScreen(),
+                              builder: (context) => const SignUpScreen(),
                             ),
                           )
                               .then((value) {
@@ -175,7 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => InstructorLoginScreen(),
+                              builder: (context) =>
+                                  const InstructorLoginScreen(),
                             ),
                           );
                         },
@@ -245,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setStudentData();
       AppCubit.get(context).getSubjects();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => LayoutScreen(),
+        builder: (context) => const LayoutScreen(),
       ));
     }).catchError((error) {
       setState(() {

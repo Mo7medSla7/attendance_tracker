@@ -49,10 +49,10 @@ class MyApp extends StatelessWidget {
       : !isOnboardingFinished
           ? OnBoardingScreen()
           : !isLoggedIn
-              ? LoginScreen()
+              ? const LoginScreen()
               : isInstructor
-                  ? InstructorHomeScreen()
-                  : LayoutScreen();
+                  ? const InstructorHomeScreen()
+                  : const LayoutScreen();
 
   @override
   Widget build(BuildContext context) {

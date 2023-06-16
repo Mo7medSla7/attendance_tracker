@@ -48,7 +48,6 @@ class InstructorCubit extends Cubit<InstructorStates> {
       emit(GetNextLecturesSuccessState());
     }).catchError((e) {
       isGettingLectures = false;
-      print(e.toString());
       emit(GetNextLecturesErrorState());
     });
   }
@@ -72,7 +71,6 @@ class InstructorCubit extends Cubit<InstructorStates> {
       emit(GetInstructorSubjectsSuccessState());
     }).catchError((e) {
       isGettingSubjects = false;
-      print(e.toString());
       emit(GetInstructorSubjectsErrorState());
     });
   }
@@ -95,7 +93,6 @@ class InstructorCubit extends Cubit<InstructorStates> {
       emit(GetLecturesOfSubjectSuccessState());
     }).catchError((e) {
       isGettingLecturesOfSubject = false;
-      print(e.toString());
       emit(GetLecturesOfSubjectErrorState());
     });
   }
@@ -122,7 +119,6 @@ class InstructorCubit extends Cubit<InstructorStates> {
       emit(GetSubjectActiveStudentsSuccessState());
     }).catchError((e) {
       isGettingActiveStudents = false;
-      print(e.toString());
       emit(GetSubjectActiveStudentsErrorState());
     });
   }
@@ -140,7 +136,6 @@ class InstructorCubit extends Cubit<InstructorStates> {
         .then((Response response) {
       lectureAttendees.clear();
       response.data.forEach((student) {
-        print(student);
         lectureAttendees.add({
           'name': student['name'],
           'studentId': student['studentId'].toString(),
@@ -150,7 +145,6 @@ class InstructorCubit extends Cubit<InstructorStates> {
       emit(GetLecturesAttendeesSuccessState());
     }).catchError((e) {
       isGettingAttendees = false;
-      print(e.toString());
       emit(GetLecturesAttendeesErrorState());
     });
   }
@@ -259,15 +253,13 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
         final String filePath = path.join(customDirectory.path, fileName);
 
-        final File file = await File(filePath);
+        final File file = File(filePath);
 
         await file.writeAsBytes(excel.encode()!);
         showDefaultToast('Excel file created: $filePath');
         emit(ExtractStudentsSuccessState());
       }
     } catch (e) {
-      print(e);
-
       showDefaultToast('Error happened while creating excel file');
       emit(ExtractStudentsErrorState());
     }

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../shared/component.dart';
-import '../scanner_screen/scanner_screen.dart';
 
 class SubjectDetailsScreen extends StatelessWidget {
   const SubjectDetailsScreen(this.subject, {Key? key}) : super(key: key);
