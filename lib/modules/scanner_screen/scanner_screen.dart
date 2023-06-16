@@ -54,30 +54,34 @@ class _ScannerScreenState extends State<ScannerScreen> {
 /*
       if (!isPageOpened) {
 */
-        var cubit = AppCubit.get(context);
-        await cubit.qrScan(scanData.code!, widget.id);
-        if (cubit.qrSuccessScan) {
-          showDefaultSnackBar(
-            context,
-            'Attendance recorded successfully',
-            Colors.green,
-            Colors.white,
-          );
-        } else {
-          showDefaultSnackBar(
-            context,
-            'Failed to record attendance',
-            Colors.red,
-            Colors.white,
-          );
+      var cubit = AppCubit.get(context);
+      await cubit.qrScan(scanData.code!, widget.id);
+      if (cubit.qrSuccessScan) {
+        showDefaultSnackBar(
+          context,
+          'Attendance recorded successfully',
+          Colors.green,
+          Colors.white,
+        );
+        if (!isPageOpened) {
+          Navigator.pop(context);
+          isPageOpened = true;
         }
-        if (!isPageOpened)
-        Navigator.pop(context);
-
-        isPageOpened = true;
+        return;
+      } else {
+        showDefaultSnackBar(
+          context,
+          'Failed to record attendance',
+          Colors.red,
+          Colors.white,
+        );
+        if (!isPageOpened) {
+          Navigator.pop(context);
+          isPageOpened = true;
+        }
+        return;
       }
-    /*}*/
-    );
+    });
   }
 
   @override
@@ -86,4 +90,3 @@ class _ScannerScreenState extends State<ScannerScreen> {
     super.dispose();
   }
 }
-
