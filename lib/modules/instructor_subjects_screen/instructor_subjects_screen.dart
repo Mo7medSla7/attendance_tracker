@@ -77,16 +77,36 @@ class InstructorSubjectScreen extends StatelessWidget {
                             child: CircularProgressIndicator(),
                           ),
                         )
-                      : ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => buildCourseLectures(
-                              cubit.lecturesOfSubject[index], context),
-                          separatorBuilder: (context, index) => const SizedBox(
-                            height: 4,
-                          ),
-                          itemCount: cubit.lecturesOfSubject.length,
-                        ),
+                      : cubit.lecturesOfSubject.isEmpty
+                          ? const Padding(
+                              padding: EdgeInsets.only(top: 48.0),
+                              child: Center(
+                                child: Card(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'You didn\'t create any lectures for this course yet',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) =>
+                                  buildCourseLectures(
+                                      cubit.lecturesOfSubject[index], context),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                height: 4,
+                              ),
+                              itemCount: cubit.lecturesOfSubject.length,
+                            ),
                 ],
               ),
             ),

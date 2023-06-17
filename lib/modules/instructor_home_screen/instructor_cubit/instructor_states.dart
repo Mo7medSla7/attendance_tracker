@@ -47,3 +47,5 @@ class SearchSubjectState extends InstructorStates {}
 class SearchStudentState extends InstructorStates {}
 
 class ToggleSearchState extends InstructorStates {}
+
+class LogoutState extends InstructorStates {}

@@ -41,6 +41,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
     DioHelper.getData(
             url: INSTRUCTOR_NEXT_LECTURES, token: 'Bearer $INSTRUCTOR_TOKEN')
         .then((Response response) {
+      nextLectures = [];
       response.data.forEach((lecture) {
         nextLectures.add(InstructorNextLectureModel.fromMap(lecture));
       });
@@ -57,13 +58,12 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
   Future<void> getInstructorSubjects() async {
     emit(GetInstructorSubjectsLoadingState());
-    instructorSubjects = [];
     isGettingSubjects = true;
 
     DioHelper.getData(
             url: INSTRUCTOR_SUBJECT, token: 'Bearer $INSTRUCTOR_TOKEN')
         .then((Response response) {
-      instructorSubjects.clear();
+      instructorSubjects = [];
       response.data['subjects'].forEach((subject) {
         instructorSubjects.add(InstructorSubjectModel.fromMap(subject));
       });
@@ -80,12 +80,12 @@ class InstructorCubit extends Cubit<InstructorStates> {
 
   Future<void> getLecturesOfSubject(id) async {
     emit(GetLecturesOfSubjectLoadingState());
-    lecturesOfSubject = [];
     isGettingLecturesOfSubject = true;
     final url = '$INSTRUCTOR_SUBJECT_QUERIES/$id/lectures';
 
     DioHelper.getData(url: url, token: 'Bearer $INSTRUCTOR_TOKEN')
         .then((Response response) {
+      lecturesOfSubject = [];
       response.data.forEach((lecture) {
         lecturesOfSubject.add(InstructorLectureModel.fromMap(lecture));
       });
@@ -171,6 +171,7 @@ class InstructorCubit extends Cubit<InstructorStates> {
     ).then((Response response) {
       isLectureCreated = true;
       getLecturesOfSubject(subjectId);
+      getNextLectures();
       emit(CreateLectureSuccessState());
     }).catchError((e) {
       isLectureCreated = false;
@@ -293,5 +294,10 @@ class InstructorCubit extends Cubit<InstructorStates> {
     return await permission.request().isGranted;
   }
 
-  void logout() {}
+  void logout() {
+    lecturePosition = 0.0;
+    nextLectures = [];
+    instructorSubjects = [];
+    emit(LogoutState());
+  }
 }

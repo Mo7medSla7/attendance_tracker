@@ -92,8 +92,9 @@ class InstructorNextLectureModel {
       location: map['location'] as String,
       name: map['name'] as String,
       type: map['type'] as String,
-      date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
-      time: DateFormat('h:mm a ').format(DateTime.parse(map['date'])),
+      date: DateFormat('EEE d-MM-yyyy ')
+          .format(DateTime.parse(map['date']).toLocal()),
+      time: DateFormat('h:mm a ').format(DateTime.parse(map['date']).toLocal()),
       subjectName: map['subject']['name'] as String,
       faculty: map['subject']['faculty'] as String,
     );

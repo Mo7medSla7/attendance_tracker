@@ -140,14 +140,33 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
               Expanded(
                 child: cubit.isGettingSubjects
                     ? const Center(child: CircularProgressIndicator())
-                    : ListView.separated(
-                        itemBuilder: (context, index) => buildCourseItem(
-                            cubit.instructorSubjects[index], context),
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 8,
-                        ),
-                        itemCount: cubit.instructorSubjects.length,
-                      ),
+                    : cubit.instructorSubjects.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 48.0),
+                            child: Center(
+                              child: Card(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'You have no subjects yet',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : ListView.separated(
+                            itemBuilder: (context, index) => buildCourseItem(
+                                cubit.instructorSubjects[index], context),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 8,
+                            ),
+                            itemCount: cubit.instructorSubjects.length,
+                          ),
               ),
             ],
           ),

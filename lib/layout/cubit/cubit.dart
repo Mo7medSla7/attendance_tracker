@@ -74,11 +74,11 @@ class AppCubit extends Cubit<AppStates> {
   List<LectureModel> nextLectures = [];
 
   Future<void> getNextLectures() async {
-    nextLectures = [];
     isGettingLectures = true;
     emit(GetNextLecturesLoadingState());
     DioHelper.getData(url: NEXT_LECTURES, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
+      nextLectures = [];
       response.data.forEach((lecture) {
         nextLectures.add(LectureModel.fromMap(lecture));
       });
@@ -147,11 +147,11 @@ class AppCubit extends Cubit<AppStates> {
   List<SubjectModel> mySubjects = [];
 
   Future<void> getMySubjects() async {
-    mySubjects = [];
     isGettingMySubjects = true;
     emit(GetMySubjectsLoadingState());
     DioHelper.getData(url: REGISTERED_SUBJECTS, token: 'Bearer $STUDENT_TOKEN')
         .then((Response response) {
+      mySubjects = [];
       response.data.forEach((subject) {
         mySubjects.add(SubjectModel.fromMap(subject));
       });
@@ -248,6 +248,7 @@ class AppCubit extends Cubit<AppStates> {
 
   refreshSubjects() async {
     await getRegisteredSubjects();
+    await getMySubjects();
     emit(RefreshSubjectsState());
   }
 

@@ -20,9 +20,7 @@ class HomeScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = AppCubit.get(context);
-          return cubit.nextLectures.isEmpty &&
-                  cubit.isGettingLectures &&
-                  cubit.isGettingSubjectsStats
+          return cubit.isGettingLectures && cubit.isGettingSubjectsStats
               ? const Center(child: CircularProgressIndicator())
               : RefreshIndicator(
                   onRefresh: () {

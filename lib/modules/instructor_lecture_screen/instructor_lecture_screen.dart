@@ -185,19 +185,37 @@ class InstructorLectureScreen extends StatelessWidget {
                               child: CircularProgressIndicator(),
                             ),
                           )
-                        : ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return buildStudentAttendItem(
-                                  cubit.lectureAttendees[index]);
-                            },
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              height: 4,
-                            ),
-                            itemCount: cubit.lectureAttendees.length,
-                          )
+                        : cubit.lectureAttendees.isEmpty
+                            ? const Padding(
+                                padding: EdgeInsets.only(top: 48.0),
+                                child: Center(
+                                  child: Card(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'There is no students attended this lecture',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ListView.separated(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return buildStudentAttendItem(
+                                      cubit.lectureAttendees[index]);
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                  height: 4,
+                                ),
+                                itemCount: cubit.lectureAttendees.length,
+                              )
                 ],
               ),
             ),

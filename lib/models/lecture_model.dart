@@ -46,7 +46,8 @@ class LectureModel {
       type: map['type'] as String,
       instructorName: map['instructor'] as String,
       fullDate: DateTime.parse(map['date']),
-      date: DateFormat('EEE d-MM-yyyy ').format(DateTime.parse(map['date'])),
+      date: DateFormat('EEE d-MM-yyyy ')
+          .format(DateTime.parse(map['date']).toLocal()),
       time: DateFormat('h:mm a ').format(DateTime.parse(map['date']).toLocal()),
       hasAttended: map['hasAttended'] ?? false,
     );
