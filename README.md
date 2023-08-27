@@ -1,5 +1,7 @@
 # Attendance Tracker App
 
+![App_Icon_and_Logo](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/38cdbde0-9513-458f-b1e6-13b05f2bce0a)
+
 ## Introduction
 
 Traditionally, attendance tracking in educational institutions has been done through manual methods such as roll call or sign-in sheets. These methods involve the instructor calling out the names of students or having students sign their names on a sheet of paper to indicate their presence.
@@ -45,46 +47,67 @@ for more details ckeck > [Attendance Tracker ReactJS](https://github.com/FouadMa
 
 ## Screenshots
 
-### Mobile App Screenshots
-1. Account Creation
+### Student Part Screenshots
+1. Account Sign in
+
+   ![Screenshot 2023-08-27 182340](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/a8aaac6c-e2a9-416b-822f-09a054870e79)
+ 
+2. Account Creation
+
    ![Screenshot 2023-08-27 180037](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/3aa989c4-131e-4b3c-a7e5-5f77a8c73331)
-3. Subject Registration
-   ![Screenshot](/path/to/subject_registration.png)
+   
+3. Home
 
-4. Subject Search
-   ![Screenshot](/path/to/subject_search.png)
+   ![Screenshot 2023-08-27 175737](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/d8c0d091-07bf-40cb-a85e-46661de55646)
 
-5. Upcoming Lectures
-   ![Screenshot](/path/to/upcoming_lectures.png)
+4. Subject Registration
 
-6. QR Code Scanning
-   ![Screenshot](/path/to/qr_code_scanning.png)
+   ![Screenshot 2023-08-27 175903](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/1b44c20f-61df-4187-b695-56c535c88b42)
+   
+5. Profile
 
-### Instructor App Screenshots
+   ![Screenshot 2023-08-27 183017](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/80346a3f-4f7f-45dd-abb5-5bc8c89701d0)
+
+
+### Instructor Part Screenshots
 1. Login
-   ![Screenshot](/path/to/login.png)
 
-2. Lecture Management
-   ![Screenshot](/path/to/lecture_management.png)
+   ![Screenshot 2023-08-27 180450](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/197845c9-bb2f-4356-81e0-7ab1ccbd652f)
 
-3. Lecture Search
-   ![Screenshot](/path/to/lecture_search.png)
+2. Home
 
-4. Attendance Overview
-   ![Screenshot](/path/to/attendance_overview.png)
+   ![Screenshot 2023-08-27 180539](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/adaebbf7-def3-4da0-819e-d21edfb23e90)
 
-5. QR Code Generation
-   ![Screenshot](/path/to/qr_code_generation.png)
+3. Subject Details
+
+   ![Screenshot 2023-08-27 180633](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/e422116b-11b1-4134-b0ab-2664ce723a18)
+
+4. Lecture Details
+
+   ![Screenshot 2023-08-27 180422](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/7e83e6bb-766d-480a-90a9-cbc40997f2c7)
+
+5. Students Details
+
+   ![Screenshot 2023-08-27 180323](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/7053d1e0-d99e-4dc4-ae72-611738da5f80)
+
 
 ### Website Screenshots
-1. Subject Management
-   ![Screenshot](/path/to/subject_management.png)
+1. Attendance Management
 
-2. Student Management
-   ![Screenshot](/path/to/student_management.png)
+   ![Screenshot 2023-08-27 180728](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/1e8e6158-710f-4b03-9121-a49404068d02)
 
-3. QR Code Generation
-   ![Screenshot](/path/to/website_qr_generation.png)
+2. QR Code Generation
+
+   ![Screenshot 2023-08-27 180830](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/8b8ca522-3dc3-414e-acdb-c5dc5457913a)
+
+3. Subjects Management
+
+   ![Screenshot 2023-08-27 181025](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/f12bcc5f-53a9-4479-9f2a-67b134a1acaf)
+
+4. Students Management
+
+   ![Screenshot 2023-08-27 180941](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/1815aac9-b995-4e09-b03b-90b5976f5d08)
+
 
 ## Getting Started
 
