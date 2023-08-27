@@ -47,11 +47,7 @@ for more details ckeck > [Attendance Tracker ReactJS](https://github.com/FouadMa
 
 ### Mobile App Screenshots
 1. Account Creation
-   ![Screenshot](/path/to/subject_registration.png)
-![Screenshot 2023-08-27 180037](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/3aa989c4-131e-4b3c-a7e5-5f77a8c73331)
-
-   
-
+   ![Screenshot 2023-08-27 180037](https://github.com/Mo7medSla7/attendance_tracker/assets/105592871/3aa989c4-131e-4b3c-a7e5-5f77a8c73331)
 3. Subject Registration
    ![Screenshot](/path/to/subject_registration.png)
 
